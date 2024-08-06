@@ -10,6 +10,5 @@ namespace EcommerceApp.Domain.Constants
     {
         public const string Admin = "Admin";
         public const string User = "User";
-        public const string Customer = "Customer";
     }
 }
