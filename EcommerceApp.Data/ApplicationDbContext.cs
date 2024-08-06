@@ -31,8 +31,6 @@ namespace EcommerceApp.Data
                 }
             );
 
-
-
             base.OnModelCreating(builder);
         }
     }
