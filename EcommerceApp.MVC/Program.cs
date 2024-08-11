@@ -1,6 +1,5 @@
 using EcommerceApp.Data;
 using EcommerceApp.Data.Repositories.Contracts;
-using EcommerceApp.Domain.Models;
 using EcommerceApp.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
