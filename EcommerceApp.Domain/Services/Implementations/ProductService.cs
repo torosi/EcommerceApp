@@ -1,6 +1,8 @@
 ﻿using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Repositories.Contracts;
+using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,24 +21,27 @@ namespace EcommerceApp.Domain.Services.Implementations
             _productRepository = productRepository;
         }
 
-        public Task AddAsync(Product entity)
+        public async Task AddAsync(ProductDto entity)
         {
-            throw new NotImplementedException();
+            
+            await _productRepository.AddAsync(entity);
+            await _productRepository.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Product>> GetAllAsync()
+        public Task<IEnumerable<ProductDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return _productRepository.GetAllAsync();
         }
 
-        public Task<Product?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter)
+        public Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter)
         {
-            throw new NotImplementedException();
+            return _productRepository.GetFirstOrDefaultAsync(filter);
         }
 
-        public void Remove(Product entity)
+        public async Task RemoveAsync(ProductDto entity)
         {
-            throw new NotImplementedException();
+            _productRepository.Remove(entity);
+            await _productRepository.SaveChangesAsync();
         }
     }
 }

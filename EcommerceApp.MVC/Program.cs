@@ -1,5 +1,6 @@
 using EcommerceApp.Data;
 using EcommerceApp.Data.Repositories.Contracts;
+using EcommerceApp.MVC.Automapper;
 using EcommerceApp.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -26,6 +27,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 builder.Services.AddScoped<IProductRepository, IProductRepository>();
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 
 var app = builder.Build();

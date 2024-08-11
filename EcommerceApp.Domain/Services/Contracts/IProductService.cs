@@ -1,4 +1,5 @@
 ﻿using EcommerceApp.Data.Entities;
+using EcommerceApp.Domain.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,9 @@ namespace EcommerceApp.Domain.Services.Contracts
         /// A method to retrieve all product.
         /// </summary>
         /// <returns>A collection of products.</returns>
-        public Task<IEnumerable<Product>> GetAllAsync();
-        public Task<Product?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter);
-        public Task AddAsync(Product entity);
-        public void Remove(Product entity);
+        public Task<IEnumerable<ProductDto>> GetAllAsync();
+        public Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter);
+        public Task AddAsync(ProductDto entity);
+        public Task RemoveAsync(ProductDto entity);
     }
 }
