@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240809195759_ProductCategoryForeignKey")]
-    partial class ProductCategoryForeignKey
+    [Migration("20240811072555_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace EcommerceApp.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("EcommerceApp.Domain.Models.Entities.ProductImage", b =>
+                {
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ImageId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "ImageId");
+
+                    b.HasIndex("ImageId");
+
+                    b.ToTable("ProductImages");
+                });
 
             modelBuilder.Entity("EcommerceApp.Domain.Models.Image", b =>
                 {
@@ -45,7 +60,7 @@ namespace EcommerceApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Image");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("EcommerceApp.Domain.Models.Product", b =>
@@ -329,6 +344,25 @@ namespace EcommerceApp.Data.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("EcommerceApp.Domain.Models.Entities.ProductImage", b =>
+                {
+                    b.HasOne("EcommerceApp.Domain.Models.Image", "Image")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceApp.Domain.Models.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("EcommerceApp.Domain.Models.Product", b =>
                 {
                     b.HasOne("EcommerceApp.Domain.Models.Image", "Image")
@@ -387,6 +421,16 @@ namespace EcommerceApp.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("EcommerceApp.Domain.Models.Image", b =>
+                {
+                    b.Navigation("ProductImages");
+                });
+
+            modelBuilder.Entity("EcommerceApp.Domain.Models.Product", b =>
+                {
+                    b.Navigation("ProductImages");
                 });
 #pragma warning restore 612, 618
         }
