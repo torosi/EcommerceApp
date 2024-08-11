@@ -1,10 +1,10 @@
-﻿using EcommerceApp.Domain.Models;
-using EcommerceApp.Domain.Models.Entities;
+﻿using EcommerceApp.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 // dotnet ef migrations add Initial  --startup-project /Users/thomassimons/Documents/GitHub/EcommerceApp/EcommerceApp.MVC/EcommerceApp.MVC.csproj
+// dotnet ef database update --startup-project C:\Users\thoma\source\repos\EcommerceApp\EcommerceApp.MVC\EcommerceApp.MVC.csproj
 
 namespace EcommerceApp.Data
 {
@@ -21,7 +21,7 @@ namespace EcommerceApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
+            // Seed user roles
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {
@@ -37,11 +37,7 @@ namespace EcommerceApp.Data
                 }
             );
 
-            // builder.Entity<Product>()
-            //     .HasOne(p => p.Image)
-            //     .WithMany() // No navigation property in Image
-            //     .HasForeignKey(p => p.ImageId);
-
+            // product images
             builder.Entity<ProductImage>()
                 .HasKey(pi => new { pi.ProductId, pi.ImageId});
 

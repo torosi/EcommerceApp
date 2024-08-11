@@ -25,7 +25,7 @@ namespace EcommerceApp.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EcommerceApp.Domain.Models.Entities.ProductImage", b =>
+            modelBuilder.Entity("EcommerceApp.Data.Entities.ProductImage", b =>
                 {
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
@@ -344,7 +344,7 @@ namespace EcommerceApp.Data.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
-            modelBuilder.Entity("EcommerceApp.Domain.Models.Entities.ProductImage", b =>
+            modelBuilder.Entity("EcommerceApp.Data.Entities.ProductImage", b =>
                 {
                     b.HasOne("EcommerceApp.Domain.Models.Image", "Image")
                         .WithMany("ProductImages")

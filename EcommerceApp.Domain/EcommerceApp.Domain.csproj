@@ -9,6 +9,8 @@
   <ItemGroup>
     <Folder Include="Models\Entities\" />
     <Folder Include="Models\Dtos\" />
+    <Folder Include="Services\Contracts\" />
+    <Folder Include="Services\Implementations\" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -20,6 +22,11 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\EcommerceApp.Data\EcommerceApp.Data.csproj" />
+		<ProjectReference Include="..\EcommerceApp.Utils\EcommerceApp.Utils.csproj" />
 	</ItemGroup>
 
 </Project>
