@@ -12,6 +12,7 @@ namespace EcommerceApp.Data
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Product> Products{ get; set; } // context.Products.Include(p => p.Image).ToList(); -- this is how you need to imclude images
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -30,6 +31,11 @@ namespace EcommerceApp.Data
                     NormalizedName = "USER"
                 }
             );
+
+            builder.Entity<Product>()
+                .HasOne(p => p.Image)
+                .WithMany() // No navigation property in Image
+                .HasForeignKey(p => p.ImageId);
 
             base.OnModelCreating(builder);
         }
