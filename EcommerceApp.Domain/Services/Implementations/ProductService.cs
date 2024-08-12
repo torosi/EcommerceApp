@@ -1,14 +1,9 @@
 ﻿using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Dtos;
+using EcommerceApp.Domain.Mappings;
 using EcommerceApp.Domain.Services.Contracts;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EcommerceApp.Domain.Services.Implementations
 {
@@ -23,25 +18,62 @@ namespace EcommerceApp.Domain.Services.Implementations
 
         public async Task AddAsync(ProductDto entity)
         {
-            
-            await _productRepository.AddAsync(entity);
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            var productEntity = entity.ToEntity();
+
+            await _productRepository.AddAsync(productEntity);
             await _productRepository.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<ProductDto>> GetAllAsync()
+        public async Task<IEnumerable<ProductDto>> GetAllAsync()
         {
-            return _productRepository.GetAllAsync();
+            var productEntities = await _productRepository.GetAllAsync();
+            return productEntities.Select(x => x.ToDto());
         }
 
-        public Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter)
+        public async Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter)
         {
-            return _productRepository.GetFirstOrDefaultAsync(filter);
+            var productEntity = await _productRepository.GetFirstOrDefaultAsync(filter);
+            if (productEntity == null) return null;
+            return productEntity.ToDto(); 
         }
 
         public async Task RemoveAsync(ProductDto entity)
         {
-            _productRepository.Remove(entity);
+            if (entity == null) throw new ArgumentException(nameof(entity));
+            _productRepository.Remove(entity.ToEntity());
             await _productRepository.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(ProductDto entity)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            // 1) get the entity from db
+            var productFromDb = await _productRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            // 2) update entity
+            if (productFromDb != null)
+            {
+                productFromDb.Description = entity.Description;
+                productFromDb.Name = entity.Name;
+
+                if (entity.Image != null)
+                {
+                    productFromDb.Image = entity.Image.ToEntity();
+                }
+                else 
+                {
+                    productFromDb.Image = null;
+                }
+
+                productFromDb.ImageId = entity.ImageId;
+                productFromDb.Updated = DateTime.Now;
+
+                await _productRepository.Update(productFromDb);
+                await _productRepository.SaveChangesAsync();
+            }
         }
     }
 }

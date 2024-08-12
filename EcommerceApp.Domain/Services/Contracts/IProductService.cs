@@ -19,5 +19,6 @@ namespace EcommerceApp.Domain.Services.Contracts
         public Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter);
         public Task AddAsync(ProductDto entity);
         public Task RemoveAsync(ProductDto entity);
+        public Task UpdateAsync(ProductDto entity);
     }
 }
