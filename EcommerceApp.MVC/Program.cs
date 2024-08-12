@@ -1,5 +1,8 @@
 using EcommerceApp.Data;
 using EcommerceApp.Data.Repositories.Contracts;
+using EcommerceApp.Data.Repositories.Implementations;
+using EcommerceApp.Domain.Services.Contracts;
+using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Automapper;
 using EcommerceApp.Utils;
 using Microsoft.AspNetCore.Identity;
@@ -24,7 +27,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 
 /*builder.Services.AddDatabaseDeveloperPageExceptionFilter();*/
 
-builder.Services.AddScoped<IProductRepository, IProductRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 

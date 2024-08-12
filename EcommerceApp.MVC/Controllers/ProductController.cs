@@ -37,14 +37,16 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     if (createProduct != null)
                     {
-                        var productDto = _mapper.Map<ProductDto>(createProduct.product);
+                        // map to dto
+                        var productDto = _mapper.Map<ProductDto>(createProduct.Product);
+                        // call our service
                         await _productService.AddAsync(productDto);
                     }
                 }
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
 
             return RedirectToAction("Index");
