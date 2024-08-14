@@ -20,7 +20,7 @@ namespace EcommerceApp.Domain.Mappings
                 Description = product.Description,
                 Created = product.Created,
                 Updated = product.Updated,
-                Image = product.Image.ToDto(),
+                Image = product.Image != null ? product.Image.ToDto() : null, // if the image is null we dont need to map it
                 ImageId = product.ImageId,
             };
         }
@@ -34,7 +34,7 @@ namespace EcommerceApp.Domain.Mappings
                 Description = product.Description,
                 Created = product.Created,
                 Updated = product.Updated,
-                Image = product.Image.ToEntity(),
+                Image = product.Image != null ? product.Image.ToEntity() : null,
                 ImageId = product.ImageId,
             };
         }

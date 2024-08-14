@@ -46,7 +46,7 @@ namespace EcommerceApp.MVC.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
             }
 
             return RedirectToAction("Index");
