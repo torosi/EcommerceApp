@@ -37,8 +37,19 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     if (createProduct != null)
                     {
-                        // map to dto
+
+                        if (createProduct.UploadImage != null && createProduct.UploadImage.ImageFile != null)
+                        {
+                            // Read the file's content into the ImageData property
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                createProduct.UploadImage.ImageFile.CopyTo(memoryStream);
+                                createProduct.Product.Image.ImageData = memoryStream.ToArray();
+                            }
+                        }
+
                         var productDto = _mapper.Map<ProductDto>(createProduct.Product);
+
                         // call our service
                         await _productService.AddAsync(productDto);
                     }

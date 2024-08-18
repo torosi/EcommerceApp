@@ -10,11 +10,13 @@ namespace EcommerceApp.MVC.Automapper
         public AutoMapperProfile()
         {
             CreateMap<ProductViewModel, ProductDto>()
-           .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created ?? DateTime.Now))
-           .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => src.Updated ?? DateTime.Now));
+               .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
+               .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created ?? DateTime.Now))
+               .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => src.Updated ?? DateTime.Now));
 
             // Mapping from ProductDto to ProductViewModel
             CreateMap<ProductDto, ProductViewModel>()
+                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
                 .ForMember(dest => dest.Created, opt => opt.MapFrom(src => (DateTime?)src.Created))
                 .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => (DateTime?)src.Updated));
 

@@ -6,7 +6,12 @@
             <h3>Products</h3>
         </div>
         <div class="col">
-            <a asp-action="Create" class="btn btn-primary">Add New Product <i class="bi bi-plus-circle"></i></a>
+            <a asp-action="Create" class="btn btn-primary float-end">Add New Product <i class="bi bi-plus-circle"></i></a>
         </div>
     </div>
 </div>
+
+
+
+@* this is how we are going to display the image base 64 *@
+@* <img src="data:@Model.ContentType;base64,@Model.ImageBase64" alt="@Model.ImageName" class="img-fluid" /> *@
