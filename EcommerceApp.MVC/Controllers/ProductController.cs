@@ -17,9 +17,26 @@ namespace EcommerceApp.MVC.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try 
+            {
+                var products = await _productService.GetAllAsync();
+                var productViewModels = new List<ProductViewModel>();
+
+                if (products.Any())
+                {
+                    productViewModels = _mapper.Map<IEnumerable<ProductViewModel>>(products).ToList();
+                }
+
+                return View(productViewModels);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
