@@ -58,17 +58,6 @@ namespace EcommerceApp.Domain.Services.Implementations
             {
                 productFromDb.Description = entity.Description;
                 productFromDb.Name = entity.Name;
-
-                if (entity.Image != null)
-                {
-                    productFromDb.Image = entity.Image.ToEntity();
-                }
-                else 
-                {
-                    productFromDb.Image = null;
-                }
-
-                productFromDb.ImageId = entity.ImageId;
                 productFromDb.Updated = DateTime.Now;
 
                 await _productRepository.Update(productFromDb);

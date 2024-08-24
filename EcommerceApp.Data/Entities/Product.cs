@@ -9,10 +9,9 @@ namespace EcommerceApp.Data.Entities
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public int? ImageId { get; set; }
-        public Image? Image { get; set; }
 
-        //navigation property for many to many
-        public ICollection<ProductImage> ProductImages { get; set; }
+        public string? ImageUrl { get; set; }
+        public int? CategoryId { get; set; }
+        public Category? Category { get; set; } // navigation property
     }
 }

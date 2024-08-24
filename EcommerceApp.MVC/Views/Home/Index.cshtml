@@ -8,12 +8,8 @@
     <div class="row d-flex">
         @foreach (var product in Model)
         {
-            <div class="col-3">
+            <div class="col-3 mb-3">
                 <div class="card" style="width: 18rem;">
-                    @if (product.Image != null)
-                    {
-                        <img class="card-img-top" src="..." alt="Card image cap">
-                    }
                     <div class="card-body">
                         <h5 class="card-title">@product.Name</h5>
                         <p class="card-text">@product.Description</p>

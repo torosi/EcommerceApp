@@ -13,7 +13,6 @@ namespace EcommerceApp.Domain.Dtos
         public DateTime Updated { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public int? ImageId { get; set; }
-        public ImageDto? Image { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

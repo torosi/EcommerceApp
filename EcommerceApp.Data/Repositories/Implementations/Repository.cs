@@ -25,9 +25,19 @@ namespace EcommerceApp.Data.Repositories.Implementations
             await _dbSet.AddAsync(entity);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync() // you could also add an expression filter here to get a filtered collection -- look at bulky project
+        public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null) // you could also add an expression filter here to get a filtered collection -- look at bulky project
         {
-            return await _dbSet.ToListAsync();
+            IQueryable<T> query = _dbSet;
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var property in includeProperties.Split(new Char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(property);
+                }
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter)

@@ -22,45 +22,7 @@ namespace EcommerceApp.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EcommerceApp.Data.Entities.ProductImage", b =>
-                {
-                    b.Property<int?>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId", "ImageId");
-
-                    b.HasIndex("ImageId");
-
-                    b.ToTable("ProductImages");
-                });
-
-            modelBuilder.Entity("EcommerceApp.Domain.Models.Image", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte[]>("ImageData")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("EcommerceApp.Domain.Models.Product", b =>
+            modelBuilder.Entity("EcommerceApp.Data.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,8 +37,38 @@ namespace EcommerceApp.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ImageId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("EcommerceApp.Data.Entities.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -87,7 +79,7 @@ namespace EcommerceApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ImageId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
@@ -313,7 +305,7 @@ namespace EcommerceApp.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("EcommerceApp.Domain.Models.ApplicationUser", b =>
+            modelBuilder.Entity("EcommerceApp.Data.Entities.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -341,32 +333,13 @@ namespace EcommerceApp.Data.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
-            modelBuilder.Entity("EcommerceApp.Data.Entities.ProductImage", b =>
+            modelBuilder.Entity("EcommerceApp.Data.Entities.Product", b =>
                 {
-                    b.HasOne("EcommerceApp.Domain.Models.Image", "Image")
-                        .WithMany("ProductImages")
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("EcommerceApp.Data.Entities.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
 
-                    b.HasOne("EcommerceApp.Domain.Models.Product", "Product")
-                        .WithMany("ProductImages")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Image");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("EcommerceApp.Domain.Models.Product", b =>
-                {
-                    b.HasOne("EcommerceApp.Domain.Models.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId");
-
-                    b.Navigation("Image");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -420,14 +393,9 @@ namespace EcommerceApp.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EcommerceApp.Domain.Models.Image", b =>
+            modelBuilder.Entity("EcommerceApp.Data.Entities.Category", b =>
                 {
-                    b.Navigation("ProductImages");
-                });
-
-            modelBuilder.Entity("EcommerceApp.Domain.Models.Product", b =>
-                {
-                    b.Navigation("ProductImages");
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }
