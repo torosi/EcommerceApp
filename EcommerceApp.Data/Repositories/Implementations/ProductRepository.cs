@@ -16,9 +16,9 @@ namespace EcommerceApp.Data.Repositories.Implementations
             _context = context;
         }
 
-        public Task Update(Product product)
+        public void Update(Product product)
         {
-            throw new NotImplementedException();
+            _context.Products.Update(product);
         }
     }
 }

@@ -9,6 +9,6 @@ namespace EcommerceApp.Data.Repositories.Contracts
 {
     public interface IProductRepository : IRepository<Product>
     {
-        public Task Update(Product product);
+        public void Update(Product product);
     }
 }

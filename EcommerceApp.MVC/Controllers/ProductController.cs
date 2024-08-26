@@ -59,8 +59,6 @@ namespace EcommerceApp.MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
-
                     if (file != null)
                     {
                         string wwwRootPath = _webHostEnvironment.WebRootPath;
@@ -91,5 +89,7 @@ namespace EcommerceApp.MVC.Controllers
 
             return RedirectToAction("Index");
         }
+
+        
     }
 }

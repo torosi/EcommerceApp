@@ -60,7 +60,7 @@ namespace EcommerceApp.Domain.Services.Implementations
                 productFromDb.Name = entity.Name;
                 productFromDb.Updated = DateTime.Now;
 
-                await _productRepository.Update(productFromDb);
+                _productRepository.Update(productFromDb);
                 await _productRepository.SaveChangesAsync();
             }
         }
