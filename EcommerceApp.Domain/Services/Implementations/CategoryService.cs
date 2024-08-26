@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Dtos;
