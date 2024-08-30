@@ -4,11 +4,14 @@ using EcommerceApp.Data.Repositories.Implementations;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Automapper;
+using EcommerceApp.MVC.Helpers;
 using EcommerceApp.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System.Drawing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +33,12 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+// The ImageHelper class is registered as a singleton service using AddSingleton<ImageHelper>().
+// This means that a single instance of ImageHelper will be created and shared throughout the application.
+builder.Services.AddSingleton<ImageHelper>();
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 

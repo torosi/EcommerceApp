@@ -2,6 +2,7 @@
 using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
+using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models;
 using EcommerceApp.MVC.Models.Product;
 using Microsoft.AspNetCore.Authorization;
@@ -16,12 +17,14 @@ namespace EcommerceApp.MVC.Controllers
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
         private IWebHostEnvironment _webHostEnvironment;
+        private readonly ImageHelper _imageHelper;
 
-        public ProductController(IProductService productService, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+        public ProductController(IProductService productService, IMapper mapper, IWebHostEnvironment webHostEnvironment, ImageHelper imageHelper)
         {
             _productService = productService;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
+            _imageHelper = imageHelper;
         }
 
         public async Task<IActionResult> Index()
@@ -61,25 +64,16 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     if (file != null)
                     {
-                        string wwwRootPath = _webHostEnvironment.WebRootPath;
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); // set the filename to a random new guid
-                        string productPath = Path.Combine(wwwRootPath, @"images\product"); // www root folder, images
-
-                        // save file
-                        using (var stream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                        {
-                            await file.CopyToAsync(stream);
-                        };
+                        var imageUrl = await _imageHelper.UploadImageAsync(file, @"images\product");
 
                         // set view model image url
-                        createProduct.Product.ImageUrl = @"\images\product\" + fileName;
+                        createProduct.Product.ImageUrl = imageUrl;
                     }
 
                     var productDto = _mapper.Map<ProductDto>(createProduct.Product);
 
                     // call our service
                     await _productService.AddAsync(productDto);
-
                 }
             }
             catch (Exception ex)

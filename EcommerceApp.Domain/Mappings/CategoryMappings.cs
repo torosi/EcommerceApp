@@ -18,6 +18,7 @@ namespace EcommerceApp.Domain.Mappings
                 Updated = category.Updated,
                 Created = category.Created,
                 Description = category.Description,
+                ImageUrl = category.ImageUrl,
             };
         }
 
@@ -30,6 +31,7 @@ namespace EcommerceApp.Domain.Mappings
                 Updated = categoryDto.Updated,
                 Created = categoryDto.Created,
                 Description = categoryDto.Description,
+                ImageUrl = categoryDto.ImageUrl,
             };
         }
 
