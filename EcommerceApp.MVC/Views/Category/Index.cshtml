@@ -5,5 +5,36 @@
 }
 
 <div class="container">
-    
+    <div class="row">
+        <div class="col">
+            <h3>Categories</h3>
+        </div>
+        <div class="col">
+            <a asp-action="Create" class="btn btn-primary float-end">Add New Category <i class="bi bi-plus-circle"></i></a>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Created</th>
+                <th scope="col">Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.Name</td>
+                    <td>@category.Description</td>
+                    <td>@category.Created</td>
+                    <td>@category.Updated</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
 </div>
