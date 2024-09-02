@@ -91,6 +91,29 @@ namespace EcommerceApp.MVC.Controllers
 
             return RedirectToAction("Index");
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> Edit(int categoryId)
+        {
+            try 
+            {
+                var categoryDto = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == categoryId);
+
+                if (categoryDto != null)
+                {
+                    var cateogryViewModel = _mapper.Map<CategoryViewModel>(categoryDto);
+                    return View(cateogryViewModel);
+                } 
+
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
 
     }
 }
