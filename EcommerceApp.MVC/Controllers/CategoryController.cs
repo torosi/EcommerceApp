@@ -113,6 +113,101 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(CategoryViewModel category, IFormFile file)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // 1) get the category from db
+                    var categoryFromDb = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == category.Id);
+
+                    // 2) update category
+                    if (categoryFromDb != null)
+                    {
+                        // check if we need to upload a new image
+                        if (file != null) // there is already an existing image and we need to upload a new one
+                        {
+                            // check if there is already an image, if so then we need to remove it first and then upload the next one
+                            if (!string.IsNullOrEmpty(categoryFromDb.ImageUrl)) // there is already an image so we need to delete it
+                            {
+                                var isDeleted = _imageHelper.DeleteImage(categoryFromDb.ImageUrl);
+                                // what should we do if the image couldnt be deleted?
+                                // if (!isDeleted)
+                                // {
+                                    
+                                // }
+                            }
+
+                            // upload new image
+                            var imageUrl = await _imageHelper.UploadImageAsync(file, @"images\category");
+
+                            categoryFromDb.ImageUrl = imageUrl;
+                        }
+
+                        categoryFromDb.Name = category.Name;
+                        categoryFromDb.Description = category.Description;
+
+                        // 3) save changes
+                        await _categoryService.UpdateAsync(categoryFromDb);
+
+                        // 4) redirect to index page
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            // if not updated successfully then go back to view
+            return View(category);
+        }
+
+
+
+        #region API CALLS
+
+
+        // 1) get the cateogry from db
+        // 2) if null then return out
+        // 3) if there is an image then will need to remove this
+        // 4) remove cateogry from db
+        // 5) return out
+        public async Task<IActionResult> Delete(int categoryId)
+        {
+            try 
+            {
+                var categoryFromDb = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == categoryId);
+                if (categoryFromDb == null)
+                {
+                    return Json(new { success = false, message = "Error while deleting - category not found" });
+                }
+
+                if (categoryFromDb.ImageUrl != null)
+                {
+                    var isDeleted = _imageHelper.DeleteImage(categoryFromDb.ImageUrl);
+
+                    if (!isDeleted) // if the image could not be deleted then we want to return out, otherwise we will end up with load of undeleted images
+                    {
+                        return Json(new { success = false, message = "Error while deleting - could not delete image" });
+                    }
+                }
+
+                await _categoryService.RemoveAsync(categoryFromDb);
+
+                return Json(new { success = true, message = "Delete Successful" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        #endregion
 
 
     }

@@ -29,5 +29,30 @@ namespace EcommerceApp.MVC.Helpers
 
             return imageUrl;
         }
+
+        public bool DeleteImage(string imageUrl)
+        {
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string finalPath = Path.Combine(wwwRootPath, imageUrl.TrimStart('\\'));
+
+            if (Directory.Exists(finalPath))
+            {
+                // string[] filePaths = Directory.GetFiles(finalPath);
+                // foreach (string filePath in filePaths)
+                // {
+                //     System.IO.File.Delete(filePath);
+                // }
+                if (System.IO.File.Exists(finalPath))
+                {
+                    System.IO.File.Delete(finalPath);
+                }
+
+                // Directory.Delete(finalPath);
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }
