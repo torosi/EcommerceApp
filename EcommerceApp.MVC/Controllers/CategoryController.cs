@@ -75,7 +75,7 @@ namespace EcommerceApp.MVC.Controllers
             {
                 if (file != null)
                 {
-                    var imageUrl = await _imageHelper.UploadImageAsync(file, @"images\category");
+                    var imageUrl = await _imageHelper.UploadImageAsync(file, "category");
 
                     categoryViewModel.ImageUrl = imageUrl;
                 }
@@ -141,7 +141,7 @@ namespace EcommerceApp.MVC.Controllers
                             }
 
                             // upload new image
-                            var imageUrl = await _imageHelper.UploadImageAsync(file, @"images\category");
+                            var imageUrl = await _imageHelper.UploadImageAsync(file, "category");
 
                             categoryFromDb.ImageUrl = imageUrl;
                         }

@@ -16,7 +16,7 @@ namespace EcommerceApp.MVC.Helpers
         public async Task<string> UploadImageAsync(IFormFile imageFile, string imagePath = @"images")
         {
             string wwwRootPath = _webHostEnvironment.WebRootPath;
-            string fullImagePath = Path.Combine(wwwRootPath, imagePath); // @"\images\product"
+            string fullImagePath = Path.Combine(wwwRootPath, "images", imagePath); // @"\images\product"
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName); // set the filename to a random new guid
 
             // save file
@@ -25,7 +25,7 @@ namespace EcommerceApp.MVC.Helpers
                 await imageFile.CopyToAsync(stream);
             };
 
-            string imageUrl = "\\" + imagePath + "\\" + fileName; // need to add forward slash to image url so it is saved that way in db
+            string imageUrl = "\\images\\" + imagePath + "\\" + fileName; // need to add forward slash to image url so it is saved that way in db
 
             return imageUrl;
         }

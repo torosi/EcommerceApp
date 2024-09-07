@@ -64,7 +64,7 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     if (file != null)
                     {
-                        var imageUrl = await _imageHelper.UploadImageAsync(file, @"images\product");
+                        var imageUrl = await _imageHelper.UploadImageAsync(file, "product");
 
                         // set view model image url
                         createProduct.Product.ImageUrl = imageUrl;
