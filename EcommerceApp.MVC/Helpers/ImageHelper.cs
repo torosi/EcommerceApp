@@ -25,30 +25,29 @@ namespace EcommerceApp.MVC.Helpers
                 await imageFile.CopyToAsync(stream);
             };
 
-            string imageUrl = "\\" + imagePath + fileName; // need to add forward slash to image url so it is saved that way in db
+            string imageUrl = "\\" + imagePath + "\\" + fileName; // need to add forward slash to image url so it is saved that way in db
 
             return imageUrl;
         }
 
         public bool DeleteImage(string imageUrl)
         {
+            // Check if the imageUrl is null or empty
+            if (string.IsNullOrWhiteSpace(imageUrl))
+            {
+                return false; // Invalid input
+            }
+
             string wwwRootPath = _webHostEnvironment.WebRootPath;
             string finalPath = Path.Combine(wwwRootPath, imageUrl.TrimStart('\\'));
 
-            if (Directory.Exists(finalPath))
+            // Normalize the path to ensure it's absolute and safe
+            finalPath = Path.GetFullPath(finalPath);
+
+            // Check if the file exists
+            if (System.IO.File.Exists(finalPath))
             {
-                // string[] filePaths = Directory.GetFiles(finalPath);
-                // foreach (string filePath in filePaths)
-                // {
-                //     System.IO.File.Delete(filePath);
-                // }
-                if (System.IO.File.Exists(finalPath))
-                {
-                    System.IO.File.Delete(finalPath);
-                }
-
-                // Directory.Delete(finalPath);
-
+                System.IO.File.Delete(finalPath); // Delete the file
                 return true;
             }
 

@@ -92,7 +92,7 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction("Index");
         }
         
-        [HttpGet]
+        [HttpGet("Edit")]
         public async Task<IActionResult> Edit(int categoryId)
         {
             try 
@@ -113,8 +113,8 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(CategoryViewModel category, IFormFile file)
+        [HttpPost("Edit")]
+        public async Task<IActionResult> Edit(CategoryViewModel category, IFormFile? file)
         {
             try
             {
@@ -134,10 +134,10 @@ namespace EcommerceApp.MVC.Controllers
                             {
                                 var isDeleted = _imageHelper.DeleteImage(categoryFromDb.ImageUrl);
                                 // what should we do if the image couldnt be deleted?
-                                // if (!isDeleted)
-                                // {
-                                    
-                                // }
+                                if (!isDeleted)
+                                {
+                                    throw new Exception("Failed uploading new image - Unable to delete old image");
+                                }
                             }
 
                             // upload new image
@@ -176,6 +176,7 @@ namespace EcommerceApp.MVC.Controllers
         // 3) if there is an image then will need to remove this
         // 4) remove cateogry from db
         // 5) return out
+        [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int categoryId)
         {
             try 

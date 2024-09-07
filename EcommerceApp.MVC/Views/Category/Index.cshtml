@@ -31,6 +31,9 @@
                     <td>@category.Description</td>
                     <td>@category.Created</td>
                     <td>@category.Updated</td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="Category" asp-route-categoryId="@category.Id" class="btn btn-secondary">Edit</a>
+                    </td>
                 </tr>
             }
         </tbody>
