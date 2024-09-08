@@ -5,18 +5,31 @@
 }
 
 <div class="container">
-    <div class="row d-flex">
+    <div class="row d-flex gx-3 gy-3">
         @foreach (var product in Model)
         {
-            <div class="col-3 mb-3">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text">@product.Description</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
+            @if (!string.IsNullOrEmpty(product.ImageUrl))
+            {
+                <div class="card border-0 img-fluid col-3">
+                    <a href="#" class="text-decoration-none text-dark">
+                        <img class="card-img-top product-image" src="@(product.ImageUrl)" alt="Card image" style="width:100%">
+                        @* <div class="card-img-overlay d-flex align-items-end p-3 fw-bolder">
+                            <p class="card-title text-dark h2">@product.Name</p>
+                        </div> *@
+                    </a>
                 </div>
-            </div>
+            } 
+            else
+            {
+                <div class="card border-0 img-fluid col-3">
+                    <a href="#" class="text-decoration-none text-dark">
+                        <img class="card-img-top product-image" src="\images\placeholder.jpg" alt="Card image" style="width:100%">
+                         @* <div class="card-img-overlay d-flex align-items-end p-3 fw-bolder">
+                             <p class="card-title text-dark h2">@product.Name</p>
+                         </div> *@
+                    </a>
+                </div>
+            }
         }
     </div>
 </div>
