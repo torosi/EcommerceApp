@@ -19,6 +19,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -37,7 +38,11 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
                             </li>
                         }
-
+                    </ul>
+                    <ul class="navbar-nav" id="category-list">
+                        <li class="nav-item" id="loading-categories">
+                            <span class="nav-link">Loading categories...</span>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -58,6 +63,35 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetAllCategories", "Category")',
+                type: 'GET',
+                success: function (response) {
+                    $('#loading-categories').remove(); // Remove loading text
+                    var categoryList = $('#category-list');
+                    // Check if the data contains categories
+                    if (response.data && response.data.length > 0) {
+                        // Iterate through each category
+                        $.each(response.data, function (index, category) {
+                            console.log(category.Name);
+                            var listItem = $('<li class="nav-item"></li>');
+                            var link = $('<a class="nav-link"></a>')
+                                .attr('href', '/Home/Category/' + category.id) // Ensure this matches your route
+                                .text(category.name); // Ensure category.name exists in your model
+                            listItem.append(link);
+                            categoryList.append(listItem);
+                        });
+                    }
+                },
+                error: function (ex) {
+                    console.error("Failed to load categories.");
+                    console.log(ex);
+                }
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

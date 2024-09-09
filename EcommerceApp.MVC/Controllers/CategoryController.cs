@@ -208,6 +208,31 @@ namespace EcommerceApp.MVC.Controllers
             }
         }
 
+        [HttpGet("GetAllCategories")]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            try 
+            {
+                var categoryDtos = await _categoryService.GetAllAsync();
+
+                // Handle null or empty list
+                if (categoryDtos == null || !categoryDtos.Any())
+                {
+                    return Json(new { success = false, data = new List<CategoryViewModel>() });
+                }
+
+                var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDtos);
+
+                return Json(new { success = true, data = categoryViewModels.ToList() });
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         #endregion
 
 
