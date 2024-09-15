@@ -29,15 +29,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
 
-                        @if (User.IsInRole(UserRoles.Admin))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
-                            </li>
-                        }
+                        
                         
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,6 +41,25 @@
                                 </li>
                             </ul>
                         </li>
+
+
+
+                        @if (User.IsInRole(UserRoles.Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu" id="category-list" aria-labelledby="adminDropdown">
+                                    <li class="dropdown-item" id="admin-category">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
+                                    </li>
+                                    <li class="dropdown-item" id="admin-product">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
 
                     </ul>
                     
@@ -70,6 +81,7 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         $(document).ready(function () {
@@ -94,7 +106,6 @@
                 },
                 error: function (ex) {
                     console.error("Failed to load categories.");
-                    console.log(ex);
                 }
             });
         });
