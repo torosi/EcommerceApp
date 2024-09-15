@@ -64,6 +64,14 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     if (file != null)
                     {
+                        if (!_imageHelper.IsImageFile(file)) //TODO: THIS NEED TESTING
+                        {
+                            // Add an error to the ModelState
+                            ModelState.AddModelError("File", "The uploaded file is not a valid image.");
+                            // Return the view with the current model to show errors
+                            return View(createProduct);
+                        }
+
                         var imageUrl = await _imageHelper.UploadImageAsync(file, "product");
 
                         // set view model image url
@@ -84,8 +92,5 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction("Index");
         }
 
-        
-
-        
     }
 }

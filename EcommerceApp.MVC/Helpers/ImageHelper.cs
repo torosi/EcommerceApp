@@ -53,5 +53,33 @@ namespace EcommerceApp.MVC.Helpers
 
             return false;
         }
+
+        /// <summary>
+        /// This is a method to check that a file is an image. We do not want to allow images to be uploaded that are not a correct image file type.
+        /// </summary>
+        /// <param name="file">IFormFile file type to be validated</param>
+        /// <returns></returns>
+        public bool IsImageFile(IFormFile file)
+        {
+            // List of allowed image content types
+            var allowedContentTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/bmp" };
+            // List of allowed file extensions
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+
+            // Check the file's content type
+            if (!allowedContentTypes.Contains(file.ContentType.ToLower()))
+            {
+                return false;
+            }
+
+            // Check the file's extension
+            var extension = Path.GetExtension(file.FileName).ToLower();
+            if (!allowedExtensions.Contains(extension))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

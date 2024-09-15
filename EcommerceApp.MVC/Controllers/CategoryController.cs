@@ -75,6 +75,14 @@ namespace EcommerceApp.MVC.Controllers
             {
                 if (file != null)
                 {
+                    if (!_imageHelper.IsImageFile(file))
+                    {
+                        // Add an error to the ModelState
+                        ModelState.AddModelError("File", "The uploaded file is not a valid image.");
+                        // Return the view with the current model to show errors
+                        return View(categoryViewModel);
+                    }
+
                     var imageUrl = await _imageHelper.UploadImageAsync(file, "category");
 
                     categoryViewModel.ImageUrl = imageUrl;
@@ -164,6 +172,30 @@ namespace EcommerceApp.MVC.Controllers
 
             // if not updated successfully then go back to view
             return View(category);
+        }
+
+
+        [HttpGet("details")]
+        public async Task<IActionResult> Details(int categoryId)
+        {
+            try
+            {
+                var categoryDto = await _categoryService.GetFirstOrDefaultAsync(x => x.Id==categoryId);
+
+                if (categoryDto == null)
+                {
+                    return NotFound();
+                }
+
+                var categoryViewModel = _mapper.Map<CategoryViewModel>(categoryDto);
+
+                return View(categoryViewModel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction(nameof(Index));
+            }
         }
 
 
