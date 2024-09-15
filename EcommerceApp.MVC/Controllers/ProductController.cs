@@ -56,7 +56,7 @@ namespace EcommerceApp.MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProductViewModel createProduct, IFormFile file)
+        public async Task<IActionResult> Create(CreateProductViewModel createProduct, IFormFile? file)
         {
             try
             {
