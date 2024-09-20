@@ -40,9 +40,16 @@ namespace EcommerceApp.Data.Repositories.Implementations
             return await query.ToListAsync();
         }
 
-        public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter)
+        public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, bool tracked = true)
         {
-            return await _dbSet.Where(filter).FirstOrDefaultAsync();
+            IQueryable<T> query = _dbSet;
+
+            if (!tracked)
+            {
+                query = query.AsNoTracking();
+            }
+
+            return await query.Where(filter).FirstOrDefaultAsync();
         }
 
         public void Remove(T entity)

@@ -10,10 +10,11 @@ namespace EcommerceApp.Domain.Services.Implementations
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
-        
-        public CategoryService(ICategoryRepository categoryRepository)
+        private readonly IProductRepository _productRepository;
+        public CategoryService(ICategoryRepository categoryRepository, IProductRepository productRepository)
         {
             _categoryRepository =  categoryRepository;
+            _productRepository = productRepository;
         }
 
         public async Task AddAsync(CategoryDto entity)
@@ -26,16 +27,16 @@ namespace EcommerceApp.Domain.Services.Implementations
             await _categoryRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetAllAsync()
+        public async Task<IEnumerable<CategoryDto>> GetAllAsync(int? limit = null)
         {
-            var categories = await _categoryRepository.GetAllAsync();
+            var categories = await _categoryRepository.GetAllAsync(limit : limit);
             var categoryDtos = categories.Select(c => c.ToDto());
             return categoryDtos;
         }
 
-        public async Task<CategoryDto?> GetFirstOrDefaultAsync(Expression<Func<Category, bool>> filter)
+        public async Task<CategoryDto?> GetFirstOrDefaultAsync(Expression<Func<Category, bool>> filter, bool tracked = true)
         {
-            var category = await _categoryRepository.GetFirstOrDefaultAsync(filter);
+            var category = await _categoryRepository.GetFirstOrDefaultAsync(filter, tracked);
             if (category == null) return null;
             return category.ToDto();
         }
@@ -43,6 +44,22 @@ namespace EcommerceApp.Domain.Services.Implementations
         public async Task RemoveAsync(CategoryDto entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+
+            // we need to remove the categoryid from all of the products that currently have this category
+            var products = await _productRepository.GetAllAsync(filter: x => x.CategoryId == entity.Id);
+            // if there are any products in this category, then we need to remove them from category first
+            if (products.Any())
+            {
+                foreach (var product in products)
+                {
+                    product.CategoryId = null;
+                }
+
+                _productRepository.UpdateRange(products);
+                await _productRepository.SaveChangesAsync();
+            }
+
             _categoryRepository.Remove(entity.ToEntity());
             await _categoryRepository.SaveChangesAsync();
         }

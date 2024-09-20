@@ -1,6 +1,7 @@
 using AutoMapper;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Models;
+using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -12,33 +13,38 @@ namespace EcommerceApp.MVC.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
+        private readonly ICategoryService _categoryService;
 
-        public HomeController(ILogger<HomeController> logger, IProductService productService, IMapper mapper)
+        public HomeController(ILogger<HomeController> logger, IProductService productService, IMapper mapper, ICategoryService categoryService)
         {
             _logger = logger;
             _productService = productService;
             _mapper = mapper;
+            _categoryService = categoryService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var productViewModels = new List<ProductViewModel>();
-
-            try 
+            try
             {
-                var products = await _productService.GetAllAsync();
+                var categoryDtos = await _categoryService.GetAllAsync(6); // change this to get top x amount
+                var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDtos);
 
-                if (products.Any())
+                var homeViewModel = new HomePageViewModel();
+
+                if (categoryViewModels.Any())
                 {
-                    productViewModels = _mapper.Map<IEnumerable<ProductViewModel>>(products).ToList();
+                    homeViewModel.Categories = categoryViewModels.ToList();
                 }
+
+                return View(homeViewModel);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
 
-            return View(productViewModels);
         }
 
         public IActionResult Privacy()

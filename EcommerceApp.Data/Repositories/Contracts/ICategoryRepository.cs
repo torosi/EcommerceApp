@@ -9,5 +9,6 @@ namespace EcommerceApp.Data.Repositories.Contracts
     public interface ICategoryRepository : IRepository<Category>
     {
         public void Update(Category category);
+        public Task<IEnumerable<Category>> GetAllAsync(string? includeProperties = null, int? limit = null);
     }
 }

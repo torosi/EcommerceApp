@@ -175,7 +175,7 @@ namespace EcommerceApp.MVC.Controllers
         }
 
 
-        [HttpGet("details")]
+        [HttpGet("Details")]
         public async Task<IActionResult> Details(int categoryId)
         {
             try
@@ -198,17 +198,72 @@ namespace EcommerceApp.MVC.Controllers
             }
         }
 
+        [HttpGet("Delete")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var categoryDto = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == id);
+               
+                if (categoryDto == null)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var categoryViewModel = _mapper.Map<CategoryViewModel>(categoryDto);
+                return View(categoryViewModel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpPost("Delete")]
+        public async Task<IActionResult> Delete(CategoryViewModel category)
+        {
+            try
+            {
+                var categoryFromDb = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == category.Id, tracked: false);
+                if (categoryFromDb == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The category could not be found.");
+                    return View(category);
+                }
+
+                if (categoryFromDb.ImageUrl != null)
+                {
+                    var isDeleted = _imageHelper.DeleteImage(categoryFromDb.ImageUrl);
+
+                    //if (!isDeleted) // if the image could not be deleted then we want to return out, otherwise we will end up with load of undeleted images
+                    //{
+                    //    ModelState.AddModelError(string.Empty, "Failed to delete the associated image.");
+                    //    return View(category);
+                    //}
+                }
+
+                await _categoryService.RemoveAsync(categoryFromDb);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                ModelState.AddModelError(string.Empty, "An error occurred while attempting to delete the category.");
+                return View(category);
+            }
+        }
 
 
         #region API CALLS
-
 
         // 1) get the cateogry from db
         // 2) if null then return out
         // 3) if there is an image then will need to remove this
         // 4) remove cateogry from db
         // 5) return out
-        [HttpDelete("Delete")]
+        /*[HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int categoryId)
         {
             try 
@@ -238,7 +293,7 @@ namespace EcommerceApp.MVC.Controllers
                 Console.WriteLine(ex);
                 return StatusCode(500, "Internal server error");
             }
-        }
+        }*/
 
         [HttpGet("GetAllCategories")]
         public async Task<IActionResult> GetAllCategories()

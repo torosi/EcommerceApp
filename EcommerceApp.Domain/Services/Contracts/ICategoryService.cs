@@ -14,14 +14,14 @@ namespace EcommerceApp.Domain.Services.Contracts
         /// A method to get all categories
         /// </summary>
         /// <returns>IEnumerable CategoryDto</returns>
-        public Task<IEnumerable<CategoryDto>> GetAllAsync();
+        public Task<IEnumerable<CategoryDto>> GetAllAsync(int? limit = null);
 
         /// <summary>
         /// A method to get the first of default category
         /// </summary>
         /// <param name="filter"></param>
         /// <returns>CategoryDto</returns>
-        public Task<CategoryDto?> GetFirstOrDefaultAsync(Expression<Func<Category, bool>> filter);
+        public Task<CategoryDto?> GetFirstOrDefaultAsync(Expression<Func<Category, bool>> filter, bool tracked = true);
 
         /// <summary>
         /// A method to add a single category

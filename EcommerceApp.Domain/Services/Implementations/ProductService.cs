@@ -26,9 +26,9 @@ namespace EcommerceApp.Domain.Services.Implementations
             await _productRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllAsync()
+        public async Task<IEnumerable<ProductDto>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null)
         {
-            var productEntities = await _productRepository.GetAllAsync();
+            var productEntities = await _productRepository.GetAllAsync(includeProperties, filter);
             return productEntities.Select(x => x.ToDto());
         }
 

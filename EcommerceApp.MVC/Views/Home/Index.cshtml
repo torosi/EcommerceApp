@@ -1,51 +1,143 @@
-﻿@model List<ProductViewModel>
+﻿@model HomePageViewModel
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="container">
-    <div class="row d-flex gx-3 gy-3">
 
-    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel" data-interval="5000">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img class="d-block hero-image" src="\images\banner\banner1.jpg" alt="First slide">
-            </div>
-            <div class="carousel-item">
-              <img class="d-block hero-image" src="\images\banner\banner2.jpg" alt="Second slide">
-            </div>
-            <div class="carousel-item">
-              <img class="d-block hero-image" src="\images\banner\banner3.jpg" alt="Second slide">
+    <div class="row d-flex gx-3 gy-3">
+        <div id="carouselExampleSlidesOnly" class="carousel slide col" data-ride="carousel" data-interval="5000">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block hero-image" src="/images/next/hero-banner.jpg" alt="First slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block hero-image" src="/images/next/hero-banner2.jpg" alt="Second slide">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block hero-image" src="/images/next/hero-banner3.jpg" alt="Second slide">
+                </div>
             </div>
         </div>
     </div>
 
 
-        @foreach (var product in Model)
-        {
-            @if (!string.IsNullOrEmpty(product.ImageUrl))
-            {
-                <div class="card border-0 img-fluid col-3">
-                    <a href="#" class="text-decoration-none text-dark">
-                        <img class="card-img-top product-image" src="@(product.ImageUrl)" alt="Card image" style="width:100%">
-                        @* <div class="card-img-overlay d-flex align-items-end p-3 fw-bolder">
-                            <p class="card-title text-dark h2">@product.Name</p>
-                        </div> *@
+    @if (Model.Categories != null && Model.Categories.Any())
+    {
+
+        var firstCategory = Model.Categories.ElementAtOrDefault(0);
+        var secondCategory = Model.Categories.ElementAtOrDefault(1);
+        var thirdCategory = Model.Categories.ElementAtOrDefault(2);
+
+        <div class="row mt-2">
+            <div class="col pe-1">
+                @if (firstCategory != null)
+                {
+                    <a href="/Category/Details?categoryId=@firstCategory.Id">
+                        <div class="card bg-dark text-white border-0">
+                            <img class="card-img category-image" src="@firstCategory.ImageUrl" alt="@firstCategory.Name">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end gradient-overlay">
+                                <p class="card-title h5">@firstCategory.Name</p>
+                                <p class="card-text text-decoration-underline">Shop Now</p>
+                            </div>
+                        </div>
                     </a>
-                </div>
-            } 
-            else
-            {
-                <div class="card border-0 img-fluid col-3">
-                    <a href="#" class="text-decoration-none text-dark">
-                        <img class="card-img-top product-image" src="\images\placeholder.jpg" alt="Card image" style="width:100%">
-                         @* <div class="card-img-overlay d-flex align-items-end p-3 fw-bolder">
-                             <p class="card-title text-dark h2">@product.Name</p>
-                         </div> *@
+                }
+            </div>
+            
+            <div class="col pe-1 ps-1">
+                @if (secondCategory != null)
+                {
+                    <a href="/Category/Details?categoryId=@secondCategory.Id">
+                        <div class="card bg-dark text-white border-0">
+                            <img class="card-img category-image" src="@secondCategory.ImageUrl" alt="@secondCategory.Name">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end gradient-overlay">
+                                <p class="card-title h5">@secondCategory.Name</p>
+                                <p class="card-text text-decoration-underline">Shop Now</p>
+                            </div>
+                        </div>
                     </a>
-                </div>
-            }
-        }
+                }
+            </div>
+
+            <div class="col ps-1">
+                @if (thirdCategory != null)
+                {
+                    <a href="/Category/Details?categoryId=@thirdCategory.Id">
+                        <div class="card bg-dark text-white border-0">
+                            <img class="card-img category-image" src="@thirdCategory.ImageUrl" alt="@thirdCategory.Name">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end gradient-overlay">
+                                <p class="card-title h5">@thirdCategory.Name</p>
+                                <p class="card-text text-decoration-underline">Shop Now</p>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+
+    <div class="row mt-2">
+        <div class="col-12">
+            <img class="banner-image" src="/images/next/banner-image.jpg" alt="Card image" style="width:100%">
+        </div>
     </div>
+
+    @if (Model.Categories != null && Model.Categories.Any() && Model.Categories.ElementAtOrDefault(3) != null)
+    {
+        var fourthCategory = Model.Categories.ElementAtOrDefault(3);
+        var fithCateogry = Model.Categories.ElementAtOrDefault(4);
+        var sixthCategory = Model.Categories.ElementAtOrDefault(5);
+
+        <div class="row mt-2">
+            <div class="col pe-1">
+                @if (fourthCategory != null)
+                {
+                    <a href="/Category/Details?categoryId=@fourthCategory.Id">
+                        <div class="card bg-dark text-white border-0">
+                            <img class="card-img category-image" src="@fourthCategory.ImageUrl" alt="@fourthCategory.Name">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end gradient-overlay">
+                                <p class="card-title h5">@fourthCategory.Name</p>
+                                <p class="card-text text-decoration-underline">Shop Now</p>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+
+            <div class="col pe-1 ps-1">
+                @if (fithCateogry != null)
+                {
+                    <a href="/Category/Details?categoryId=@fithCateogry.Id">
+                        <div class="card bg-dark text-white border-0">
+                            <img class="card-img category-image" src="@fithCateogry.ImageUrl" alt="@fithCateogry.Name">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end gradient-overlay">
+                                <p class="card-title h5">@fithCateogry.Name</p>
+                                <p class="card-text text-decoration-underline">Shop Now</p>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+
+            <div class="col ps-1">
+                @if (sixthCategory != null)
+                {
+                    <a href="/Category/Details?categoryId=@sixthCategory.Id">
+                        <div class="card bg-dark text-white border-0">
+                            <img class="card-img category-image" src="@sixthCategory.ImageUrl" alt="@sixthCategory.Name">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end gradient-overlay">
+                                <p class="card-title h5">@sixthCategory.Name</p>
+                                <p class="card-text text-decoration-underline">Shop Now</p>
+                            </div>
+                        </div>
+                    </a>
+                }   
+             </div>
+
+        </div>
+    }
+
 </div>

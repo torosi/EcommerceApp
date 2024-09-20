@@ -10,7 +10,7 @@ namespace EcommerceApp.Data.Repositories.Contracts
     public interface IRepository<T> where T : class
     {
         public Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null);
-        public Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter);
+        public Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, bool tracked = true);
         public Task AddAsync(T entity);
         public void Remove(T entity);
         public Task SaveChangesAsync();
