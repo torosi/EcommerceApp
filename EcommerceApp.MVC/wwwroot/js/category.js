@@ -1,6 +1,6 @@
 ﻿
 
-function loadCategories(url, dropdownSelector) {
+function loadCategories(url, dropdownSelector, categoryId) {
     $.ajax({
         url: url,
         type: 'GET',
@@ -14,8 +14,12 @@ function loadCategories(url, dropdownSelector) {
                 $.each(response.data, function (index, category) {
                     categoryList.append($('<option>', {
                         value: category.id,
-                        text: category.name
+                        text: category.name,
+                        selected: category.id === categoryId 
                     }));
+                    console.log(">>> " + category.id)
+                    console.log(">>> " + categoryId)
+                    console.log(">>> " + category.id === categoryId)
                 });
             } else {
                 // Show a message if there are no categories

@@ -18,8 +18,8 @@
             <div class="row">
                 <div class="col-8">
                     <form asp-action="Edit" enctype="multipart/form-data">
-                        <input asp-for="@Model.Id" hidden />
-                        <input asp-for="@Model.ImageUrl" hidden />
+                        <input asp-for="Id" hidden />
+                        <input asp-for="ImageUrl" hidden />
 
                         <div class="form-group">
                             <label asp-for="Name" class="control-label"></label>
@@ -43,7 +43,7 @@
                 </div>
     
                 <div class="col-4">
-                    <img src="@(Model.ImageUrl)" width="100%" />
+                    <img src="@(Model.ImageUrl)" class="w-100"/>
                 </div>
             </div>
         </div>

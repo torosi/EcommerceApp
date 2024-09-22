@@ -33,7 +33,7 @@
             <td>@product.Created</td>
             <td>@product.Updated</td>
             <td>
-                <a asp-action="Edit" asp-controller="Product" asp-route-categoryId="@product.Id" class="btn btn-secondary">
+                <a asp-action="Edit" asp-controller="Product" asp-route-id="@product.Id" class="btn btn-secondary">
                     Edit
                 </a>
                 <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger mx-2">

@@ -129,7 +129,7 @@ namespace EcommerceApp.MVC.Controllers
                 if (ModelState.IsValid)
                 {
                     // 1) get the category from db
-                    var categoryFromDb = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == category.Id);
+                    var categoryFromDb = _mapper.Map<CategoryDto>(category);
 
                     // 2) update category
                     if (categoryFromDb != null)
@@ -142,20 +142,16 @@ namespace EcommerceApp.MVC.Controllers
                             {
                                 var isDeleted = _imageHelper.DeleteImage(categoryFromDb.ImageUrl);
                                 // what should we do if the image couldnt be deleted?
-                                if (!isDeleted)
-                                {
-                                    throw new Exception("Failed uploading new image - Unable to delete old image");
-                                }
+                                //if (!isDeleted)
+                                //{
+                                //    throw new Exception("Failed uploading new image - Unable to delete old image");
+                                //}
                             }
 
                             // upload new image
                             var imageUrl = await _imageHelper.UploadImageAsync(file, "category");
-
                             categoryFromDb.ImageUrl = imageUrl;
                         }
-
-                        categoryFromDb.Name = category.Name;
-                        categoryFromDb.Description = category.Description;
 
                         // 3) save changes
                         await _categoryService.UpdateAsync(categoryFromDb);

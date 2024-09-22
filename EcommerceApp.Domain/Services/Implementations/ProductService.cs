@@ -59,6 +59,8 @@ namespace EcommerceApp.Domain.Services.Implementations
                 productFromDb.Description = entity.Description;
                 productFromDb.Name = entity.Name;
                 productFromDb.Updated = DateTime.Now;
+                productFromDb.ImageUrl = entity.ImageUrl;
+                productFromDb.CategoryId = entity.CategoryId;
 
                 _productRepository.Update(productFromDb);
                 await _productRepository.SaveChangesAsync();

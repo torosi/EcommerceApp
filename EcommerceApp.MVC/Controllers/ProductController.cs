@@ -1,13 +1,8 @@
-﻿using AspNetCore;
-using AutoMapper;
-using EcommerceApp.Domain.Constants;
+﻿using AutoMapper;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
-using EcommerceApp.MVC.Models;
 using EcommerceApp.MVC.Models.Product;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceApp.MVC.Controllers
@@ -121,39 +116,33 @@ namespace EcommerceApp.MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var productFromDb = await _productService.GetFirstOrDefaultAsync(x => x.Id == product.Id);
+                    var productDto = _mapper.Map<ProductDto>(product);
                     
-                    if (productFromDb != null)
+                    if (productDto != null)
                     {
 
                         // 1) check if there is a new file and upload/delete new/old images
                         if (file != null) // there is already an existing image and we need to upload a new one
                         {
                             // check if there is already an image, if so then we need to remove it first and then upload the next one
-                            if (!string.IsNullOrEmpty(productFromDb.ImageUrl)) // there is already an image so we need to delete it
+                            if (!string.IsNullOrEmpty(productDto.ImageUrl)) // there is already an image so we need to delete it
                             {
-                                if (!string.IsNullOrEmpty(productFromDb.ImageUrl)) // there is already an image so we need to delete it
-                                {
-                                    var isDeleted = _imageHelper.DeleteImage(productFromDb.ImageUrl);
-                                    // what should we do if the image couldnt be deleted?
-                                    if (!isDeleted)
-                                    {
-                                        throw new Exception("Failed uploading new image - Unable to delete old image");
-                                    }
-                                }
-                                // upload new image
-                                var imageUrl = await _imageHelper.UploadImageAsync(file, "product");
-                                productFromDb.ImageUrl = imageUrl;
+                                var isDeleted = _imageHelper.DeleteImage(productDto.ImageUrl);
+                                
+                                // what should we do if the image couldnt be deleted?
+                                //if (!isDeleted)
+                                //{
+                                //    throw new Exception("Failed uploading new image - Unable to delete old image");
+                                //}
                             }
+
+                            // upload new image
+                            var imageUrl = await _imageHelper.UploadImageAsync(file, "product");
+                            productDto.ImageUrl = imageUrl;
                         }
 
-                        // 2) Update product
-                        productFromDb.Name = product.Name;
-                        productFromDb.Description = product.Description;
-                        productFromDb.CategoryId = product.CategoryId;
-
                         // 3) Save changes
-                        await _productService.UpdateAsync(productFromDb);
+                        await _productService.UpdateAsync(productDto);
 
                         return RedirectToAction(nameof(Index));
                     }
