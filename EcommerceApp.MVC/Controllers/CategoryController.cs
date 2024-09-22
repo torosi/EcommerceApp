@@ -8,6 +8,7 @@ using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Category;
+using EcommerceApp.MVC.Models.Product;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -18,15 +19,17 @@ namespace EcommerceApp.MVC.Controllers
     {
         private readonly ILogger<CategoryController> _logger;
         private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
         private readonly IMapper _mapper;
         private readonly ImageHelper _imageHelper;
 
-        public CategoryController(ILogger<CategoryController> logger, ICategoryService categoryService, IMapper mapper, ImageHelper imageHelper)
+        public CategoryController(ILogger<CategoryController> logger, ICategoryService categoryService, IMapper mapper, ImageHelper imageHelper, IProductService productService)
         {
             _logger = logger;
             _categoryService = categoryService;
             _mapper = mapper;
             _imageHelper = imageHelper;
+            _productService = productService;
         }
 
         [HttpGet]
@@ -170,7 +173,6 @@ namespace EcommerceApp.MVC.Controllers
             return View(category);
         }
 
-
         [HttpGet("Details")]
         public async Task<IActionResult> Details(int categoryId)
         {
@@ -178,20 +180,30 @@ namespace EcommerceApp.MVC.Controllers
             {
                 var categoryDto = await _categoryService.GetFirstOrDefaultAsync(x => x.Id==categoryId);
 
-                if (categoryDto == null)
+                if (categoryDto != null)
                 {
-                    return NotFound();
+                    // Get products for this category
+                    var productDtos = await _productService.GetAllAsync(filter: x => x.CategoryId == categoryId);
+
+                    // turn into view models
+                    var productViewModels = _mapper.Map<IEnumerable<ProductViewModel>>(productDtos);
+                    var categoryViewModel = _mapper.Map<CategoryViewModel>(categoryDto);
+
+                    var viewCategoryViewModel = new ViewCategoryViewModel()
+                    {
+                        Category = categoryViewModel,
+                        Products = productViewModels.ToList(),
+                    };
+
+                    return View(viewCategoryViewModel);
                 }
-
-                var categoryViewModel = _mapper.Map<CategoryViewModel>(categoryDto);
-
-                return View(categoryViewModel);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return RedirectToAction(nameof(Index));
             }
+            
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet("Delete")]
