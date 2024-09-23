@@ -32,7 +32,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try 
             {
-                var products = await _productService.GetAllAsync();
+                var products = await _productService.GetAllAsync(includeProperties: "ProductVariation");
                 var productViewModels = new List<ProductViewModel>();
 
                 if (products.Any())
@@ -171,6 +171,7 @@ namespace EcommerceApp.MVC.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -193,6 +194,7 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<IActionResult> Delete(ProductViewModel product)
         {

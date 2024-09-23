@@ -17,5 +17,6 @@ namespace EcommerceApp.Domain.Dtos
         public int? CategoryId { get; set; }
         public CategoryDto? Category { get; set; }
         public double Price { get; set; }
+        public ICollection<ProductVariationDto>? Variations { get; set; }
     }
 }

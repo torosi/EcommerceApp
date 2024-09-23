@@ -24,7 +24,7 @@ namespace EcommerceApp.Data
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Product> Products{ get; set; } // context.Products.Include(p => p.Image).ToList(); -- this is how you need to imclude images
-
+        public DbSet<ProductVariation> ProductVariations { get; set; }
         public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -45,16 +45,11 @@ namespace EcommerceApp.Data
                 }
             );
 
-
             // Configure Product-Category relationship
             builder.Entity<Product>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId);
-
-
-
-
 
             base.OnModelCreating(builder);
         }
