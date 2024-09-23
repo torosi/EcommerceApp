@@ -1,6 +1,29 @@
-﻿@model CategoryViewModel
+﻿@model ViewCategoryViewModel
 
 
 <div class="container">
-    <h1>@Model.Name</h1>
+    <div class="row">
+        <div class="col">
+            <h1>@Model.Category.Name</h1>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        @if (Model.Products != null)
+        {
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-2">
+                    <a href="/Product/Details?productId=@product.Id">
+                        <div class="card bg-dark text-white border-0">
+                            <img class="card-img product-image" src="@product.ImageUrl" alt="@product.Name">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end gradient-overlay">
+                                <p class="card-title h5">@product.Name</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+    </div>
 </div>

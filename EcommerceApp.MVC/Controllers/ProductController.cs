@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceApp.MVC.Controllers
@@ -45,12 +47,14 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductViewModel createProduct, IFormFile? file)
         {
@@ -88,6 +92,7 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -109,6 +114,7 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<IActionResult> Edit(ProductViewModel product, IFormFile? file)
         {
