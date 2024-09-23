@@ -1,4 +1,6 @@
-﻿namespace EcommerceApp.MVC.Models.Product
+﻿using EcommerceApp.MVC.Models.Category;
+
+namespace EcommerceApp.MVC.Models.Product
 {
     public class ProductViewModel
     {
@@ -9,5 +11,6 @@
         public DateTime? Updated { get; set; }
         public string? ImageUrl { get; set; }
         public int? CategoryId { get; set; }
+        public CategoryViewModel? Category { get; set; }
     }
 }

@@ -156,5 +156,27 @@ namespace EcommerceApp.MVC.Controllers
             return View(product);
         }
 
+        [HttpGet]
+        public async  Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == id);
+
+                if (productDto != null)
+                {
+                    var productViewModel = _mapper.Map<ProductViewModel>(productDto);
+
+                    return View(productViewModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

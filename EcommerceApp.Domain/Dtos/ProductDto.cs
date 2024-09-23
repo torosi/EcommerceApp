@@ -15,6 +15,6 @@ namespace EcommerceApp.Domain.Dtos
         public string Description { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
         public int? CategoryId { get; set; }
-
+        public CategoryDto? Category { get; set; }
     }
 }

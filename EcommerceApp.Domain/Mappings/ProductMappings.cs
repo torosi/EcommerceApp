@@ -22,6 +22,7 @@ namespace EcommerceApp.Domain.Mappings
                 Updated = product.Updated,
                 ImageUrl = product.ImageUrl,
                 CategoryId = product.CategoryId,
+                Category = product.Category != null ? product.Category.ToDto() : null
             };
         }
 

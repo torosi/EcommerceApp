@@ -40,13 +40,21 @@ namespace EcommerceApp.Data.Repositories.Implementations
             return await query.ToListAsync();
         }
 
-        public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, bool tracked = true)
+        public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, bool tracked = true, string? includeProperties = null)
         {
             IQueryable<T> query = _dbSet;
 
             if (!tracked)
             {
                 query = query.AsNoTracking();
+            }
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var property in includeProperties.Split(new Char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(property);
+                }
             }
 
             return await query.Where(filter).FirstOrDefaultAsync();
