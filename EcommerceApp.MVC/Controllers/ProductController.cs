@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using EcommerceApp.Data.Entities;
 using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
+using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EcommerceApp.MVC.Controllers
 {
@@ -64,7 +67,7 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     if (file != null)
                     {
-                        if (!_imageHelper.IsImageFile(file)) //TODO: THIS NEED TESTING
+                        if (!_imageHelper.IsImageFile(file))
                         {
                             // Add an error to the ModelState
                             ModelState.AddModelError("File", "The uploaded file is not a valid image.");
@@ -130,6 +133,12 @@ namespace EcommerceApp.MVC.Controllers
                         // 1) check if there is a new file and upload/delete new/old images
                         if (file != null) // there is already an existing image and we need to upload a new one
                         {
+                            if (!_imageHelper.IsImageFile(file))
+                            {
+                                ModelState.AddModelError("File", "The uploaded file is not a valid image.");
+                                return View(product);
+                            }
+
                             // check if there is already an image, if so then we need to remove it first and then upload the next one
                             if (!string.IsNullOrEmpty(productDto.ImageUrl)) // there is already an image so we need to delete it
                             {
@@ -163,7 +172,7 @@ namespace EcommerceApp.MVC.Controllers
         }
 
         [HttpGet]
-        public async  Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
@@ -183,6 +192,37 @@ namespace EcommerceApp.MVC.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(ProductViewModel product)
+        {
+            try
+            {
+                var productFromDb = await _productService.GetFirstOrDefaultAsync(x => x.Id == product.Id, tracked: false);
+
+                if (productFromDb == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The category could not be found.");
+                    return View(product);
+                }
+
+                if (productFromDb.ImageUrl != null)
+                {
+                    var isDeleted = _imageHelper.DeleteImage(productFromDb.ImageUrl);
+                }
+
+                await _productService.RemoveAsync(productFromDb);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                ModelState.AddModelError(string.Empty, "An error occurred while attempting to delete the category.");
+                return View(product);
+            }
+        }
+
 
     }
 }

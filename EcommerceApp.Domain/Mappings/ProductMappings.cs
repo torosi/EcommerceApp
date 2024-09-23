@@ -22,7 +22,8 @@ namespace EcommerceApp.Domain.Mappings
                 Updated = product.Updated,
                 ImageUrl = product.ImageUrl,
                 CategoryId = product.CategoryId,
-                Category = product.Category != null ? product.Category.ToDto() : null
+                Category = product.Category != null ? product.Category.ToDto() : null,
+                Price = product.Price
             };
         }
 
@@ -36,7 +37,8 @@ namespace EcommerceApp.Domain.Mappings
                 Created = product.Created,
                 Updated = product.Updated,
                 ImageUrl = product.ImageUrl,
-                CategoryId = product.CategoryId
+                CategoryId = product.CategoryId,
+                Price = product.Price
             };
         }
 

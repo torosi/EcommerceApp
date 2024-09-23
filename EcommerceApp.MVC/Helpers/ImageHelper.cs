@@ -62,9 +62,9 @@ namespace EcommerceApp.MVC.Helpers
         public bool IsImageFile(IFormFile file)
         {
             // List of allowed image content types
-            var allowedContentTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/bmp" };
+            var allowedContentTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/bmp", "image/webp" };
             // List of allowed file extensions
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
 
             // Check the file's content type
             if (!allowedContentTypes.Contains(file.ContentType.ToLower()))

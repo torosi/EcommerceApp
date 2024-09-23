@@ -12,5 +12,6 @@ namespace EcommerceApp.MVC.Models.Product
         public string? ImageUrl { get; set; }
         public int? CategoryId { get; set; }
         public CategoryViewModel? Category { get; set; }
+        public double Price { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Mappings;
 using EcommerceApp.Domain.Services.Contracts;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 
 namespace EcommerceApp.Domain.Services.Implementations
@@ -32,9 +33,9 @@ namespace EcommerceApp.Domain.Services.Implementations
             return productEntities.Select(x => x.ToDto());
         }
 
-        public async Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter)
+        public async Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, bool tracked = true)
         {
-            var productEntity = await _productRepository.GetFirstOrDefaultAsync(filter, includeProperties: "Category");
+            var productEntity = await _productRepository.GetFirstOrDefaultAsync(filter, includeProperties: "Category", tracked: tracked);
             if (productEntity == null) return null;
             return productEntity.ToDto(); 
         }

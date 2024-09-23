@@ -13,12 +13,13 @@
         {
             @foreach (var product in Model.Products)
             {
-                <div class="col-2">
-                    <a href="/Product/Details?productId=@product.Id">
-                        <div class="card bg-dark text-white border-0">
+                <div class="col-3">
+                    <a href="/Product/Details?productId=@product.Id" class="text-decoration-none text-dark">
+                        <div class="card border-0">
                             <img class="card-img product-image" src="@product.ImageUrl" alt="@product.Name">
-                            <div class="card-img-overlay d-flex flex-column justify-content-end gradient-overlay">
-                                <p class="card-title h5">@product.Name</p>
+                            <div class="card-body p-1">
+                                <p class="fw-bold mb-0">@product.Name</p>
+                                <p class="mb-0">@product.Price.ToString("c")</p>
                             </div>
                         </div>
                     </a>

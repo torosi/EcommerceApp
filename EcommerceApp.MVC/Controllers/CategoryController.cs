@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EcommerceApp.Data.Entities;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
@@ -80,9 +81,7 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     if (!_imageHelper.IsImageFile(file))
                     {
-                        // Add an error to the ModelState
                         ModelState.AddModelError("File", "The uploaded file is not a valid image.");
-                        // Return the view with the current model to show errors
                         return View(categoryViewModel);
                     }
 
@@ -140,7 +139,12 @@ namespace EcommerceApp.MVC.Controllers
                         // check if we need to upload a new image
                         if (file != null) // there is already an existing image and we need to upload a new one
                         {
-                            // check if there is already an image, if so then we need to remove it first and then upload the next one
+                            if (!_imageHelper.IsImageFile(file))
+                            {
+                                ModelState.AddModelError("File", "The uploaded file is not a valid image.");
+                                return View(category);
+                            }
+
                             if (!string.IsNullOrEmpty(categoryFromDb.ImageUrl)) // there is already an image so we need to delete it
                             {
                                 var isDeleted = _imageHelper.DeleteImage(categoryFromDb.ImageUrl);
@@ -243,12 +247,6 @@ namespace EcommerceApp.MVC.Controllers
                 if (categoryFromDb.ImageUrl != null)
                 {
                     var isDeleted = _imageHelper.DeleteImage(categoryFromDb.ImageUrl);
-
-                    //if (!isDeleted) // if the image could not be deleted then we want to return out, otherwise we will end up with load of undeleted images
-                    //{
-                    //    ModelState.AddModelError(string.Empty, "Failed to delete the associated image.");
-                    //    return View(category);
-                    //}
                 }
 
                 await _categoryService.RemoveAsync(categoryFromDb);

@@ -16,5 +16,6 @@ namespace EcommerceApp.Domain.Dtos
         public string? ImageUrl { get; set; }
         public int? CategoryId { get; set; }
         public CategoryDto? Category { get; set; }
+        public double Price { get; set; }
     }
 }
