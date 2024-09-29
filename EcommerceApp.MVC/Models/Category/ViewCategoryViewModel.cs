@@ -10,5 +10,8 @@ namespace EcommerceApp.MVC.Models.Category
     {
         public CategoryViewModel Category { get; set; }
         public List<ProductViewModel>? Products { get; set; }
+        public int TotalPages { get; set; }
+        public int CurrentPage { get; set; }
+        public int ItemsPerPage { get; set; }
     }
 }

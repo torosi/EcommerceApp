@@ -21,5 +21,6 @@ namespace EcommerceApp.Domain.Services.Contracts
         public Task AddAsync(ProductDto entity);
         public Task RemoveAsync(ProductDto entity);
         public Task UpdateAsync(ProductDto entity);
+        public Task<(int TotalCount, IEnumerable<ProductDto> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20);
     }
 }

@@ -8,6 +8,34 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col">
+            <div>
+                <select class="form-select w-auto" id="itemsPerPage" onchange="ChangeItemsPerPage()">
+                    @if (Model.ItemsPerPage == 5) {
+                        <option value="5" selected>5</option>
+                    } else {
+                        <option value="5">5</option>
+                    }
+                    @if (Model.ItemsPerPage == 20) {
+                        <option value="20" selected>20</option>
+                    } else {
+                        <option value="20">20</option>
+                    }
+                    @if (Model.ItemsPerPage == 50) {
+                        <option value="50" selected>50</option>
+                    } else {
+                        <option value="50">50</option>
+                    }
+                    @if (Model.ItemsPerPage == 100) {
+                        <option value="100" selected>100</option>
+                    } else {
+                        <option value="100">100</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
     <div class="row mt-2">
         @if (Model.Products != null)
         {
@@ -27,4 +55,32 @@
             }
         }
     </div>
+    <div class="row">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Details", new { categoryId = Model.Category.Id, page = i, itemsPerPage = Model.ItemsPerPage })">@i</a>
+                    </li>
+                }
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
+
+
+<script>
+    function ChangeItemsPerPage() {
+        var itemsPerPage = document.getElementById("itemsPerPage").value;
+        var url = '@Url.Action("Details", "Category")' + '?categoryId=' + @Model.Category.Id + '&page=1&itemsPerPage=' + itemsPerPage;
+        console.log(url);
+        window.location.href = url;
+    }
+</script>

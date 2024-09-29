@@ -67,5 +67,14 @@ namespace EcommerceApp.Domain.Services.Implementations
                 await _productRepository.SaveChangesAsync();
             }
         }
+
+
+        public async Task<(int TotalCount, IEnumerable<ProductDto> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20)
+        {
+            var productResult = await _productRepository.GetFilteredProductsAsync(includeProperties, filter, pageNumber, itemsPerPage);
+            var productDtos = productResult.Products.Select(x => x.ToDto());
+            return (productResult.TotalCount, productDtos);
+        }
+
     }
 }

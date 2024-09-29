@@ -51,5 +51,33 @@ namespace EcommerceApp.Data.Repositories.Implementations
             _context.Products.UpdateRange(products);
         }
 
+        /// <summary>
+        /// A method that will apply a filter to get products as well as pagination options.
+        /// Returns the total of number of products also so that you can calculate number of pages if needed.
+        /// </summary>
+        /// <param name="includeProperties"></param>
+        /// <param name="filter"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="itemsPerPage"></param>
+        /// <returns>Returns (totalNumberOfProducts, IEnumerable of your products)</returns>
+        public async Task<(int TotalCount, IEnumerable<Product> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20)
+        {
+            IQueryable<Product> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            int totalCount = await query.CountAsync();
+
+            List<Product> products = await query
+                .Skip((pageNumber - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .ToListAsync();
+
+            return (totalCount, products);
+        }
+
     }
 }

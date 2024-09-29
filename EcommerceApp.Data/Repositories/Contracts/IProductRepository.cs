@@ -13,5 +13,7 @@ namespace EcommerceApp.Data.Repositories.Contracts
         public void Update(Product product);
         public void UpdateRange(IEnumerable<Product> products);
         public Task<IEnumerable<Product>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null);
+        public Task<(int TotalCount, IEnumerable<Product> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20);
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using EcommerceApp.Data.Repositories.Contracts;
+﻿using EcommerceApp.Data.Entities;
+using EcommerceApp.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,8 @@ namespace EcommerceApp.Data.Repositories.Implementations
             await _context.SaveChangesAsync();
         }
 
-        
+
+
 
         // use this method for reference on how to include properties and filters etc
 

@@ -178,7 +178,7 @@ namespace EcommerceApp.MVC.Controllers
         }
 
         [HttpGet("Details")]
-        public async Task<IActionResult> Details(int categoryId)
+        public async Task<IActionResult> Details(int categoryId, int page = 1, int itemsPerPage = 20)
         {
             try
             {
@@ -187,16 +187,23 @@ namespace EcommerceApp.MVC.Controllers
                 if (categoryDto != null)
                 {
                     // Get products for this category
-                    var productDtos = await _productService.GetAllAsync(filter: x => x.CategoryId == categoryId);
+                    var productResult = await _productService.GetFilteredProductsAsync(filter: x => x.CategoryId == categoryId, pageNumber: page, itemsPerPage: itemsPerPage);
 
-                    // turn into view models
-                    var productViewModels = _mapper.Map<IEnumerable<ProductViewModel>>(productDtos);
+                    var productViewModels = new List<ProductViewModel>();
+                    if (productResult.Products.Any())
+                    {
+                        productViewModels = _mapper.Map<IEnumerable<ProductViewModel>>(productResult.Products).ToList();
+                    }
+
                     var categoryViewModel = _mapper.Map<CategoryViewModel>(categoryDto);
 
                     var viewCategoryViewModel = new ViewCategoryViewModel()
                     {
                         Category = categoryViewModel,
-                        Products = productViewModels.ToList(),
+                        Products = productViewModels,
+                        TotalPages = (int)Math.Ceiling((double)productResult.TotalCount / itemsPerPage),
+                        ItemsPerPage = itemsPerPage,
+                        CurrentPage = page
                     };
 
                     return View(viewCategoryViewModel);
