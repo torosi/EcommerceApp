@@ -1,0 +1,30 @@
+﻿@model ProductViewModel
+
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col">
+            <div class="col-4">
+
+            </div>
+            <div class="col-8">
+                <img src="@(Model.ImageUrl)" class="w-100" />
+            </div>
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <p class="h5">@Model.Name</p>
+                    <hr>
+                    <p>@Model.Description</p>
+                    <p>@Model.Price.ToString("c")</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a class="btn btn-primary fw-bold">Add To Basket</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

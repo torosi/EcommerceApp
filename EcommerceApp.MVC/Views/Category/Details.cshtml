@@ -42,7 +42,7 @@
             @foreach (var product in Model.Products)
             {
                 <div class="col-3">
-                    <a href="/Product/Details?productId=@product.Id" class="text-decoration-none text-dark">
+                    <a asp-action="Details" asp-controller="Product" asp-route-productId="@product.Id" class="text-decoration-none text-dark">
                         <div class="card border-0">
                             <img class="card-img product-image" src="@product.ImageUrl" alt="@product.Name">
                             <div class="card-body p-1">

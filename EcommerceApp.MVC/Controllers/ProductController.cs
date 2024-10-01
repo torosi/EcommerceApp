@@ -225,6 +225,25 @@ namespace EcommerceApp.MVC.Controllers
             }
         }
 
+        [HttpGet("Details")]
+        public async Task<IActionResult> Details(int productId)
+        {
+            try
+            {
+                var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
+                if (productDto != null)
+                {
+                    var productViewModel = _mapper.Map<ProductViewModel>(productDto);
+                    return View(productViewModel);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
 
     }
 }
