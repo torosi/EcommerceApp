@@ -8,17 +8,91 @@
     @foreach (var line in Model)
     {
         <div class="row mt-2">
-@*              <div class="col">
-                 <p>@line.Product.Name</p>
-             </div> *@
             <div class="col-3">
                 <img src="@line.Product.ImageUrl" class="w-50"/>
             </div>
-            <div class="col">
-                <p class="h5">@line.Product.Name</p>
-                <p>@((line.Product.Price * line.Count).ToString("c"))</p>
-                <p>@line.Count</p>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col">
+                        <p class="h5">@line.Product.Name</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <p id="total-price-@line.Id">Total: <span class="fw-bold">@((line.Product.Price * line.Count).ToString("c"))</span></p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-8">
+                        <p id="count-@line.Id">Qty: <span class="fw-bold">@line.Count</span></p>
+                    </div>
+                    <div class="col-2">
+                        <a href="javascript:void(0)" id="decrement" class="decrement-btn h5" data-cart-id="@line.Id">
+                            <i class="bi bi-dash-circle-dotted"></i>
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <a href="javascript:void(0)" id="increment" class="increment-btn h5" data-cart-id="@line.Id">
+                            <i class="bi bi-plus-circle-dotted"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <a asp-action="Delete" class="h5 text-danger"><i class="bi bi-trash"></i></a>
+                    </div>
+                </div>
             </div>
         </div>
     }
 </div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '#increment', function() {
+            var cartId = $(this).data('cart-id');
+            $.ajax({
+                url: '@Url.Action("Increment", "ShoppingCart")',
+                type: 'POST',
+                data: { cartId: cartId },
+                success: function (response) {
+                    if (response.success) {
+                        var formattedTotalPrice = new Intl.NumberFormat('en-UK', {
+                            style: 'currency',
+                            currency: 'GBP'
+                        }).format(response.totalPrice);
+
+                        $('#count-' + cartId).html('Qty: <span class="fw-bold">' + response.count + '</span>');
+                        $('#total-price-' + cartId).html('Total: <span class="fw-bold">' + formattedTotalPrice + '</span>');
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '#decrement', function() {
+            var cartId = $(this).data('cart-id');
+            $.ajax({
+                url: '@Url.Action("Decrement", "ShoppingCart")',
+                type: 'POST',
+                data: { cartId: cartId },
+                success: function (response) {
+                    if (response.success) {
+                        var formattedTotalPrice = new Intl.NumberFormat('en-UK', {
+                            style: 'currency',
+                            currency: 'GBP'
+                        }).format(response.totalPrice);
+
+                        $('#count-' + cartId).html('Qty: <span class="fw-bold">' + response.count + '</span>');
+                        $('#total-price-' + cartId).html('Total: <span class="fw-bold">' + formattedTotalPrice + '</span>');
+                    }
+                }
+            });
+        })
+
+    });
+</script>

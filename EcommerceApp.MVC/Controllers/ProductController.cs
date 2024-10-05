@@ -285,7 +285,8 @@ namespace EcommerceApp.MVC.Controllers
                     { 
                         ProductId = cart.Product.Id,
                         ApplicationUserId = userId,
-                        Count = cart.Count
+                        Count = cart.Count,
+                        Id = cart.Id
                     };
 
                     await _shoppingCartService.AddAsync(shoppingCartDto);
