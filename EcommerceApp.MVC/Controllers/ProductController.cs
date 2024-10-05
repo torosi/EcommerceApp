@@ -6,9 +6,12 @@ using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Product;
+using EcommerceApp.MVC.Models.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Security.Claims;
+using System.Web;
 
 namespace EcommerceApp.MVC.Controllers
 {
@@ -16,23 +19,25 @@ namespace EcommerceApp.MVC.Controllers
     public class ProductController : Controller
     {   
         private readonly IProductService _productService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly IMapper _mapper;
         private IWebHostEnvironment _webHostEnvironment;
         private readonly ImageHelper _imageHelper;
 
-        public ProductController(IProductService productService, IMapper mapper, IWebHostEnvironment webHostEnvironment, ImageHelper imageHelper)
+        public ProductController(IProductService productService, IMapper mapper, IWebHostEnvironment webHostEnvironment, ImageHelper imageHelper, IShoppingCartService shoppingCartService)
         {
             _productService = productService;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _imageHelper = imageHelper;
+            _shoppingCartService = shoppingCartService;
         }
 
         public async Task<IActionResult> Index()
         {
             try 
             {
-                var products = await _productService.GetAllAsync(includeProperties: "ProductVariation");
+                var products = await _productService.GetAllAsync();
                 var productViewModels = new List<ProductViewModel>();
 
                 if (products.Any())
@@ -234,7 +239,13 @@ namespace EcommerceApp.MVC.Controllers
                 if (productDto != null)
                 {
                     var productViewModel = _mapper.Map<ProductViewModel>(productDto);
-                    return View(productViewModel);
+                    var shoppingCartViewModel = new ShoppingCartViewModel()
+                    {
+                        Product = productViewModel,
+                        Count = 1
+                    };
+
+                    return View(shoppingCartViewModel);
                 }
             }
             catch (Exception ex)
@@ -243,6 +254,52 @@ namespace EcommerceApp.MVC.Controllers
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpPost("AddToCart")]
+        public async Task<IActionResult> AddToCart(ShoppingCartViewModel cart)
+        {
+            try
+            {
+                // 1) we need the currently logged in user
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+
+                if (claimsIdentity == null) throw new Exception("User could not be found");
+
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                if (userId == null) throw new Exception("User could not be found");
+
+
+                // 2) if there is already a cart item for this product then we want to add the product to the existing one
+                var cartFromDb = await _shoppingCartService.GetFirstOrDefault(x => x.ApplicationUserId == userId && x.ProductId == cart.Product.Id, tracked: false);
+
+                if (cartFromDb != null)
+                {
+                    cartFromDb.Count += cart.Count;
+                    await _shoppingCartService.Update(cartFromDb);
+                }
+                else // 3) if there is no product already then we can just add the new item to cart
+                {
+                    var shoppingCartDto = new ShoppingCartDto()
+                    { 
+                        ProductId = cart.Product.Id,
+                        ApplicationUserId = userId,
+                        Count = cart.Count
+                    };
+
+                    await _shoppingCartService.AddAsync(shoppingCartDto);
+                }
+
+                //return Redirect(Request.Headers["Referer"].ToString()); // takes you to the previous page
+                return RedirectToAction("Index", "Home"); // change to shopping cart
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("Index", "Home");
+            }
         }
 
     }

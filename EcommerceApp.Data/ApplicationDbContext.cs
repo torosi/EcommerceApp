@@ -24,8 +24,9 @@ namespace EcommerceApp.Data
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Product> Products{ get; set; } // context.Products.Include(p => p.Image).ToList(); -- this is how you need to imclude images
-        public DbSet<ProductVariation> ProductVariations { get; set; }
+        //public DbSet<ProductVariation> ProductVariations { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

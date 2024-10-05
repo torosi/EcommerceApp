@@ -19,7 +19,7 @@ namespace EcommerceApp.Domain.Mappings
                 CategoryId = product.CategoryId,
                 Category = product.Category != null ? product.Category.ToDto() : null,
                 Price = product.Price,
-                Variations = product.Variations != null ? product.Variations.Select(x => x.ToDto()).ToList() : null
+                //Variations = product.Variations != null ? product.Variations.Select(x => x.ToDto()).ToList() : null
             };
         }
 
@@ -35,7 +35,7 @@ namespace EcommerceApp.Domain.Mappings
                 ImageUrl = product.ImageUrl,
                 CategoryId = product.CategoryId,
                 Price = product.Price,
-                Variations = product.Variations != null ? product.Variations.Select(x => x.ToEntity()).ToList() : null
+                //Variations = product.Variations != null ? product.Variations.Select(x => x.ToEntity()).ToList() : null
             };
         }
 

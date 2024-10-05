@@ -13,6 +13,6 @@ namespace EcommerceApp.Data.Entities
         public string? ImageUrl { get; set; }
         public int? CategoryId { get; set; }
         public Category? Category { get; set; } // navigation property
-        public virtual ICollection<ProductVariation>? Variations { get; set; }
+        //public virtual ICollection<ProductVariation>? Variations { get; set; }
     }
 }
