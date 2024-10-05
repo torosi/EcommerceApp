@@ -10,5 +10,6 @@ namespace EcommerceApp.Data.Repositories.Contracts
     public interface IShoppingCartRepository : IRepository<ShoppingCart>
     {
         public void Update(ShoppingCart cart);
+        public Task<IEnumerable<ShoppingCart>> GetShoppingCartByUser(string userId);
     }
 }

@@ -1,11 +1,6 @@
 ﻿using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Repositories.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApp.Data.Repositories.Implementations
 {
@@ -21,6 +16,16 @@ namespace EcommerceApp.Data.Repositories.Implementations
         public void Update(ShoppingCart cart)
         {
             _context.ShoppingCarts.Update(cart);
+        }
+
+        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartByUser(string userId)
+        {
+            IQueryable<ShoppingCart> query = _dbSet;
+
+            query = query.Where(x => x.ApplicationUserId == userId);
+            query = query.Include("Product");
+
+            return await query.ToListAsync();
         }
     }
 }

@@ -12,7 +12,8 @@ namespace EcommerceApp.Domain.Mappings
                 Id = cart.Id,
                 ProductId = cart.ProductId,
                 ApplicationUserId = cart.ApplicationUserId,
-                Count = cart.Count
+                Count = cart.Count,
+                Product = cart.Product.ToDto()
             };
         }
 

@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ShoppingCartViewModel>
+
+<div class="container">
+    <div class="row">
+        <p class="h3">My Cart</p>
+    </div>
+
+    @foreach (var line in Model)
+    {
+        <div class="row mt-2">
+@*              <div class="col">
+                 <p>@line.Product.Name</p>
+             </div> *@
+            <div class="col-3">
+                <img src="@line.Product.ImageUrl" class="w-50"/>
+            </div>
+            <div class="col">
+                <p class="h5">@line.Product.Name</p>
+                <p>@((line.Product.Price * line.Count).ToString("c"))</p>
+                <p>@line.Count</p>
+            </div>
+        </div>
+    }
+</div>

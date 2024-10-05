@@ -12,7 +12,8 @@ namespace EcommerceApp.Domain.Services.Contracts
     public interface IShoppingCartService
     {
         public Task AddAsync(ShoppingCartDto cart);
-        public Task<ShoppingCartDto> GetFirstOrDefault(Expression<Func<ShoppingCart, bool>> filter, bool tracked = true);
+        public Task<ShoppingCartDto> GetFirstOrDefaultAsync(Expression<Func<ShoppingCart, bool>> filter, bool tracked = true);
         public Task Update(ShoppingCartDto cart);
+        public Task<IEnumerable<ShoppingCartDto>> GetShoppingCartByUser(string userId);
     }
 }

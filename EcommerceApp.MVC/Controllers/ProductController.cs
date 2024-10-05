@@ -271,9 +271,8 @@ namespace EcommerceApp.MVC.Controllers
 
                 if (userId == null) throw new Exception("User could not be found");
 
-
                 // 2) if there is already a cart item for this product then we want to add the product to the existing one
-                var cartFromDb = await _shoppingCartService.GetFirstOrDefault(x => x.ApplicationUserId == userId && x.ProductId == cart.Product.Id, tracked: false);
+                var cartFromDb = await _shoppingCartService.GetFirstOrDefaultAsync(x => x.ApplicationUserId == userId && x.ProductId == cart.Product.Id, tracked: false);
 
                 if (cartFromDb != null)
                 {
@@ -293,7 +292,7 @@ namespace EcommerceApp.MVC.Controllers
                 }
 
                 //return Redirect(Request.Headers["Referer"].ToString()); // takes you to the previous page
-                return RedirectToAction("Index", "Home"); // change to shopping cart
+                return RedirectToAction("Index", "ShoppingCart"); // change to shopping cart
             }
             catch (Exception ex)
             {
