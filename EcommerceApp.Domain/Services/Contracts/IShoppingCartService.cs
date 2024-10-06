@@ -15,5 +15,6 @@ namespace EcommerceApp.Domain.Services.Contracts
         public Task<ShoppingCartDto> GetFirstOrDefaultAsync(Expression<Func<ShoppingCart, bool>> filter, bool tracked = true);
         public Task Update(ShoppingCartDto cart);
         public Task<IEnumerable<ShoppingCartDto>> GetShoppingCartByUser(string userId);
+        public Task<bool> Remove(int cartId);
     }
 }

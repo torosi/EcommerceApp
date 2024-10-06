@@ -42,6 +42,22 @@ namespace EcommerceApp.Domain.Services.Implementations
             return shoppingCartDtos;
         }
 
+        public async Task<bool> Remove(int cartId)
+        {
+            var shoppingCartEntity = await _shoppingCartRepository.GetFirstOrDefaultAsync(x => x.Id == cartId);
+
+            var success = false;
+
+            if (shoppingCartEntity != null)
+            {
+                _shoppingCartRepository.Remove(shoppingCartEntity);
+                await _shoppingCartRepository.SaveChangesAsync();
+                success = true;
+            }
+
+            return success;
+        }
+
         public async Task Update(ShoppingCartDto cart)
         {
             if (cart == null) throw new ArgumentNullException(nameof(cart));

@@ -2,6 +2,7 @@
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ShoppingCart;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -18,7 +19,7 @@ namespace EcommerceApp.MVC.Controllers
             _mapper = mapper;
         }
 
-
+        [Authorize]
         public async Task<IActionResult> Index()
         {
 
@@ -53,6 +54,8 @@ namespace EcommerceApp.MVC.Controllers
 
             return View();
         }
+
+        
 
 
         #region API Calls
@@ -106,6 +109,21 @@ namespace EcommerceApp.MVC.Controllers
                     count = shoppingCartDto.Count,
                     totalPrice = shoppingCartDto.Count * shoppingCartDto.Product.Price
                 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return Json(new { success = false });
+            }
+        }
+
+        [HttpPost("Delete")]
+        public async Task<IActionResult> Delete(int cartId)
+        {
+            try
+            {
+                var success = await _shoppingCartService.Remove(cartId);
+                return Json(new { success = success });
             }
             catch (Exception ex)
             {

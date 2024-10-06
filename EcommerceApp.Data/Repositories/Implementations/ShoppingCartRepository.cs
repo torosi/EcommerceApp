@@ -27,5 +27,6 @@ namespace EcommerceApp.Data.Repositories.Implementations
 
             return await query.ToListAsync();
         }
+
     }
 }
