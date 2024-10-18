@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
-using System.Reflection.Emit;
 
 // dotnet ef migrations add Initial  --startup-project /Users/thomassimons/Documents/GitHub/EcommerceApp/EcommerceApp.MVC/EcommerceApp.MVC.csproj
 // dotnet ef database update --startup-project C:\Users\thoma\source\repos\EcommerceApp\EcommerceApp.MVC\EcommerceApp.MVC.csproj
@@ -23,10 +21,18 @@ namespace EcommerceApp.Data
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<Product> Products{ get; set; } // context.Products.Include(p => p.Image).ToList(); -- this is how you need to imclude images
-        //public DbSet<ProductVariation> ProductVariations { get; set; }
+
+        public DbSet<Product> Products { get; set; } // context.Products.Include(p => p.Image).ToList(); -- this is how you need to include images
+        public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+
+        public DbSet<Variation> Variations { get; set; }
+        public DbSet<VariationValue> VariationValues { get; set; }
+        public DbSet<VariationType> VariationTypes { get; set; }
+        public DbSet<VariationAttribute> VariationAttributes { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -51,6 +57,17 @@ namespace EcommerceApp.Data
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId);
+
+            builder.Entity<Product>()
+                .HasOne(p => p.ProductType)
+                .WithMany(pt => pt.Products)
+                .HasForeignKey(p => p.ProductTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // we want to make sure that the vartiationattibute class is made up of unique combinations
+            builder.Entity<VariationAttribute>()
+                .HasIndex(va => new { va.ProductVariationId, va.VariationId })
+                .IsUnique();
 
             base.OnModelCreating(builder);
         }
