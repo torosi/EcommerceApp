@@ -1,6 +1,5 @@
 ﻿@model CreateProductViewModel
 
-
 <div class="container">
     <div class="card shadow border-0 mt-4">
         <div class="card-header bg-primary text-white bg-gradient m-lg-0 py-3">
@@ -30,10 +29,17 @@
                     </div>
                     <div class="py-2 col-12">
                         <label asp-for="Product.CategoryId" class="control-label">Category</label>
-                        <select asp-for="Product.CategoryId" class="form-select">
+                        <select asp-for="Product.CategoryId" id="category-drop-down" class="form-select">
                             <option id="loading-categories" disabled selected>Loading...</option>
                         </select>
                         <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                    </div>
+                    <div class="py-2 col-12">
+                        <label asp-for="Product.ProductTypeId" class="control-label">Product Type</label>
+                        <select asp-for="Product.ProductTypeId" id="product-types-drop-down" class="form-select">
+                            <option class="dummy-select-item" disabled selected>Select a Product Type</option>
+                        </select>
+                        <span asp-validation-for="Product.ProductTypeId" class="text-danger"></span>
                     </div>
                     <div class="py-2 col-12">
                         <label class="btn btn-secondary">
@@ -51,11 +57,16 @@
 
 
 @section Scripts {
-    <script src="/js/category.js"></script>
+    <script src="/js/create-product.js"></script>
 
     <script>
         $(document).ready(function () {
-            loadCategories('@Url.Action("GetAllCategories", "Category")', '[name="Product.CategoryId"]');
+            init(
+                '@Url.Action("GetAllProductTypes", "ProductType")'
+            );
+
+            // Load categories for drop down
+            loadDropDownData('@Url.Action("GetAllCategories", "Category")', 'category-drop-down');
         });
     </script>
 }

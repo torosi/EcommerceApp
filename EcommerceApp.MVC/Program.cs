@@ -31,6 +31,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 //Transient: Every time you request a transient class, a new instance is created.
 //Scoped: Scoped instances are created once per client request.
 
+builder.Services.AddLogging();
+
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
@@ -51,7 +53,6 @@ builder.Services.AddSingleton<ImageHelper>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
-
 
 var app = builder.Build();
 

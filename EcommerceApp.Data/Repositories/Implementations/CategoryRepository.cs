@@ -1,18 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.Data.Repositories.Implementations
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public CategoryRepository(ApplicationDbContext context) : base(context)
+        public CategoryRepository(ApplicationDbContext context, ILogger<CategoryRepository> logger) : base(context, logger)
         {
             _context = context;
         }

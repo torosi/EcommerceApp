@@ -61,10 +61,7 @@ namespace EcommerceApp.Data
                 .HasForeignKey(p => p.CategoryId);
 
             builder.Entity<Product>()
-                .HasOne(p => p.ProductType)
-                .WithMany(pt => pt.Products)
-                .HasForeignKey(p => p.ProductTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(p => p.ProductType);
 
             // we want to make sure that the vartiationattibute class is made up of unique combinations
             builder.Entity<VariationAttribute>()

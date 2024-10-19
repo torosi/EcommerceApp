@@ -1,23 +1,20 @@
-﻿using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Repositories.Contracts;
+﻿using EcommerceApp.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EcommerceApp.Data.Repositories.Implementations
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class BaseRepository<T> : IRepository<T> where T : class
     {
         internal DbSet<T> _dbSet; // i think that this needs to be internal rather than private because inheriting classes may use?
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<BaseRepository<T>> _logger;
 
-        public Repository(ApplicationDbContext context)
+        public BaseRepository(ApplicationDbContext context, ILogger<BaseRepository<T>> logger)
         {
             _context = context;
+            this._logger = logger;
             this._dbSet = _context.Set<T>();
         }
 
@@ -38,7 +35,10 @@ namespace EcommerceApp.Data.Repositories.Implementations
                 }
             }
 
-            return await query.ToListAsync();
+            var results = await query.ToListAsync();
+            _logger.LogTrace("Found '{entities}'", string.Join(", ", results.ToString()));
+
+            return results;
         }
 
         public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, bool tracked = true, string? includeProperties = null)

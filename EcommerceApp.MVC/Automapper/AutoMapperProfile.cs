@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EcommerceApp.Domain.Dtos;
-using EcommerceApp.MVC.Models;
+using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
 
@@ -30,6 +30,9 @@ namespace EcommerceApp.MVC.Automapper
                 .ForMember(dest => dest.Created, opt => opt.MapFrom(src => (DateTime?)src.Created))
                 .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => (DateTime?)src.Updated));
 
+            // Mapping from ProductTypeViewModel to ProductTypeDto
+            CreateMap<ProductTypeViewModel, ProductTypeDto>()
+                .ReverseMap();
         }
 
     }
