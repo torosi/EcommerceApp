@@ -17,7 +17,7 @@ namespace EcommerceApp.Domain.Services.Contracts
         /// </summary>
         /// <returns>A collection of products.</returns>
         public Task<IEnumerable<ProductDto>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null);
-        public Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, bool tracked = true);
+        public Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null, bool tracked = true);
         public Task AddAsync(ProductDto entity);
         public Task RemoveAsync(ProductDto entity);
         public Task UpdateAsync(ProductDto entity);

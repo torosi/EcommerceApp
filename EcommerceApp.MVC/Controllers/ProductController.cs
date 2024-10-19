@@ -37,7 +37,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try 
             {
-                var products = await _productService.GetAllAsync();
+                var products = await _productService.GetAllAsync(includeProperties: "Category,ProductType");
                 var productViewModels = new List<ProductViewModel>();
 
                 if (products.Any())

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EcommerceApp.Domain.Dtos.Products;
 
 namespace EcommerceApp.Domain.Dtos
 {
@@ -16,7 +17,8 @@ namespace EcommerceApp.Domain.Dtos
         public string? ImageUrl { get; set; }
         public int? CategoryId { get; set; }
         public CategoryDto? Category { get; set; }
+        public int ProductTypeId { get; set; }
+        public ProductTypeDto? ProductType { get; set; }
         public double Price { get; set; }
-        public ICollection<ProductVariationDto>? Variations { get; set; }
     }
 }

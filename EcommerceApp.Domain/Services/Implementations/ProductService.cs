@@ -17,6 +17,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             _productRepository = productRepository;
         }
 
+
         public async Task AddAsync(ProductDto entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -27,18 +28,21 @@ namespace EcommerceApp.Domain.Services.Implementations
             await _productRepository.SaveChangesAsync();
         }
 
+
         public async Task<IEnumerable<ProductDto>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null)
         {
             var productEntities = await _productRepository.GetAllAsync(includeProperties, filter);
             return productEntities.Select(x => x.ToDto());
         }
 
-        public async Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, bool tracked = true)
+
+        public async Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null, bool tracked = true)
         {
-            var productEntity = await _productRepository.GetFirstOrDefaultAsync(filter, includeProperties: "Category", tracked: tracked);
+            var productEntity = await _productRepository.GetFirstOrDefaultAsync(filter, includeProperties: includeProperties, tracked: tracked);
             if (productEntity == null) return null;
             return productEntity.ToDto(); 
         }
+
 
         public async Task RemoveAsync(ProductDto entity)
         {
@@ -46,6 +50,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             _productRepository.Remove(entity.ToEntity());
             await _productRepository.SaveChangesAsync();
         }
+
 
         public async Task UpdateAsync(ProductDto entity)
         {
