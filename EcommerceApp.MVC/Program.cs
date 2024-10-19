@@ -30,6 +30,10 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 
 /*builder.Services.AddDatabaseDeveloperPageExceptionFilter();*/
 
+//Singleton: This creates only one instance of a class during the application's lifecycle.
+//Transient: Every time you request a transient class, a new instance is created.
+//Scoped: Scoped instances are created once per client request.
+
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
@@ -38,6 +42,9 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+
+builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
+
 
 // The ImageHelper class is registered as a singleton service using AddSingleton<ImageHelper>().
 // This means that a single instance of ImageHelper will be created and shared throughout the application.

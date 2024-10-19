@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EcommerceApp.Data.Entities
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
         public int Id { get; set; }
         public DateTime Created { get; set; }
