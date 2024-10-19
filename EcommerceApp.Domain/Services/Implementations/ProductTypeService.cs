@@ -15,7 +15,6 @@ public class ProductTypeService : IProductTypeService
         _productTypeRepository = productTypeRepository;
     }
 
-
     public async Task AddAsync(ProductTypeDto productTypeDto)
     {
         if (productTypeDto == null) throw new ArgumentNullException(nameof(productTypeDto));

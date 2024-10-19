@@ -15,6 +15,6 @@ public class ProductTypeRepository : Repository<ProductType>, IProductTypeReposi
 
     public void Update(ProductType productType)
     {
-        _context.ProductType.Update(productType);
+        _context.ProductTypes.Update(productType);
     }
 } 

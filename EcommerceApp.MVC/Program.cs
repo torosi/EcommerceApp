@@ -9,9 +9,6 @@ using EcommerceApp.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using System.Drawing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +41,7 @@ builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
 builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
+builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 
 
 // The ImageHelper class is registered as a singleton service using AddSingleton<ImageHelper>().
