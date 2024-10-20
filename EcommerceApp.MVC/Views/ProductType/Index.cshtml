@@ -7,4 +7,15 @@
             <h3>Product Types</h3>
         </div>
     </div>
+
+    <div class="row">
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                <p>@item.Name</p>
+            }
+        }
+    </div>
+    
 </div>

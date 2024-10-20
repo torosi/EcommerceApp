@@ -10,5 +10,5 @@ public interface IProductTypeService
     /// Method to get all product types
     /// </summary>
     /// <returns>A collection of <see cref="ProductTypeDto"/></returns>
-    Task<IEnumerable<ProductTypeDto>> GetAllAsync();
+    public Task<IEnumerable<ProductTypeDto>> GetAllAsync();
 }

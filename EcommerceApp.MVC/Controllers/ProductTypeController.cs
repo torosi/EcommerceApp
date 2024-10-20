@@ -18,6 +18,32 @@ namespace EcommerceApp.MVC.Controllers
             _logger = logger;
         }
 
+
+        public async Task<IActionResult> Index()
+        {
+            try 
+            {
+                // get all product types
+                var productTypeDtos = await _productTypeService.GetAllAsync();
+
+                // map to view models
+                if (productTypeDtos.Any())
+                {
+                    var productViewModels = _mapper.Map<IEnumerable<ProductViewModel>>(productTypeDtos);
+                    return View(productViewModels);
+                }
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+        
+
+        #region API CALLS
+
         [HttpGet("GetAllProductTypes")]
         public async Task<IActionResult> GetAllProductTypes()
         {
@@ -41,5 +67,8 @@ namespace EcommerceApp.MVC.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        #endregion
+        
     }
 }
