@@ -5,6 +5,7 @@ using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Helpers;
+using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
@@ -20,17 +21,29 @@ namespace EcommerceApp.MVC.Controllers
     {   
         private readonly IProductService _productService;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly ICategoryService _categoryService;
+        private readonly IProductTypeService _productTypeService;
         private readonly IMapper _mapper;
         private IWebHostEnvironment _webHostEnvironment;
         private readonly ImageHelper _imageHelper;
 
-        public ProductController(IProductService productService, IMapper mapper, IWebHostEnvironment webHostEnvironment, ImageHelper imageHelper, IShoppingCartService shoppingCartService)
+        public ProductController(
+            IProductService productService,
+            IMapper mapper,
+            IWebHostEnvironment webHostEnvironment,
+            ImageHelper imageHelper,
+            IShoppingCartService shoppingCartService,
+            ICategoryService categoryService,
+            IProductTypeService productTypeService
+        )
         {
             _productService = productService;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _imageHelper = imageHelper;
             _shoppingCartService = shoppingCartService;
+            _categoryService = categoryService;
+            _productTypeService = productTypeService;
         }
 
         public async Task<IActionResult> Index()
@@ -64,7 +77,7 @@ namespace EcommerceApp.MVC.Controllers
 
         [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProductViewModel createProduct, IFormFile? file)
+        public async Task<IActionResult> Create(ProductViewModel createProduct, IFormFile? file)
         {
             try
             {
@@ -83,10 +96,10 @@ namespace EcommerceApp.MVC.Controllers
                         var imageUrl = await _imageHelper.UploadImageAsync(file, "product");
 
                         // set view model image url
-                        createProduct.Product.ImageUrl = imageUrl;
+                        createProduct.ImageUrl = imageUrl;
                     }
 
-                    var productDto = _mapper.Map<ProductDto>(createProduct.Product);
+                    var productDto = _mapper.Map<ProductDto>(createProduct);
 
                     // call our service
                     await _productService.AddAsync(productDto);
@@ -106,20 +119,33 @@ namespace EcommerceApp.MVC.Controllers
         {
             try 
             {
+                // Get the product we want to edit
                 var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == id);
+                // Get all categories for the dropdown
+                var categoryDtos = await _categoryService.GetAllAsync();
+                // Get all producttypes for the dropdown
+                var productTypeDtos = await _productTypeService.GetAllAsync();
 
+                // Create a new EditProductViewModel so we can return to view
+                var editProductViewModel = new EditProductViewModel();
+
+                // Map DTO to view models
                 if (productDto != null)
-                {
-                    var productViewModel = _mapper.Map<ProductViewModel>(productDto);
-                    return View(productViewModel);
-                }
+                    editProductViewModel.Product = _mapper.Map<ProductViewModel>(productDto);
+                
+                if (categoryDtos != null)
+                    editProductViewModel.Categories = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDtos);
+                
+                if (productTypeDtos != null)
+                    editProductViewModel.ProductTypes = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeDtos);
+
+                return View(editProductViewModel);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
+                return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = UserRoles.Admin)]

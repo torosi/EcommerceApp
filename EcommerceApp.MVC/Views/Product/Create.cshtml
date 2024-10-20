@@ -1,4 +1,4 @@
-﻿@model CreateProductViewModel
+﻿@model ProductViewModel
 
 <div class="container">
     <div class="card shadow border-0 mt-4">
@@ -13,33 +13,33 @@
             <div class="row">
                 <form asp-action="Create" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label asp-for="Product.Name" class="control-label"></label>
-                        <input asp-for="Product.Name" class="form-control" />
-                        <span asp-validation-for="Product.Name" class="text-danger"></span>
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Product.Description" class="control-label"></label>
-                        <input asp-for="Product.Description" class="form-control" />
-                        <span asp-validation-for="Product.Description" class="text-danger"></span>
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Product.Price" class="control-label"></label>
-                        <input asp-for="Product.Price" class="form-control" />
-                        <span asp-validation-for="Product.Price" class="text-danger"></span>
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
                     </div>
                     <div class="py-2 col-12">
-                        <label asp-for="Product.CategoryId" class="control-label">Category</label>
-                        <select asp-for="Product.CategoryId" id="category-drop-down" class="form-select">
+                        <label asp-for="CategoryId" class="control-label">Category</label>
+                        <select asp-for="CategoryId" id="category-drop-down" class="form-select">
                             <option id="loading-categories" disabled selected>Loading...</option>
                         </select>
-                        <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
                     </div>
                     <div class="py-2 col-12">
-                        <label asp-for="Product.ProductTypeId" class="control-label">Product Type</label>
-                        <select asp-for="Product.ProductTypeId" id="product-types-drop-down" class="form-select">
+                        <label asp-for="ProductTypeId" class="control-label">Product Type</label>
+                        <select asp-for="ProductTypeId" id="product-types-drop-down" class="form-select">
                             <option class="dummy-select-item" disabled selected>Select a Product Type</option>
                         </select>
-                        <span asp-validation-for="Product.ProductTypeId" class="text-danger"></span>
+                        <span asp-validation-for="ProductTypeId" class="text-danger"></span>
                     </div>
                     <div class="py-2 col-12">
                         <label class="btn btn-secondary">
@@ -57,7 +57,7 @@
 
 
 @section Scripts {
-    <script src="/js/create-product.js"></script>
+    <script src="/js/create-js"></script>
 
     <script>
         $(document).ready(function () {
