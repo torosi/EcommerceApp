@@ -29,8 +29,8 @@ namespace EcommerceApp.MVC.Controllers
                 // map to view models
                 if (productTypeDtos.Any())
                 {
-                    var productViewModels = _mapper.Map<IEnumerable<ProductViewModel>>(productTypeDtos);
-                    return View(productViewModels);
+                    var productTypeViewModels = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeDtos);
+                    return View(productTypeViewModels);
                 }
             } 
             catch (Exception ex)
@@ -41,6 +41,21 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
         
+
+        [HttpGet("Create")]
+        public IActionResult Create()
+        {
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
 
         #region API CALLS
 

@@ -66,10 +66,8 @@ namespace EcommerceApp.MVC.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                return RedirectToAction(nameof(Index));
             }
-
-            // if no category found, then redirect to index page
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost("Create")]
