@@ -26,6 +26,7 @@
                         <div class="py-2 col-12">
                             <label asp-for="Product.CategoryId" class="control-label">Category</label>
                             <select asp-for="Product.CategoryId" class="form-select">
+                                <option id="loading-categories" disabled selected>Select a Category</option>
                                 @if (Model.Categories.Any())
                                 {
                                     @foreach (var item in Model.Categories)
@@ -44,6 +45,7 @@
                         <div class="py-2 col-12">
                             <label asp-for="Product.ProductTypeId" class="control-label">Product Type</label>
                             <select asp-for="Product.ProductTypeId" class="form-select">
+                                <option id="loading-categories" disabled selected>Select a Product Type</option>
                                 @if (Model.ProductTypes.Any())
                                 {
                                     @foreach (var item in Model.ProductTypes)

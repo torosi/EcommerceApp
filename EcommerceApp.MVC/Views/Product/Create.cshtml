@@ -30,7 +30,7 @@
                     <div class="py-2 col-12">
                         <label asp-for="CategoryId" class="control-label">Category</label>
                         <select asp-for="CategoryId" id="category-drop-down" class="form-select">
-                            <option id="loading-categories" disabled selected>Loading...</option>
+                            <option id="loading-categories" disabled selected>Select a Category</option>
                         </select>
                         <span asp-validation-for="CategoryId" class="text-danger"></span>
                     </div>
@@ -57,7 +57,7 @@
 
 
 @section Scripts {
-    <script src="/js/create-js"></script>
+    <script src="/js/create-product.js"></script>
 
     <script>
         $(document).ready(function () {

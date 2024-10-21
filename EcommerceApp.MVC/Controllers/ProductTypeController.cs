@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Models.Product;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,29 @@ namespace EcommerceApp.MVC.Controllers
                 Console.WriteLine(ex);
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(ProductTypeViewModel productType)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // map product type view model to dto
+                    var productDto = _mapper.Map<ProductTypeDto>(productType);
+
+                    // save product type view model
+                    await _productTypeService.AddAsync(productDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
 

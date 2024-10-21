@@ -25,6 +25,7 @@ public class ProductTypeService : IProductTypeService
         var productEntity = productTypeDto.ToEntity();
 
         await _productTypeRepository.AddAsync(productEntity);
+        await _productTypeRepository.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<ProductTypeDto>> GetAllAsync()

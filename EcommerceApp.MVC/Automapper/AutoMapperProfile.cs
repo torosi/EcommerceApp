@@ -34,6 +34,11 @@ namespace EcommerceApp.MVC.Automapper
             CreateMap<ProductTypeDto, ProductTypeViewModel>()
                 .ForMember(dest => dest.Created, opt => opt.MapFrom(src => (DateTime?)src.Created))
                 .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => (DateTime?)src.Updated));
+
+            // Mapping from ProductTypeViewModel to ProductTypeDto
+            CreateMap<ProductTypeViewModel, ProductTypeDto>()
+                .ForMember(dest => dest.Created, opt => opt.MapFrom(src => (DateTime?)src.Created))
+                .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => (DateTime?)src.Updated));
         }
 
     }
