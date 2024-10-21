@@ -2,6 +2,8 @@
 using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Services.Contracts;
+using EcommerceApp.Domain.Services.Implementations;
+using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -128,7 +130,7 @@ namespace EcommerceApp.MVC.Controllers
         }
 
 
-        [HttpGet("ProductType/Delete")]
+        [HttpGet("Delete")]
         public async Task<IActionResult> Delete(int productTypeId)
         {
             try
@@ -152,8 +154,8 @@ namespace EcommerceApp.MVC.Controllers
         }
 
 
-        [HttpPost("ProductType/Delete")]
-        public async Task<IActionResult> Delete(ProductTypeViewModel productType)
+        [HttpPost]
+        public async Task<IActionResult> DeleteProductType(ProductTypeViewModel productType)
         {
             try
             {
@@ -161,7 +163,7 @@ namespace EcommerceApp.MVC.Controllers
 
                 if (productFromDb == null)
                 {
-                    ModelState.AddModelError(string.Empty, "The category could not be found.");
+                    ModelState.AddModelError(string.Empty, "The product type could not be found.");
                     return View(productType);
                 }
 
@@ -172,7 +174,7 @@ namespace EcommerceApp.MVC.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                ModelState.AddModelError(string.Empty, "An error occurred while attempting to delete the category.");
+                ModelState.AddModelError(string.Empty, "An error occurred while attempting to delete the product type.");
                 return View(productType);
             }
         }
