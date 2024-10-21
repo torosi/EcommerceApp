@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
+using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Models.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
 
 namespace EcommerceApp.MVC.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class ProductTypeController : Controller
     {
         private readonly IProductTypeService _productTypeService;
@@ -125,6 +127,55 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        [HttpGet("ProductType/Delete")]
+        public async Task<IActionResult> Delete(int productTypeId)
+        {
+            try
+            {
+                // get product type
+                var productTypeDto = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productTypeId);
+
+                // delete the product type
+                if (productTypeDto != null)
+                {
+                    var productTypeVM = _mapper.Map<ProductTypeViewModel>(productTypeDto);
+                    return View(productTypeVM);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpPost("ProductType/Delete")]
+        public async Task<IActionResult> Delete(ProductTypeViewModel productType)
+        {
+            try
+            {
+                var productFromDb = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productType.Id, tracked: false);
+
+                if (productFromDb == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The category could not be found.");
+                    return View(productType);
+                }
+
+                await _productTypeService.RemoveAsync(productFromDb);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                ModelState.AddModelError(string.Empty, "An error occurred while attempting to delete the category.");
+                return View(productType);
+            }
+        }
 
         #region API CALLS
 

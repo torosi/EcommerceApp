@@ -72,7 +72,16 @@ namespace EcommerceApp.MVC.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            
+            return RedirectToAction("Index", "Home");
         }
 
         [Authorize(Roles = UserRoles.Admin)]

@@ -54,11 +54,27 @@ public class ProductTypeService : IProductTypeService
         return productEntity.ToDto();
     }
 
+    public async Task RemoveAsync(ProductTypeDto entity)
+    {
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+        var productEntity = await _productTypeRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+
+        if (productEntity != null)
+        {
+            _logger.LogDebug("Removing Product Type Entity with id: '{id}'", entity.Id);
+            _productTypeRepository.Remove(productEntity);
+            await _productTypeRepository.SaveChangesAsync();
+        }
+    }
+
     public async Task UpdateAsync(ProductTypeDto entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
 
         var productFromDb = await _productTypeRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+
+        _logger.LogDebug("Found Product Type Entity with id: '{id}'", entity.Id);
 
         if (productFromDb != null)
         {
@@ -68,6 +84,8 @@ public class ProductTypeService : IProductTypeService
 
             _productTypeRepository.Update(productFromDb);
             await _productTypeRepository.SaveChangesAsync();
+
+            _logger.LogDebug("Updated Product Type Entity with id: '{id}'", entity.Id);
         }
     }
 }
