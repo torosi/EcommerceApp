@@ -39,7 +39,10 @@ namespace EcommerceApp.Domain.Services.Implementations
         public async Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null, bool tracked = true)
         {
             var productEntity = await _productRepository.GetFirstOrDefaultAsync(filter, includeProperties: includeProperties, tracked: tracked);
-            if (productEntity == null) return null;
+            
+            if (productEntity == null) 
+                return null;
+
             return productEntity.ToDto(); 
         }
 

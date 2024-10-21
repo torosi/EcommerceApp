@@ -1,8 +1,10 @@
+using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Mappings;
 using EcommerceApp.Domain.Services.Contracts;
 using Microsoft.Extensions.Logging;
+using System.Linq.Expressions;
 
 namespace EcommerceApp.Domain.Services.Implementations;
 
@@ -18,11 +20,11 @@ public class ProductTypeService : IProductTypeService
         _logger = logger;
     }
 
-    public async Task AddAsync(ProductTypeDto productTypeDto)
+    public async Task AddAsync(ProductTypeDto entity)
     {
-        if (productTypeDto == null) throw new ArgumentNullException(nameof(productTypeDto));
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-        var productEntity = productTypeDto.ToEntity();
+        var productEntity = entity.ToEntity();
 
         await _productTypeRepository.AddAsync(productEntity);
         await _productTypeRepository.SaveChangesAsync();
@@ -38,4 +40,34 @@ public class ProductTypeService : IProductTypeService
         return productEntities.Select(x => x.ToDto());
     }
 
+    public async Task<ProductTypeDto?> GetFirstOrDefaultAsync(Expression<Func<ProductType, bool>> filter, string? includeProperties = null, bool tracked = true)
+    {
+        // get the product type from db
+        var productEntity = await _productTypeRepository.GetFirstOrDefaultAsync(filter, tracked, includeProperties);
+
+        if (productEntity == null) 
+            return null;
+
+        _logger.LogDebug("Found Product Type Entity with id: '{id}'", productEntity.Id);
+
+        // map and return product type
+        return productEntity.ToDto();
+    }
+
+    public async Task UpdateAsync(ProductTypeDto entity)
+    {
+        if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+        var productFromDb = await _productTypeRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+
+        if (productFromDb != null)
+        {
+            productFromDb.Name = entity.Name;
+            productFromDb.Description = entity.Description;
+            productFromDb.Updated = DateTime.Now;
+
+            _productTypeRepository.Update(productFromDb);
+            await _productTypeRepository.SaveChangesAsync();
+        }
+    }
 }

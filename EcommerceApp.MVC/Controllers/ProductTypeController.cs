@@ -3,6 +3,7 @@ using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Models.Product;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 namespace EcommerceApp.MVC.Controllers
 {
@@ -18,7 +19,6 @@ namespace EcommerceApp.MVC.Controllers
             _mapper = mapper;
             _logger = logger;
         }
-
 
         public async Task<IActionResult> Index()
         {
@@ -52,7 +52,7 @@ namespace EcommerceApp.MVC.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -70,6 +70,51 @@ namespace EcommerceApp.MVC.Controllers
 
                     // save product type view model
                     await _productTypeService.AddAsync(productDto);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpGet("Edit")]
+        public async Task<IActionResult> Edit(int productTypeId)
+        {
+            try
+            {
+                var productTypeDto = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productTypeId);
+
+                if (productTypeDto != null)
+                {
+                    var productTypeVM = _mapper.Map<ProductTypeViewModel>(productTypeDto);
+                    return View(productTypeVM);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpPost("Edit")]
+        public async Task<IActionResult> Edit(ProductTypeViewModel productType)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // map product type to dto
+                    var productTypeDto = _mapper.Map<ProductTypeDto>(productType);
+
+                    // update product type
+                    await _productTypeService.UpdateAsync(productTypeDto);
                 }
             }
             catch (Exception ex)
