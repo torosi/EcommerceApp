@@ -70,6 +70,7 @@ namespace EcommerceApp.Domain.Services.Implementations
                 productFromDb.Updated = DateTime.Now;
                 productFromDb.ImageUrl = entity.ImageUrl;
                 productFromDb.CategoryId = entity.CategoryId;
+                productFromDb.ProductTypeId = entity.ProductTypeId;
 
                 _productRepository.Update(productFromDb);
                 await _productRepository.SaveChangesAsync();

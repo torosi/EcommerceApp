@@ -45,19 +45,20 @@
                         <div class="py-2 col-12">
                             <label asp-for="Product.ProductTypeId" class="control-label">Product Type</label>
                             <select asp-for="Product.ProductTypeId" class="form-select">
-                                <option id="loading-categories" disabled selected>Select a Product Type</option>
-                                @if (Model.ProductTypes.Any())
+                                <option id="loading-productType" disabled selected>Select a Product Type</option>
+                                @if (Model.Categories.Any())
                                 {
                                     @foreach (var item in Model.ProductTypes)
                                     {
-                                        <option id="@item.Id" value="@item.Id" selected=@(Model.Product.ProductTypeId == item.Id ? "selected" : "")>@item.Name</option>
+                                        <option id="@item.Id" value="@item.Id">@item.Name</option>
                                     }
                                 }
                                 else
                                 {
-                                    <option id="loading-productTypes" disabled selected>Loading...</option>
+                                    <option id="loading-productType" disabled selected>Loading...</option>
                                 }
                             </select>
+
                             <span asp-validation-for="Product.ProductTypeId" class="text-danger"></span>
                         </div>
 
