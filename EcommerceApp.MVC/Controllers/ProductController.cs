@@ -312,7 +312,7 @@ namespace EcommerceApp.MVC.Controllers
                 if (cartFromDb != null)
                 {
                     cartFromDb.Count += cart.Count;
-                    await _shoppingCartService.Update(cartFromDb);
+                    await _shoppingCartService.UpdateAsync(cartFromDb);
                 }
                 else // 3) if there is no product already then we can just add the new item to cart
                 {

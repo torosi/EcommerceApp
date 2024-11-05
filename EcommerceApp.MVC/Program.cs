@@ -49,6 +49,8 @@ builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 // The ImageHelper class is registered as a singleton service using AddSingleton<ImageHelper>().
 // This means that a single instance of ImageHelper will be created and shared throughout the application.
 builder.Services.AddSingleton<ImageHelper>();
+builder.Services.AddScoped<UserHelper>();
+
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 

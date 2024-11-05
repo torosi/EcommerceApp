@@ -17,6 +17,8 @@ namespace EcommerceApp.Domain.Services.Implementations
             _shoppingCartRepository = shoppingCartRepository;
         }
 
+
+        /// <inheritdoc/>
         public async Task AddAsync(ShoppingCartDto cart)
         {
             if (cart == null) throw new ArgumentNullException(nameof(cart));
@@ -28,6 +30,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             await _shoppingCartRepository.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<ShoppingCartDto?> GetFirstOrDefaultAsync(Expression<Func<ShoppingCart, bool>> filter, bool tracked = true)
         {
             var shoppingCart = await _shoppingCartRepository.GetFirstOrDefaultAsync(filter, tracked: tracked, includeProperties: "Product");
@@ -35,14 +38,23 @@ namespace EcommerceApp.Domain.Services.Implementations
             return shoppingCart.ToDto();
         }
 
-        public async Task<IEnumerable<ShoppingCartDto>> GetShoppingCartByUser(string userId)
+        /// <inheritdoc/>
+        public async Task<IEnumerable<ShoppingCartDto>> GetShoppingCartByUserAsync(string userId)
         {
             var shoppingCartEntities = await _shoppingCartRepository.GetShoppingCartByUser(userId);
             var shoppingCartDtos = shoppingCartEntities.Select(x => x.ToDto()).ToList();
             return shoppingCartDtos;
         }
 
-        public async Task<bool> Remove(int cartId)
+        /// <inheritdoc/>
+        public async Task<int> GetShoppingCartCountByUserAsync(string userId)
+        {
+            var count = await _shoppingCartRepository.GetShoppingCartCountByUser(userId);
+            return count;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> RemoveAsync(int cartId)
         {
             var shoppingCartEntity = await _shoppingCartRepository.GetFirstOrDefaultAsync(x => x.Id == cartId);
 
@@ -58,7 +70,8 @@ namespace EcommerceApp.Domain.Services.Implementations
             return success;
         }
 
-        public async Task Update(ShoppingCartDto cart)
+        /// <inheritdoc/>
+        public async Task UpdateAsync(ShoppingCartDto cart)
         {
             if (cart == null) throw new ArgumentNullException(nameof(cart));
 

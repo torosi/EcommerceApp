@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EcommerceApp.Domain.Services.Contracts;
+using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
@@ -12,29 +13,23 @@ namespace EcommerceApp.MVC.Controllers
     {
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IMapper _mapper;
+        private readonly UserHelper _userHelper;
 
-        public ShoppingCartController(IShoppingCartService shoppingCartService, IMapper mapper)
+        public ShoppingCartController(IShoppingCartService shoppingCartService, IMapper mapper, UserHelper userHelper)
         {
             _shoppingCartService = shoppingCartService;
             _mapper = mapper;
+            _userHelper = userHelper;
         }
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
-
             try
             {
-                // 1) we need the currently logged in user
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = _userHelper.GetUserId();
 
-                if (claimsIdentity == null) throw new Exception("User could not be found");
-
-                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-                if (userId == null) throw new Exception("User could not be found");
-
-                var shoppingCartDtos = await _shoppingCartService.GetShoppingCartByUser(userId);
+                var shoppingCartDtos = await _shoppingCartService.GetShoppingCartByUserAsync(userId);
 
                 if (shoppingCartDtos == null) return View();
 
@@ -73,7 +68,7 @@ namespace EcommerceApp.MVC.Controllers
 
                 shoppingCartDto.Count++;
 
-                await _shoppingCartService.Update(shoppingCartDto);
+                await _shoppingCartService.UpdateAsync(shoppingCartDto);
 
                 return Json(new
                 {
@@ -101,7 +96,7 @@ namespace EcommerceApp.MVC.Controllers
 
                 shoppingCartDto.Count--;
 
-                await _shoppingCartService.Update(shoppingCartDto);
+                await _shoppingCartService.UpdateAsync(shoppingCartDto);
 
                 return Json(new
                 {
@@ -122,13 +117,32 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var success = await _shoppingCartService.Remove(cartId);
+                var success = await _shoppingCartService.RemoveAsync(cartId);
                 return Json(new { success = success });
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 return Json(new { success = false });
+            }
+        }
+
+        [HttpGet("ShoppingCart/GetShoppingCartCountAsync")]
+        public async Task<IActionResult> GetShoppingCartCountAsync()
+        {
+            try
+            {
+                var userId = _userHelper.GetUserId();
+                if (userId == null) return Json(new { data = 0 });
+
+                var data = await _shoppingCartService.GetShoppingCartCountByUserAsync(userId);
+
+                return Json(new { data = data });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return Json(new { data = 0 });
             }
         }
 

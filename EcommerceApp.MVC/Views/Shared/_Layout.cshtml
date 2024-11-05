@@ -57,8 +57,11 @@
                         }
                     </ul>
 
-                    <div>
-                        <a class="nav-link text-dark" asp-controller="ShoppingCart" asp-action="Index"><i class="bi bi-bag"></i></a>
+                    <div class="mx-3">
+                        <a class="btn btn-secondary position-relative" asp-controller="ShoppingCart" asp-action="Index">
+                            <i class="bi bi-bag"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count"></span>
+                        </a>
                     </div>
                     
                     <partial name="_LoginPartial" />
@@ -106,7 +109,24 @@
                     console.error("Failed to load categories.");
                 }
             });
+
+            $.ajax({
+                url: '@Url.Action("GetShoppingCartCountAsync", "ShoppingCart")',
+                type: 'GET',
+                success: function (response) {
+                    var cartCount = $('#cart-count');
+                    if (response && response.data) {
+                        cartCount.text(response.data);
+                    } else {
+                        cartCount.text(0);
+                    }
+                },
+                error: function (ex) {
+                    console.error("Failed to get shopping cart count value");
+                }
+            });
         });
+
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
