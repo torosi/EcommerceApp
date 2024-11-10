@@ -1,5 +1,7 @@
 ﻿using EcommerceApp.Data.Entities;
+using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Dtos;
+using EcommerceApp.Domain.Dtos.Products;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
@@ -22,5 +24,6 @@ namespace EcommerceApp.Domain.Services.Contracts
         public Task RemoveAsync(ProductDto entity);
         public Task UpdateAsync(ProductDto entity);
         public Task<(int TotalCount, IEnumerable<ProductDto> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20);
+        public Task<IEnumerable<ProductVariationOptionDto>> GetProductVariationsAsync(int productId);
     }
 }

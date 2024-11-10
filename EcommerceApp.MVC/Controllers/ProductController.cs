@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EcommerceApp.Data.Entities;
+using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
@@ -271,6 +272,47 @@ namespace EcommerceApp.MVC.Controllers
             try
             {
                 var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
+                var productOptions = await _productService.GetProductVariationsAsync(productId);
+
+                if (productDto != null && productOptions.Any())
+                {
+
+                    var productViewModel = _mapper.Map<ProductViewModel>(productDto);
+
+                    productViewModel.Skus = productOptions
+                    .Select(option => new SkuViewModel
+                    {
+                        SkuId = option.SkuId,
+                        SkuString = option.SkuString,
+                        Quantity = option.Quantity,
+                        Variations = new List<VariationViewModel>
+                        {
+                            new VariationViewModel
+                            {
+                                VariationTypeName = option.VariationTypeName,  // e.g., "Size" or "Color"
+                                VariationValueName = option.VariationValueName // e.g., "Small" or "Red"
+                            }
+                        }
+                    })
+                    .ToList();
+
+                    productViewModel.GroupedVariations = productViewModel.Skus
+                        .SelectMany(sku => sku.Variations)  // Flatten the variations across all SKUs
+                        .GroupBy(v => v.VariationTypeName)  // Group by VariationType
+                        .ToDictionary(
+                            group => group.Key,  // Group by VariationType
+                            group => group.Select(v => v.VariationValueName).Distinct().ToList() // Get distinct variation values
+                        );
+
+                    var shoppingCartViewModel = new ShoppingCartViewModel()
+                    {
+                        Product = productViewModel,
+                        Count = 1 // how many items do we want to add. eventually user needs to set this
+                    };
+
+                    return View(shoppingCartViewModel);
+                }
+
                 if (productDto != null)
                 {
                     var productViewModel = _mapper.Map<ProductViewModel>(productDto);

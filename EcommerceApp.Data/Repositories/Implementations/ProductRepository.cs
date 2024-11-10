@@ -3,6 +3,7 @@ using EcommerceApp.Data.Entities;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using EcommerceApp.Data.Entities.Products;
 
 namespace EcommerceApp.Data.Repositories.Implementations
 {
@@ -75,5 +76,18 @@ namespace EcommerceApp.Data.Repositories.Implementations
             return (totalCount, products);
         }
 
+        public async Task<IEnumerable<ProductVariationOption>> GetProductVariationsAsync(int productId)
+        {
+
+            var options = await _context.ProductVariationOptions
+                .Where(o => o.Sku.ProductId == productId)
+                .Include(o => o.Sku)
+                .Include(o => o.Sku.Product)
+                .Include(o => o.VariationType)
+                .Include(o => o.VariationValue)
+                .ToListAsync();
+
+            return options;
+        }
     }
 }

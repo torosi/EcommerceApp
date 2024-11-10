@@ -1,3 +1,4 @@
+using EcommerceApp.Data.Entities.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,6 @@ namespace EcommerceApp.Data.Entities
 
         public int ProductTypeId { get; set; }
         public virtual ProductType ProductType { get; set; }
+
     }
 }

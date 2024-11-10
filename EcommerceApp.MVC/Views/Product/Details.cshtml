@@ -2,7 +2,7 @@
 
 
 <div class="container">
-    <form method="post" action="AddToCart">
+    <form method="post" action="AddToCart" id="productForm">
         <div class="row mt-5">
             <div class="col">
                 <div class="col-4"></div>
@@ -14,7 +14,6 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <!-- Display the product details -->
                         <p class="h5">@Model.Product.Name</p>
                         <hr>
                         <p>@Model.Product.Description</p>
@@ -22,17 +21,33 @@
                     </div>
                 </div>
 
-                <!-- Hidden inputs for Product data -->
                 <input type="hidden" name="Product.Id" value="@Model.Product.Id" />
                 <input type="hidden" name="Product.Name" value="@Model.Product.Name" />
                 <input type="hidden" name="Product.Price" value="@Model.Product.Price" />
 
-                <!-- Editable Count field -->
                 <div class="row">
                     <div class="col-12 col-md-6 pb-1">
                         <label for="count">Quantity:</label>
                         <input type="number" name="Count" value="@Model.Count" class="form-control" min="1" />
                     </div>
+                </div>
+
+
+                @foreach (var variationType in Model.Product.GroupedVariations.Keys)
+                {
+                    <label>@variationType</label>
+                        <select name="@variationType" class="form-select">
+                        <option value="">Select @variationType</option>
+                        @foreach (var variationValue in Model.Product.GroupedVariations[variationType])
+                        {
+                            <option value="@variationValue">@variationValue</option>
+                        }
+                    </select>
+                }
+
+                <div id="selectedSkuDetails">
+                    <p>SKU: <span id="selectedSkuString">None</span></p>
+                    <p>Stock: <span id="selectedStock">N/A</span></p>
                 </div>
 
                 <div class="row">
@@ -46,3 +61,14 @@
         </div>
     </form>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var skus = @Html.Raw(Json.Serialize(Model.Product.Skus));
+
+        console.log(skus);
+
+
+    });
+</script>

@@ -1,4 +1,5 @@
 ﻿using EcommerceApp.Data.Entities;
+using EcommerceApp.Data.Entities.Products;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,9 @@ namespace EcommerceApp.Data
 
         public DbSet<VariationValue> VariationValues { get; set; }
         public DbSet<VariationType> VariationTypes { get; set; }
+        public DbSet<ProductVariationOption> ProductVariationOptions { get; set; }
+        public DbSet<Sku> Skus { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)

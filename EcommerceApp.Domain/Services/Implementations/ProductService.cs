@@ -1,9 +1,9 @@
 ﻿using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Dtos;
+using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Mappings;
 using EcommerceApp.Domain.Services.Contracts;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 
 namespace EcommerceApp.Domain.Services.Implementations
@@ -85,5 +85,24 @@ namespace EcommerceApp.Domain.Services.Implementations
             return (productResult.TotalCount, productDtos);
         }
 
+        public async Task<IEnumerable<ProductVariationOptionDto>> GetProductVariationsAsync(int productId)
+        {
+            var options = await _productRepository.GetProductVariationsAsync(productId);
+            var optionsDtos = new List<ProductVariationOptionDto>();
+
+            foreach (var option in options)
+            {
+                optionsDtos.Add(new ProductVariationOptionDto
+                {
+                    SkuId = option.SkuId,
+                    SkuString = option.Sku.SkuString,
+                    Quantity = option.Sku.Quantity,
+                    VariationTypeName = option.VariationType.Name,
+                    VariationValueName = option.VariationValue.Name
+                });
+            }
+
+            return optionsDtos;
+        }
     }
 }

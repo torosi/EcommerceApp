@@ -15,5 +15,7 @@ namespace EcommerceApp.MVC.Models.Product
         public int? ProductTypeId { get; set; }
         public ProductTypeViewModel? ProductType { get; set; }
         public double Price { get; set; }
+        public List<SkuViewModel> Skus { get; set; } = new List<SkuViewModel>();
+        public Dictionary<string, List<string>>? GroupedVariations { get; set; }
     }
 }
