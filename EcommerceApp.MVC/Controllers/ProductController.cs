@@ -12,6 +12,7 @@ using EcommerceApp.MVC.Models.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Security.Claims;
 using System.Web;
 
@@ -271,21 +272,24 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
+                // 1) gets the product
+                // 2) gets all of this products variations
                 var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
                 var productOptions = await _productService.GetProductVariationsAsync(productId);
 
                 if (productDto != null && productOptions.Any())
                 {
-
                     var productViewModel = _mapper.Map<ProductViewModel>(productDto);
 
+                    // 3) Map to SkuViewModel which will have a list of variations on it.
+                    // we get a sku row for each variation option - here we want to group all of these rows into one list per sku
                     productViewModel.Skus = productOptions
                     .Select(option => new SkuViewModel
                     {
                         SkuId = option.SkuId,
                         SkuString = option.SkuString,
                         Quantity = option.Quantity,
-                        Variations = new List<VariationViewModel>
+                        Variations = new List<VariationViewModel> // will have all of the variation types and values under one roof (sku)
                         {
                             new VariationViewModel
                             {
@@ -296,14 +300,18 @@ namespace EcommerceApp.MVC.Controllers
                     })
                     .ToList();
 
+                    // 4) we need to group the variations inside each of these sku items so that we can get a list of what variation types we have
+                    // using this we can display a drop down for each variation type like size and colour
+                    // SelectMany takes each SKU and extracts its variations, combining all variations from all SKUs into a single flat collection(instead of keeping them in separate lists for each SKU).
                     productViewModel.GroupedVariations = productViewModel.Skus
                         .SelectMany(sku => sku.Variations)  // Flatten the variations across all SKUs
-                        .GroupBy(v => v.VariationTypeName)  // Group by VariationType
+                        .GroupBy(v => v.VariationTypeName)  // Group by VariationType so that we then have a list of all of the possible values
                         .ToDictionary(
                             group => group.Key,  // Group by VariationType
                             group => group.Select(v => v.VariationValueName).Distinct().ToList() // Get distinct variation values
-                        );
+                        ); // here we have a dictionary of the variation type and all of the values - perfect for a drop down.
 
+                    // we are returning a shoppingcartitem because that is what will potentially be saved to the db
                     var shoppingCartViewModel = new ShoppingCartViewModel()
                     {
                         Product = productViewModel,
