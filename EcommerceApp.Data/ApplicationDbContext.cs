@@ -29,11 +29,8 @@ namespace EcommerceApp.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
-        public DbSet<Variation> Variations { get; set; }
         public DbSet<VariationValue> VariationValues { get; set; }
         public DbSet<VariationType> VariationTypes { get; set; }
-        public DbSet<VariationAttribute> VariationAttributes { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -63,10 +60,10 @@ namespace EcommerceApp.Data
             builder.Entity<Product>()
                 .HasOne(p => p.ProductType);
 
-            // we want to make sure that the vartiationattibute class is made up of unique combinations
-            builder.Entity<VariationAttribute>()
-                .HasIndex(va => new { va.ProductVariationId, va.VariationId })
-                .IsUnique();
+            // // we want to make sure that the vartiationattibute class is made up of unique combinations
+            // builder.Entity<VariationAttribute>()
+            //     .HasIndex(va => new { va.ProductVariationId, va.VariationId })
+            //     .IsUnique();
 
             base.OnModelCreating(builder);
         }

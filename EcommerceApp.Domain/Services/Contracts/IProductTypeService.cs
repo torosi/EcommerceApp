@@ -42,4 +42,5 @@ public interface IProductTypeService
     /// <param name="entity"></param>
     /// <returns></returns>
     public Task RemoveAsync(ProductTypeDto entity);
+
 }
