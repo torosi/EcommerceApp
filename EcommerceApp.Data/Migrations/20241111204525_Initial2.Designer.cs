@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241018165617_AddingProductVariationTables")]
-    partial class AddingProductVariationTables
+    [Migration("20241111204525_Initial2")]
+    partial class Initial2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -125,7 +125,7 @@ namespace EcommerceApp.Data.Migrations
                     b.ToTable("ProductTypes");
                 });
 
-            modelBuilder.Entity("EcommerceApp.Data.Entities.ProductVariation", b =>
+            modelBuilder.Entity("EcommerceApp.Data.Entities.Products.ProductVariationOption", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -133,25 +133,53 @@ namespace EcommerceApp.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Colour")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SkuId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("VariationTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VariationValueId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VariationTypeId");
+
+                    b.HasIndex("VariationValueId");
+
+                    b.HasIndex("SkuId", "VariationTypeId")
+                        .IsUnique();
+
+                    b.ToTable("ProductVariationOptions");
+                });
+
+            modelBuilder.Entity("EcommerceApp.Data.Entities.Products.Sku", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Size")
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SkuString")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Stock")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime2");
@@ -160,7 +188,7 @@ namespace EcommerceApp.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductVariation");
+                    b.ToTable("Skus");
                 });
 
             modelBuilder.Entity("EcommerceApp.Data.Entities.ShoppingCart", b =>
@@ -194,65 +222,6 @@ namespace EcommerceApp.Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ShoppingCarts");
-                });
-
-            modelBuilder.Entity("EcommerceApp.Data.Entities.Variation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VariationTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VariationValueId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VariationTypeId");
-
-                    b.HasIndex("VariationValueId");
-
-                    b.ToTable("Variations");
-                });
-
-            modelBuilder.Entity("EcommerceApp.Data.Entities.VariationAttribute", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProductVariationId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VariationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VariationId");
-
-                    b.HasIndex("ProductVariationId", "VariationId")
-                        .IsUnique();
-
-                    b.ToTable("VariationAttributes");
                 });
 
             modelBuilder.Entity("EcommerceApp.Data.Entities.VariationType", b =>
@@ -557,9 +526,9 @@ namespace EcommerceApp.Data.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.HasOne("EcommerceApp.Data.Entities.ProductType", "ProductType")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("ProductTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -567,7 +536,34 @@ namespace EcommerceApp.Data.Migrations
                     b.Navigation("ProductType");
                 });
 
-            modelBuilder.Entity("EcommerceApp.Data.Entities.ProductVariation", b =>
+            modelBuilder.Entity("EcommerceApp.Data.Entities.Products.ProductVariationOption", b =>
+                {
+                    b.HasOne("EcommerceApp.Data.Entities.Products.Sku", "Sku")
+                        .WithMany()
+                        .HasForeignKey("SkuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceApp.Data.Entities.VariationType", "VariationType")
+                        .WithMany()
+                        .HasForeignKey("VariationTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EcommerceApp.Data.Entities.VariationValue", "VariationValue")
+                        .WithMany()
+                        .HasForeignKey("VariationValueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sku");
+
+                    b.Navigation("VariationType");
+
+                    b.Navigation("VariationValue");
+                });
+
+            modelBuilder.Entity("EcommerceApp.Data.Entities.Products.Sku", b =>
                 {
                     b.HasOne("EcommerceApp.Data.Entities.Product", "Product")
                         .WithMany()
@@ -595,44 +591,6 @@ namespace EcommerceApp.Data.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("EcommerceApp.Data.Entities.Variation", b =>
-                {
-                    b.HasOne("EcommerceApp.Data.Entities.VariationType", "VariationType")
-                        .WithMany()
-                        .HasForeignKey("VariationTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EcommerceApp.Data.Entities.VariationValue", "VariationValue")
-                        .WithMany()
-                        .HasForeignKey("VariationValueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("VariationType");
-
-                    b.Navigation("VariationValue");
-                });
-
-            modelBuilder.Entity("EcommerceApp.Data.Entities.VariationAttribute", b =>
-                {
-                    b.HasOne("EcommerceApp.Data.Entities.ProductVariation", "ProductVariation")
-                        .WithMany()
-                        .HasForeignKey("ProductVariationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EcommerceApp.Data.Entities.Variation", "Variation")
-                        .WithMany()
-                        .HasForeignKey("VariationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductVariation");
-
-                    b.Navigation("Variation");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -687,11 +645,6 @@ namespace EcommerceApp.Data.Migrations
                 });
 
             modelBuilder.Entity("EcommerceApp.Data.Entities.Category", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("EcommerceApp.Data.Entities.ProductType", b =>
                 {
                     b.Navigation("Products");
                 });

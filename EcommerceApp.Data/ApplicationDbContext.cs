@@ -69,6 +69,16 @@ namespace EcommerceApp.Data
             //     .HasIndex(va => new { va.ProductVariationId, va.VariationId })
             //     .IsUnique();
 
+            // Define the primary key for the table as the Id
+            builder.Entity<ProductVariationOption>()
+                .HasKey(p => p.Id);
+
+            // Create a unique constraint on the combination of Sku and VariationType
+            builder.Entity<ProductVariationOption>()
+                .HasIndex(p => new { p.SkuId, p.VariationTypeId })
+                .IsUnique(); // Ensure no repeats of VariationType for a given Sku
+
+
             base.OnModelCreating(builder);
         }
     }

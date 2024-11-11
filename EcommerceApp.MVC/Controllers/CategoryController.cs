@@ -197,7 +197,7 @@ namespace EcommerceApp.MVC.Controllers
 
                     var viewCategoryViewModel = new ViewCategoryViewModel()
                     {
-                        Category = categoryViewModel,
+                        Category = categoryViewModel, 
                         Products = productViewModels,
                         TotalPages = (int)Math.Ceiling((double)productResult.TotalCount / itemsPerPage),
                         ItemsPerPage = itemsPerPage,

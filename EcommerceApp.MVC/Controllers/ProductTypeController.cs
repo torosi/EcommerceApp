@@ -26,6 +26,8 @@ namespace EcommerceApp.MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var productTypeViewModels = new List<ProductTypeViewModel>();
+
             try 
             {
                 // get all product types
@@ -34,16 +36,15 @@ namespace EcommerceApp.MVC.Controllers
                 // map to view models
                 if (productTypeDtos.Any())
                 {
-                    var productTypeViewModels = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeDtos);
-                    return View(productTypeViewModels);
+                    productTypeViewModels = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeDtos).ToList();
                 }
             } 
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
-            return RedirectToAction(nameof(Index));
+            
+            return View(productTypeViewModels);
         }
         
 

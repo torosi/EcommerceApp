@@ -147,11 +147,12 @@ namespace EcommerceApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SkuId");
-
                     b.HasIndex("VariationTypeId");
 
                     b.HasIndex("VariationValueId");
+
+                    b.HasIndex("SkuId", "VariationTypeId")
+                        .IsUnique();
 
                     b.ToTable("ProductVariationOptions");
                 });

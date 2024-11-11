@@ -289,14 +289,12 @@ namespace EcommerceApp.MVC.Controllers
                         SkuId = option.SkuId,
                         SkuString = option.SkuString,
                         Quantity = option.Quantity,
-                        Variations = new List<VariationViewModel> // will have all of the variation types and values under one roof (sku)
-                        {
-                            new VariationViewModel
+                        Variation = new VariationViewModel()
                             {
                                 VariationTypeName = option.VariationTypeName,  // e.g., "Size" or "Color"
                                 VariationValueName = option.VariationValueName // e.g., "Small" or "Red"
                             }
-                        }
+                        
                     })
                     .ToList();
 
@@ -304,11 +302,12 @@ namespace EcommerceApp.MVC.Controllers
                     // using this we can display a drop down for each variation type like size and colour
                     // SelectMany takes each SKU and extracts its variations, combining all variations from all SKUs into a single flat collection(instead of keeping them in separate lists for each SKU).
                     productViewModel.GroupedVariations = productViewModel.Skus
-                        .SelectMany(sku => sku.Variations)  // Flatten the variations across all SKUs
-                        .GroupBy(v => v.VariationTypeName)  // Group by VariationType so that we then have a list of all of the possible values
+                        // no need to select many anymore as i changed view model. it was a list but it was only ever going to have one variation per sku row so i have added jsut one item so we dont need to flatten. im going to leave here as it might be useful later
+                        //.SelectMany(sku => sku.Variation)  // Flatten the variations across all SKUs
+                        .GroupBy(v => v.Variation.VariationTypeName)  // Group by VariationType so that we then have a list of all of the possible values
                         .ToDictionary(
                             group => group.Key,  // Group by VariationType
-                            group => group.Select(v => v.VariationValueName).Distinct().ToList() // Get distinct variation values
+                            group => group.Select(v => v.Variation.VariationValueName).Distinct().ToList() // Get distinct variation values
                         ); // here we have a dictionary of the variation type and all of the values - perfect for a drop down.
 
                     // we are returning a shoppingcartitem because that is what will potentially be saved to the db
