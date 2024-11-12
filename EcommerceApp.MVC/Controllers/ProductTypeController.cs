@@ -4,7 +4,7 @@ using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Helpers;
-using EcommerceApp.MVC.Models.Product;
+using EcommerceApp.MVC.Models.ProductType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

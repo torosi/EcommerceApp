@@ -1,6 +1,6 @@
 ﻿using EcommerceApp.MVC.Models.Category;
 
-namespace EcommerceApp.MVC.Models.Product.Create
+namespace EcommerceApp.MVC.Models.Product
 {
     public class CreateProductViewModel
     {

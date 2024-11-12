@@ -1,4 +1,6 @@
 ﻿using EcommerceApp.MVC.Models.Category;
+using EcommerceApp.MVC.Models.ProductType;
+using EcommerceApp.MVC.Models.ProductVariationOption;
 
 namespace EcommerceApp.MVC.Models.Product
 {

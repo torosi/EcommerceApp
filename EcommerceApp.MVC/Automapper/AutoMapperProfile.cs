@@ -3,6 +3,7 @@ using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
+using EcommerceApp.MVC.Models.ProductType;
 
 namespace EcommerceApp.MVC.Automapper
 {

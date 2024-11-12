@@ -1,4 +1,4 @@
-﻿namespace EcommerceApp.MVC.Models.Product
+﻿namespace EcommerceApp.MVC.Models.Sku
 {
     public class SkuViewModel
     {

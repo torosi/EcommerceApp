@@ -1,20 +1,16 @@
 ﻿using AutoMapper;
-using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
-using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
+using EcommerceApp.MVC.Models.ProductType;
+using EcommerceApp.MVC.Models.ProductVariationOption;
 using EcommerceApp.MVC.Models.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
 using System.Security.Claims;
-using System.Web;
 
 namespace EcommerceApp.MVC.Controllers
 {
