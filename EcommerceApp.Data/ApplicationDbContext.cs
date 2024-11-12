@@ -75,7 +75,7 @@ namespace EcommerceApp.Data
 
             // Create a unique constraint on the combination of Sku and VariationType
             builder.Entity<ProductVariationOption>()
-                .HasIndex(p => new { p.SkuId, p.VariationTypeId })
+                .HasIndex(p => new { p.SkuId, p.VariationTypeId }) // we dont want to allow the same sku to have the multiple of the same variation type (one size, one colour etc)
                 .IsUnique(); // Ensure no repeats of VariationType for a given Sku
 
 
