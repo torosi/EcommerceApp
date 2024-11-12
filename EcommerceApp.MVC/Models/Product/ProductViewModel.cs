@@ -2,7 +2,7 @@
 
 namespace EcommerceApp.MVC.Models.Product
 {
-    public class ProductViewModel
+    public class ProductViewModel // TODO: Change this to product details view model as it has the extra stuff on it.
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -10,12 +10,12 @@ namespace EcommerceApp.MVC.Models.Product
         public DateTime? Created { get; set; }
         public DateTime? Updated { get; set; }
         public string? ImageUrl { get; set; }
+        public double Price { get; set; }
         public int? CategoryId { get; set; }
         public CategoryViewModel? Category { get; set; }
         public int? ProductTypeId { get; set; }
         public ProductTypeViewModel? ProductType { get; set; }
-        public double Price { get; set; }
-        public List<SkuViewModel> Skus { get; set; } = new List<SkuViewModel>();
+        public List<ProductVariationOptionViewModel> Options { get; set; } = new List<ProductVariationOptionViewModel>();
         public Dictionary<string, List<string>>? GroupedVariations { get; set; }
     }
 }

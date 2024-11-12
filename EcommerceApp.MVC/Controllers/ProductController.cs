@@ -283,31 +283,27 @@ namespace EcommerceApp.MVC.Controllers
 
                     // 3) Map to SkuViewModel which will have a list of variations on it.
                     // we get a sku row for each variation option - here we want to group all of these rows into one list per sku
-                    productViewModel.Skus = productOptions
-                    .Select(option => new SkuViewModel
+                    productViewModel.Options = productOptions
+                    .Select(option => new ProductVariationOptionViewModel
                     {
                         SkuId = option.SkuId,
                         SkuString = option.SkuString,
                         Quantity = option.Quantity,
-                        Variation = new VariationViewModel()
-                            {
-                                VariationTypeName = option.VariationTypeName,  // e.g., "Size" or "Color"
-                                VariationValueName = option.VariationValueName // e.g., "Small" or "Red"
-                            }
-                        
+                        VariationTypeName = option.VariationTypeName,  // e.g., "Size" or "Color"
+                        VariationValueName = option.VariationValueName // e.g., "Small" or "Red"
                     })
                     .ToList();
 
                     // 4) we need to group the variations inside each of these sku items so that we can get a list of what variation types we have
                     // using this we can display a drop down for each variation type like size and colour
                     // SelectMany takes each SKU and extracts its variations, combining all variations from all SKUs into a single flat collection(instead of keeping them in separate lists for each SKU).
-                    productViewModel.GroupedVariations = productViewModel.Skus
+                    productViewModel.GroupedVariations = productViewModel.Options
                         // no need to select many anymore as i changed view model. it was a list but it was only ever going to have one variation per sku row so i have added jsut one item so we dont need to flatten. im going to leave here as it might be useful later
                         //.SelectMany(sku => sku.Variation)  // Flatten the variations across all SKUs
-                        .GroupBy(v => v.Variation.VariationTypeName)  // Group by VariationType so that we then have a list of all of the possible values
+                        .GroupBy(v => v.VariationTypeName)  // Group by VariationType so that we then have a list of all of the possible values
                         .ToDictionary(
                             group => group.Key,  // Group by VariationType
-                            group => group.Select(v => v.Variation.VariationValueName).Distinct().ToList() // Get distinct variation values
+                            group => group.Select(v => v.VariationValueName).Distinct().ToList() // Get distinct variation values
                         ); // here we have a dictionary of the variation type and all of the values - perfect for a drop down.
 
                     // we are returning a shoppingcartitem because that is what will potentially be saved to the db
@@ -315,18 +311,6 @@ namespace EcommerceApp.MVC.Controllers
                     {
                         Product = productViewModel,
                         Count = 1 // how many items do we want to add. eventually user needs to set this
-                    };
-
-                    return View(shoppingCartViewModel);
-                }
-
-                if (productDto != null)
-                {
-                    var productViewModel = _mapper.Map<ProductViewModel>(productDto);
-                    var shoppingCartViewModel = new ShoppingCartViewModel()
-                    {
-                        Product = productViewModel,
-                        Count = 1
                     };
 
                     return View(shoppingCartViewModel);
