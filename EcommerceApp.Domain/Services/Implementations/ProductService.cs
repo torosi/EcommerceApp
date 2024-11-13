@@ -98,7 +98,9 @@ namespace EcommerceApp.Domain.Services.Implementations
                     SkuString = option.Sku.SkuString,
                     Quantity = option.Sku.Quantity,
                     VariationTypeName = option.VariationType.Name,
-                    VariationValueName = option.VariationValue.Name
+                    VariationValueName = option.VariationValue.Name,
+                    VariationTypeId = option.VariationTypeId,
+                    VariationValueId = option.VariationValueId
                 });
             }
 

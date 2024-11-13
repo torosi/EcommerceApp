@@ -286,7 +286,9 @@ namespace EcommerceApp.MVC.Controllers
                         SkuString = option.SkuString,
                         Quantity = option.Quantity,
                         VariationTypeName = option.VariationTypeName,  // e.g., "Size" or "Color"
-                        VariationValueName = option.VariationValueName // e.g., "Small" or "Red"
+                        VariationValueName = option.VariationValueName, // e.g., "Small" or "Red"
+                        VariationTypeId = option.VariationTypeId,
+                        VariationValueId = option.VariationValueId
                     })
                     .ToList();
 

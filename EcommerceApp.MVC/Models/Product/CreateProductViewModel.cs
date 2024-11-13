@@ -1,10 +1,12 @@
 ﻿using EcommerceApp.MVC.Models.Category;
+using EcommerceApp.MVC.Models.ProductVariationOption;
 
 namespace EcommerceApp.MVC.Models.Product
 {
     public class CreateProductViewModel
     {
         public ProductViewModel Product { get; set; }
+        public IEnumerable<CreateProductVariationOptionViewModel> Variations { get; set; }
 
         // currently it makes a request to get these values so we are not passing them as viewmodels at the moment.
         // i might leave it as is just to demonstrate another way to do it.

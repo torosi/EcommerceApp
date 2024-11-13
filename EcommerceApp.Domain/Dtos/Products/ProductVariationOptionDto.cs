@@ -17,7 +17,9 @@ namespace EcommerceApp.Domain.Dtos.Products
         public string SkuString { get; set; }
         public int Quantity { get; set; }
         public string VariationTypeName { get; set; }
+        public int VariationTypeId { get; set; }
         public string VariationValueName { get; set; }
+        public int VariationValueId { get; set; }
 
     }
 }
