@@ -1,6 +1,5 @@
 ﻿using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Entities.Products;
-using EcommerceApp.Data.Entities.Variations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

@@ -1,6 +1,5 @@
-using System;
 using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Entities.Variations;
+using EcommerceApp.Data.Entities.Products;
 
 namespace EcommerceApp.Data.Repositories.Contracts;
 

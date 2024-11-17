@@ -1,6 +1,5 @@
-using System;
 using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Entities.Variations;
+using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Data.Repositories.Contracts;
 using Microsoft.Extensions.Logging;
 
@@ -20,4 +19,5 @@ public class VariationTypeRepository : BaseRepository<VariationType>, IVariation
         await _context.ProductTypeVariationMappings.AddAsync(mapping);
         await _context.SaveChangesAsync();
     }
+
 }
