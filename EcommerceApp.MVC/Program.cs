@@ -45,6 +45,10 @@ builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 
+builder.Services.AddScoped<IVariationTypeRepository, VariationTypeRepository>();
+builder.Services.AddScoped<IVariationTypeService, VariationTypeService>();
+
+
 
 // The ImageHelper class is registered as a singleton service using AddSingleton<ImageHelper>().
 // This means that a single instance of ImageHelper will be created and shared throughout the application.

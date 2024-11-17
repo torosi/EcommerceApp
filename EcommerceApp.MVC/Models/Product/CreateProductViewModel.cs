@@ -5,8 +5,9 @@ namespace EcommerceApp.MVC.Models.Product
 {
     public class CreateProductViewModel
     {
-        public ProductViewModel Product { get; set; }
-        public IEnumerable<CreateProductVariationOptionViewModel> Variations { get; set; }
+        public ProductViewModel Product { get; set; } = new ProductViewModel();
+        public IEnumerable<CreateProductVariationOptionViewModel> Variations { get; set; } = new List<CreateProductVariationOptionViewModel>();
+        public IEnumerable<VariationTypeViewModel> VariationsTypes { get; set; } = new List<VariationTypeViewModel>();
 
         // currently it makes a request to get these values so we are not passing them as viewmodels at the moment.
         // i might leave it as is just to demonstrate another way to do it.

@@ -21,6 +21,7 @@ namespace EcommerceApp.MVC.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ICategoryService _categoryService;
         private readonly IProductTypeService _productTypeService;
+        private readonly IVariationTypeService _variationTypeService;
         private readonly IMapper _mapper;
         private IWebHostEnvironment _webHostEnvironment;
         private readonly ImageHelper _imageHelper;
@@ -32,7 +33,8 @@ namespace EcommerceApp.MVC.Controllers
             ImageHelper imageHelper,
             IShoppingCartService shoppingCartService,
             ICategoryService categoryService,
-            IProductTypeService productTypeService
+            IProductTypeService productTypeService,
+            IVariationTypeService variationTypeService
         )
         {
             _productService = productService;
@@ -42,6 +44,7 @@ namespace EcommerceApp.MVC.Controllers
             _shoppingCartService = shoppingCartService;
             _categoryService = categoryService;
             _productTypeService = productTypeService;
+            _variationTypeService = variationTypeService;
         }
 
         public async Task<IActionResult> Index()
@@ -68,10 +71,25 @@ namespace EcommerceApp.MVC.Controllers
 
         [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             try
             {
+                // var productViewModel = new CreateProductViewModel();
+                
+                // // get variation types and map to view models
+                // var variationTypeDtos = await _variationTypeService.GetAllAsync();
+                // var variationTypeViewModels = variationTypeDtos.Select(x => new VariationTypeViewModel()
+                //     {
+                //         Id = x.Id,
+                //         Name = x.Name,
+                //         Created = x.Created,
+                //         Updated = x.Updated
+                //     });
+                
+                // // set variation types onto view model to pass to view
+                // productViewModel.VariationsTypes = variationTypeViewModels;
+                
                 return View();
             }
             catch (Exception ex)

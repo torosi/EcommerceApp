@@ -12,6 +12,5 @@ namespace EcommerceApp.Domain.Dtos.Products
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public string Name { get; set; }
-
     }
 }

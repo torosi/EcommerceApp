@@ -1,10 +1,11 @@
 ﻿using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Entities.Products;
+using EcommerceApp.Data.Entities.Variations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-// dotnet ef migrations add Initial  --startup-project /Users/thomassimons/Documents/GitHub/EcommerceApp/EcommerceApp.MVC/EcommerceApp.MVC.csproj
+// dotnet ef migrations add AddProductTypeVariationMappingsTable  --startup-project /Users/thomassimons/Documents/GitHub/EcommerceApp/EcommerceApp.MVC/EcommerceApp.MVC.csproj
 // dotnet ef database update  --startup-project /Users/thomassimons/Documents/GitHub/EcommerceApp/EcommerceApp.MVC/EcommerceApp.MVC.csproj
 
 // dotnet ef database update --startup-project C:\Users\thoma\source\repos\EcommerceApp\EcommerceApp.jMVC\EcommerceApp.MVC.cspro
@@ -32,6 +33,7 @@ namespace EcommerceApp.Data
 
         public DbSet<VariationValue> VariationValues { get; set; }
         public DbSet<VariationType> VariationTypes { get; set; }
+        public DbSet<ProductTypeVariationMapping> ProductTypeVariationMappings { get; set; }
         public DbSet<ProductVariationOption> ProductVariationOptions { get; set; }
         public DbSet<Sku> Skus { get; set; }
 
@@ -77,6 +79,10 @@ namespace EcommerceApp.Data
             builder.Entity<ProductVariationOption>()
                 .HasIndex(p => new { p.SkuId, p.VariationTypeId }) // we dont want to allow the same sku to have the multiple of the same variation type (one size, one colour etc)
                 .IsUnique(); // Ensure no repeats of VariationType for a given Sku
+
+            builder.Entity<ProductTypeVariationMapping>()
+                .HasKey(p => new { p.ProductTypeId, p.VariationTypeId });
+
 
 
             base.OnModelCreating(builder);
