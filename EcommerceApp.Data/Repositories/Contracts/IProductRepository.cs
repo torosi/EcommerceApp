@@ -42,6 +42,7 @@ namespace EcommerceApp.Data.Repositories.Contracts
         /// </summary>
         /// <param name="productId"></param>
         /// <returns></returns>
-        public Task<IEnumerable<ProductVariationOption>> GetProductVariationsAsync(int productId);
+        public Task<IEnumerable<Sku>> GetProductVariationsAsync(int productId);
+
     }
 }

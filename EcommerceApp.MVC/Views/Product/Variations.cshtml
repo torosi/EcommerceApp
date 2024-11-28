@@ -1,0 +1,99 @@
+﻿@model CreateProductVariationOptionViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Product Variations</h5>
+        </div>
+        <div class="col">
+            <button type="button" id="add-variation" class="btn btn-primary">Add Option</button>
+        </div>
+    </div>
+    <div class="row">
+        <form asp-action="Variations">
+            <input type="hidden" asp-for="@Model.ProductId" />
+            <div>
+                <h4>Current Options</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Quantity</th>
+                                @foreach (var item in Model.VariationTypes)
+                                {
+                                    <th>@item.Name</th>
+                                }
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                            <tbody id="variation-options">
+                                @if (Model.Input.Any())
+                                {
+                                    @for (int i = 0; i < Model.Input.Count(); i++)
+                                    {
+                                        <tr>
+                                            <input type="hidden" asp-for="@Model.Input.ElementAt(i).Sku.ProductId" value="@Model.ProductId" />
+                                            <td>
+                                                <input asp-for="@Model.Input.ElementAt(i).Sku.SkuString" class="form-control" />
+                                            </td>
+                                            <td>
+                                                <input asp-for="@Model.Input.ElementAt(i).Sku.Quantity" class="form-control" />
+                                            </td>
+                                                @for (int j = 0; j < Model.VariationTypes.Count; j++)
+                                                {
+                                                    var variationType = Model.VariationTypes[j];
+                                                    <td>
+                                                        <input asp-for="@Model.Input[i].VariationValues[j].Value" placeholder="@variationType.Name" class="form-control" />
+                                                        <input type="hidden" asp-for="Input[i].VariationValues[j].VariationTypeId" value="@variationType.Id" />
+                                                    </td>
+                                                }
+                                            <td>
+                                                <button type="button" class="btn btn-danger" onclick="removeOption(@i)">Remove</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                    </table>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-success">Save Options</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.getElementById('add-variation').addEventListener('click', function () {
+        // Get the tbody element where rows will be appended
+        let tableBody = document.querySelector('#variation-options');
+        let index = tableBody.querySelectorAll('tr').length; // Calculate new row index
+        let variationTypes = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.VariationTypes));
+        let productId = @Html.Raw(Model.ProductId);
+
+        let row = `
+                <input type="hidden" name="Input[${index}].Sku.ProductId" value="${productId}" />
+            <tr>
+                <td><input name="Input[${index}].Sku.SkuString" class="form-control" /></td>
+                <td><input name="Input[${index}].Sku.Quantity" type="number" class="form-control" /></td>
+                ${variationTypes
+                    .map(
+                        (vt, colIndex) => `
+                            <td>
+                                <input type="hidden" name="Input[${index}].VariationValues[${colIndex}].VariationTypeId" value="${vt.Id}" />
+                                <input name="Input[${index}].VariationValues[${colIndex}].Value" placeholder="${vt.Name}" class="form-control" />
+                            </td>`
+                        ).join('')}
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="this.closest('tr').remove()">Remove</button>
+                </td>
+            </tr>
+        `;
+
+        // Append the new row
+        tableBody.insertAdjacentHTML('beforeend', row);
+    });
+</script>

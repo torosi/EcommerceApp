@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using Microsoft.Identity.Client;
+
 namespace EcommerceApp.Data.Entities.Products;
 
 public class ProductVariationOption : BaseEntity
@@ -8,6 +11,7 @@ public class ProductVariationOption : BaseEntity
     public int VariationTypeId { get; set; }
     public VariationType VariationType { get; set; }
 
-    public int VariationValueId { get; set; }
-    public VariationValue VariationValue { get; set; }
+    // public int VariationValueId { get; set; }
+    // public VariationValue VariationValue { get; set; }
+    public string VariationValue { get; set; } = string.Empty;
 }

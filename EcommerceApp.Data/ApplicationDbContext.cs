@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-// dotnet ef migrations add AddProductTypeVariationMappingsTable  --startup-project /Users/thomassimons/Documents/GitHub/EcommerceApp/EcommerceApp.MVC/EcommerceApp.MVC.csproj
+// dotnet ef migrations add ChangeVariationValueColumn  --startup-project /Users/thomassimons/Documents/GitHub/EcommerceApp/EcommerceApp.MVC/EcommerceApp.MVC.csproj
 // dotnet ef database update  --startup-project /Users/thomassimons/Documents/GitHub/EcommerceApp/EcommerceApp.MVC/EcommerceApp.MVC.csproj
 
 // dotnet ef database update --startup-project C:\Users\thoma\source\repos\EcommerceApp\EcommerceApp.jMVC\EcommerceApp.MVC.cspro
@@ -65,6 +65,7 @@ namespace EcommerceApp.Data
             builder.Entity<Product>()
                 .HasOne(p => p.ProductType);
 
+
             // // we want to make sure that the vartiationattibute class is made up of unique combinations
             // builder.Entity<VariationAttribute>()
             //     .HasIndex(va => new { va.ProductVariationId, va.VariationId })
@@ -82,7 +83,11 @@ namespace EcommerceApp.Data
             builder.Entity<ProductTypeVariationMapping>()
                 .HasKey(p => new { p.ProductTypeId, p.VariationTypeId });
 
-
+            builder.Entity<Sku>()
+                .HasMany(s => s.ProductVariationOptions)
+                .WithOne(pvo => pvo.Sku)
+                .HasForeignKey(pvo => pvo.SkuId)
+                .OnDelete(DeleteBehavior.Cascade); // IMPORTANT - how will this impact deleting?
 
             base.OnModelCreating(builder);
         }

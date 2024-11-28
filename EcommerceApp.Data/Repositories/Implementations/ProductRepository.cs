@@ -76,18 +76,19 @@ namespace EcommerceApp.Data.Repositories.Implementations
             return (totalCount, products);
         }
 
-        public async Task<IEnumerable<ProductVariationOption>> GetProductVariationsAsync(int productId)
+        public async Task<IEnumerable<Sku>> GetProductVariationsAsync(int productId)
         {
-
-            var options = await _context.ProductVariationOptions
-                .Where(o => o.Sku.ProductId == productId)
-                .Include(o => o.Sku)
-                .Include(o => o.Sku.Product)
-                .Include(o => o.VariationType)
-                .Include(o => o.VariationValue)
+            return await _context.Skus
+                .Where(sku => sku.ProductId == productId)
+                .Include(sku => sku.ProductVariationOptions)
+                .ThenInclude(option => option.VariationType)
                 .ToListAsync();
-
-            return options;
         }
+
+        public async Task CreateProductVariations(List<ProductVariationOption> variations)
+        {
+            await _context.ProductVariationOptions.AddRangeAsync(variations);
+        }
+
     }
 }

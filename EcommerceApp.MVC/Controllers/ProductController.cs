@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Dtos;
+using EcommerceApp.Domain.Dtos.Products;
+using EcommerceApp.Domain.Dtos.Variations;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Category;
@@ -8,6 +11,8 @@ using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductType;
 using EcommerceApp.MVC.Models.ProductVariationOption;
 using EcommerceApp.MVC.Models.ShoppingCart;
+using EcommerceApp.MVC.Models.Sku;
+using EcommerceApp.MVC.Models.VariationType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -71,7 +76,7 @@ namespace EcommerceApp.MVC.Controllers
 
         [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             try
             {
@@ -127,7 +132,9 @@ namespace EcommerceApp.MVC.Controllers
                     var productDto = _mapper.Map<ProductDto>(createProduct);
 
                     // call our service
-                    await _productService.AddAsync(productDto);
+                    var newProductDto = await _productService.AddAsync(productDto);
+
+                    return RedirectToAction("Variations", new { productId = newProductDto.Id });
                 }
             }
             catch (Exception ex)
@@ -135,7 +142,7 @@ namespace EcommerceApp.MVC.Controllers
                 Console.WriteLine(ex);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         [Authorize(Roles = UserRoles.Admin)]
@@ -286,59 +293,71 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                // 1) gets the product
-                // 2) gets all of this products variations
+                // 1) Retrieve the product
                 var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
-                var productOptions = await _productService.GetProductVariationsAsync(productId);
 
-                if (productDto != null && productOptions.Any())
+                // 2) Retrieve all SKUs and their variations for the product
+                var skuWithVariations = await _productService.GetProductVariationsAsync(productId);
+
+                if (productDto != null && skuWithVariations.Any())
                 {
+                    // 3) Map the product DTO to the product view model
                     var productViewModel = _mapper.Map<ProductViewModel>(productDto);
 
-                    // 3) Map to SkuViewModel which will have a list of variations on it.
-                    // we get a sku row for each variation option - here we want to group all of these rows into one list per sku
-                    productViewModel.Options = productOptions
-                    .Select(option => new ProductVariationOptionViewModel
-                    {
-                        SkuId = option.SkuId,
-                        SkuString = option.SkuString,
-                        Quantity = option.Quantity,
-                        VariationTypeName = option.VariationTypeName,  // e.g., "Size" or "Color"
-                        VariationValueName = option.VariationValueName, // e.g., "Small" or "Red"
-                        VariationTypeId = option.VariationTypeId,
-                        VariationValueId = option.VariationValueId
-                    })
-                    .ToList();
+                    // Populate the options (all variation options across all SKUs) - we dont need this for anything other than populating the drop down at the moment
+                    var options = skuWithVariations
+                        .SelectMany(sku => sku.VariationOptions.Select(option => new ProductVariationOptionViewModel
+                        {
+                            VariationTypeId = option.VariationTypeId,
+                            VariationTypeName = option.VariationTypeName,
+                            VariationValue = option.VariationValue
+                        }))
+                        .ToList();
 
-                    // 4) we need to group the variations inside each of these sku items so that we can get a list of what variation types we have
-                    // using this we can display a drop down for each variation type like size and colour
-                    // SelectMany takes each SKU and extracts its variations, combining all variations from all SKUs into a single flat collection(instead of keeping them in separate lists for each SKU).
-                    productViewModel.GroupedVariations = productViewModel.Options
-                        // no need to select many anymore as i changed view model. it was a list but it was only ever going to have one variation per sku row so i have added jsut one item so we dont need to flatten. im going to leave here as it might be useful later
-                        //.SelectMany(sku => sku.Variation)  // Flatten the variations across all SKUs
-                        .GroupBy(v => v.VariationTypeName)  // Group by VariationType so that we then have a list of all of the possible values
+                    // Create a grouped dictionary of variation types and their values
+                    var groupedVariations = options
+                        .GroupBy(option => option.VariationTypeName) // Group by VariationTypeName
                         .ToDictionary(
-                            group => group.Key,  // Group by VariationType
-                            group => group.Select(v => v.VariationValueName).Distinct().ToList() // Get distinct variation values
-                        ); // here we have a dictionary of the variation type and all of the values - perfect for a drop down.
+                            group => group.Key, // The key is the variation type name (e.g., "Size", "Color")
+                            group => group.Select(option => option.VariationValue).Distinct().ToList() // Get distinct values for each type
+                        );
+                    
+                    var skuWithVariationsViewModels = skuWithVariations.Select(sku => new SkuWithVariationsViewModel
+                    {
+                        Sku = new SkuViewModel
+                        {
+                            Id = sku.SkuId,
+                            SkuString = sku.SkuString,
+                            Quantity = sku.Quantity,
+                            ProductId = sku.ProductId
+                        },
+                        VariationOptions = sku.VariationOptions.Select(option => new ProductVariationOptionViewModel
+                        {
+                            VariationTypeId = option.VariationTypeId,
+                            VariationTypeName = option.VariationTypeName,
+                            VariationValue = option.VariationValue
+                        }).ToList()
+                    }).ToList();
 
-                    // we are returning a shoppingcartitem because that is what will potentially be saved to the db
-                    var shoppingCartViewModel = new ShoppingCartViewModel()
+                    var productDetailsViewModel = new ProductDetailsViewModel()
                     {
                         Product = productViewModel,
-                        Count = 1 // how many items do we want to add. eventually user needs to set this
+                        GroupedVariations = groupedVariations,
+                        SkusWithVariations = skuWithVariationsViewModels
                     };
 
-                    return View(shoppingCartViewModel);
+                    return View(productDetailsViewModel);
                 }
             }
             catch (Exception ex)
             {
+                // Log the exception (you can replace this with proper logging)
                 Console.WriteLine(ex);
             }
 
-            return RedirectToAction("Index", "Home");
-        }
+
+        return RedirectToAction("Index", "Home");
+    }
 
         [Authorize]
         [HttpPost("AddToCart")]
@@ -384,6 +403,97 @@ namespace EcommerceApp.MVC.Controllers
                 Console.WriteLine(ex);
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpGet]
+        public async Task<IActionResult> Variations(int productId)
+        {
+            try 
+            {
+                // 1) get the product from the db
+                var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
+                if (productDto == null) return RedirectToAction("Index");
+
+                // map to view model
+                var productViewModel = _mapper.Map<ProductViewModel>(productDto);
+
+                // 2) get the product type and fetch all of the linked variation types
+                var variationTypeDtos = await _variationTypeService.GetAllByProductTypeAsync(productDto.ProductTypeId);
+
+                // map to view model
+                var variationTypeViewModels = variationTypeDtos.Select(x => new VariationTypeViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                });
+
+                // TODO - We now need to get all of the existing product variation options based on this product and then pass them back to the view as the Input model on the below view model
+                // we need a collection of.... 1 sku and a collection of variations... in this format ProductVariationOptionInputViewModel
+
+                // 3) create view model for page
+                var createViewModel = new CreateProductVariationOptionViewModel()
+                {
+                    ProductId = productDto.Id,
+                    VariationTypes = variationTypeViewModels.ToList(),
+                    // HERE ---> Input = something,
+                };
+
+                // 3) pass to view
+                return View(createViewModel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Variations(CreateProductVariationOptionViewModel createProductVariationOptionViewModel)
+        {
+            try
+            {
+                var mappedOptions = new List<ProductVariationOptionInputDto>();
+                var mappedSkus = new List<SkuDto>();
+
+                foreach (var input in createProductVariationOptionViewModel.Input)
+                {
+                    var sku = new SkuDto()
+                    {
+                        SkuString = input.Sku.SkuString,
+                        Quantity = input.Sku.Quantity,
+                        ProductId = createProductVariationOptionViewModel.ProductId,
+                        Created = DateTime.Now,
+                        Updated = DateTime.Now
+                    };
+
+                    mappedSkus.Add(sku);
+                    
+                    foreach (var variationValue in input.VariationValues)
+                    {
+                        var option = new ProductVariationOptionInputDto
+                        {
+                            SkuString = input.Sku.SkuString,
+                            VariationTypeId = variationValue.VariationTypeId,
+                            VariationValue = variationValue.Value,
+                            Created = DateTime.Now,
+                            Updated = DateTime.Now
+                        };
+
+                        mappedOptions.Add(option);
+                    }
+                }
+
+                await _productService.CreateProductVariations(mappedSkus, mappedOptions);
+                return View(createProductVariationOptionViewModel); // todo, we wont want to go back to the view, i just put this here for now to keep things simple when testing this out
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return RedirectToAction("Index");
         }
 
     }

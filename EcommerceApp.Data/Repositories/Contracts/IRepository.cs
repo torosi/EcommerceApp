@@ -9,7 +9,7 @@ namespace EcommerceApp.Data.Repositories.Contracts
         /// </summary>
         /// <param name="includeProperties"></param>
         /// <returns></returns>
-        Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null);
+        Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null, Expression<Func<T, bool>>? filter = null);
 
         /// <summary>
         /// Method to get first of default entity T

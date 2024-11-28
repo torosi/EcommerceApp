@@ -103,15 +103,13 @@
 
 @section Scripts {
 
-    <script src="/js/create-js"></script>
+    <script src="/js/create-product.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             var variationIndex = 0;
 
-            init(
-                '@Url.Action("GetAllProductTypes", "ProductType")'
-            );
+            init('@Url.Action("GetAllProductTypes", "ProductType")');
 
             // Load categories for drop down
             loadDropDownData('@Url.Action("GetAllCategories", "Category")', 'category-drop-down');

@@ -12,4 +12,11 @@ public interface IVariationTypeRepository : IRepository<VariationType>
     /// <param name="productTypeid"></param>
     /// <returns></returns>
     public Task CreateProductTypeVariationMappingAsync(ProductTypeVariationMapping mapping);
+
+    /// <summary>
+    /// Method to get variation types by productTypeId
+    /// </summary>
+    /// <param name="productTypeId"></param>
+    /// <returns></returns>
+    public Task<IEnumerable<VariationType?>> GetAllByProductTypeAsync(int productTypeId);
 }

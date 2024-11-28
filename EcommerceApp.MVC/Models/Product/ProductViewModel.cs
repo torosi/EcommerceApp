@@ -1,4 +1,5 @@
-﻿using EcommerceApp.MVC.Models.Category;
+﻿using System.ComponentModel.DataAnnotations;
+using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.ProductType;
 using EcommerceApp.MVC.Models.ProductVariationOption;
 
@@ -14,10 +15,6 @@ namespace EcommerceApp.MVC.Models.Product
         public string? ImageUrl { get; set; }
         public double Price { get; set; }
         public int? CategoryId { get; set; }
-        public CategoryViewModel? Category { get; set; }
         public int? ProductTypeId { get; set; }
-        public ProductTypeViewModel? ProductType { get; set; }
-        public List<ProductVariationOptionViewModel> Options { get; set; } = new List<ProductVariationOptionViewModel>();
-        public Dictionary<string, List<string>>? GroupedVariations { get; set; }
     }
 }
