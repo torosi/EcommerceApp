@@ -14,6 +14,7 @@ namespace EcommerceApp.Data.Repositories.Implementations
             _context = context;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Category>> GetAllAsync(string? includeProperties = null, int? limit = null)
         {
             IQueryable<Category> query = _dbSet;
@@ -38,6 +39,7 @@ namespace EcommerceApp.Data.Repositories.Implementations
             return await query.ToListAsync();
         }
 
+        /// <inheritdoc />
         public void Update(Category category)
         {
             _context.Categories.Update(category);

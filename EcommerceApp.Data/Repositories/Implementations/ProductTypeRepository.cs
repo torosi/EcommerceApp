@@ -13,6 +13,7 @@ public class ProductTypeRepository : BaseRepository<ProductType>, IProductTypeRe
         _context = context;
     }
 
+    /// <inheritdoc />
     public void Update(ProductType productType)
     {
         _context.ProductTypes.Update(productType);

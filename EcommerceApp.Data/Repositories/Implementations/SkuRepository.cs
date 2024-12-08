@@ -14,11 +14,13 @@ public class SkuRepository : BaseRepository<Sku>, ISkuRepository
         _context = context;
     }
 
+    /// <inheritdoc />
     public async Task AddRangeAsync(IEnumerable<Sku> skus)
     {
         await _context.Skus.AddRangeAsync(skus);
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<Sku>> GetBySkuStringsAsync(IEnumerable<string> skuStrings)
     {
         return await _context.Skus

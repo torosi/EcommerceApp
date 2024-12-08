@@ -17,6 +17,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             _productRepository = productRepository;
         }
 
+        /// <inheritdoc />
         public async Task AddAsync(CategoryDto entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -27,6 +28,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             await _categoryRepository.SaveChangesAsync();
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<CategoryDto>> GetAllAsync(int? limit = null)
         {
             var categories = await _categoryRepository.GetAllAsync(limit : limit);
@@ -34,6 +36,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             return categoryDtos;
         }
 
+        /// <inheritdoc />
         public async Task<CategoryDto?> GetFirstOrDefaultAsync(Expression<Func<Category, bool>> filter, bool tracked = true)
         {
             var category = await _categoryRepository.GetFirstOrDefaultAsync(filter, tracked);
@@ -41,6 +44,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             return category.ToDto();
         }
 
+        /// <inheritdoc />
         public async Task RemoveAsync(CategoryDto entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -64,6 +68,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             await _categoryRepository.SaveChangesAsync();
         }
 
+        /// <inheritdoc />
         public async Task UpdateAsync(CategoryDto entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));

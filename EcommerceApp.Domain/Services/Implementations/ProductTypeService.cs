@@ -20,6 +20,7 @@ public class ProductTypeService : IProductTypeService
         _logger = logger;
     }
 
+    /// <inheritdoc />
     public async Task AddAsync(ProductTypeDto entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -30,6 +31,7 @@ public class ProductTypeService : IProductTypeService
         await _productTypeRepository.SaveChangesAsync();
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<ProductTypeDto>> GetAllAsync()
     {
         // Get product types
@@ -40,6 +42,7 @@ public class ProductTypeService : IProductTypeService
         return productEntities.Select(x => x.ToDto());
     }
 
+    /// <inheritdoc />
     public async Task<ProductTypeDto?> GetFirstOrDefaultAsync(Expression<Func<ProductType, bool>> filter, string? includeProperties = null, bool tracked = true)
     {
         // get the product type from db
@@ -54,6 +57,7 @@ public class ProductTypeService : IProductTypeService
         return productEntity.ToDto();
     }
 
+    /// <inheritdoc />
     public async Task RemoveAsync(ProductTypeDto entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -68,6 +72,7 @@ public class ProductTypeService : IProductTypeService
         }
     }
 
+    /// <inheritdoc />
     public async Task UpdateAsync(ProductTypeDto entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));

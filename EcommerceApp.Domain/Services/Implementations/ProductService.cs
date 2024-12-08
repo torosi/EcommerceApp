@@ -23,7 +23,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             _productVariationOptionRepository = productVariationOptionRepository;
         }
 
-
+        /// <inheritdoc />
         public async Task<ProductDto> AddAsync(ProductDto entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -36,14 +36,14 @@ namespace EcommerceApp.Domain.Services.Implementations
             return productEntity.ToDto();
         }
 
-
+        /// <inheritdoc />
         public async Task<IEnumerable<ProductDto>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null)
         {
             var productEntities = await _productRepository.GetAllAsync(includeProperties, filter);
             return productEntities.Select(x => x.ToDto());
         }
 
-
+        /// <inheritdoc />
         public async Task<ProductDto?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null, bool tracked = true)
         {
             var productEntity = await _productRepository.GetFirstOrDefaultAsync(filter, includeProperties: includeProperties, tracked: tracked);
@@ -54,7 +54,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             return productEntity.ToDto(); 
         }
 
-
+        /// <inheritdoc />
         public async Task RemoveAsync(ProductDto entity)
         {
             if (entity == null) throw new ArgumentException(nameof(entity));
@@ -62,7 +62,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             await _productRepository.SaveChangesAsync();
         }
 
-
+        /// <inheritdoc />
         public async Task UpdateAsync(ProductDto entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -85,7 +85,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             }
         }
 
-
+        /// <inheritdoc />
         public async Task<(int TotalCount, IEnumerable<ProductDto> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20)
         {
             var productResult = await _productRepository.GetFilteredProductsAsync(includeProperties, filter, pageNumber, itemsPerPage);
@@ -93,6 +93,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             return (productResult.TotalCount, productDtos);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<SkuWithVariationsDto>> GetProductVariationsAsync(int productId)
         {
             var skus = await _productRepository.GetProductVariationsAsync(productId);
@@ -115,6 +116,7 @@ namespace EcommerceApp.Domain.Services.Implementations
             return skuDtos;
         }
 
+        /// <inheritdoc />
         public async Task CreateProductVariations(IEnumerable<SkuDto> skus, IEnumerable<ProductVariationOptionInputDto> variations)
         {
             if (skus == null || !skus.Any()) throw new ArgumentNullException(nameof(skus));

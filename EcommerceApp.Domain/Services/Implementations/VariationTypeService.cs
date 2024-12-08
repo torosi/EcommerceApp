@@ -19,6 +19,7 @@ public class VariationTypeService : IVariationTypeService
         _variationTypeRepository = variationTypeRepository;
     }
 
+    /// <inheritdoc />
     public async Task CreateVariationTypeAsync(VariationTypeDto variationTypeDto, int productTypeId)
     {
         if (variationTypeDto == null) throw new ArgumentNullException(nameof(variationTypeDto));
@@ -42,6 +43,7 @@ public class VariationTypeService : IVariationTypeService
         await _variationTypeRepository.SaveChangesAsync();
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<VariationTypeDto>> GetAllAsync(string? includeProperties = null, Expression<Func<VariationType, bool>>? filter = null)
     {
         var variationTypes = await _variationTypeRepository.GetAllAsync(includeProperties: includeProperties, filter: filter);
@@ -49,6 +51,7 @@ public class VariationTypeService : IVariationTypeService
         return variationDtos;
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<VariationTypeDto>> GetAllByProductTypeAsync(int productTypeId)
     {
         if (productTypeId == 0) throw new ArgumentNullException(nameof(productTypeId));

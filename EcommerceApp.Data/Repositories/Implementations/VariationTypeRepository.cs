@@ -15,12 +15,14 @@ public class VariationTypeRepository : BaseRepository<VariationType>, IVariation
         _context = context;
     }
 
+    /// <inheritdoc />
     public async Task CreateProductTypeVariationMappingAsync(ProductTypeVariationMapping mapping)
     {
         await _context.ProductTypeVariationMappings.AddAsync(mapping);
         await _context.SaveChangesAsync();
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<VariationType?>> GetAllByProductTypeAsync(int productTypeId)
     {
         // Fetch the mappings including VariationType navigation property

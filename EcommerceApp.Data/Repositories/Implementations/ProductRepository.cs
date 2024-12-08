@@ -15,6 +15,7 @@ namespace EcommerceApp.Data.Repositories.Implementations
             _context = context;
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Product>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null)
         {
             IQueryable<Product> query = _dbSet;
@@ -36,11 +37,13 @@ namespace EcommerceApp.Data.Repositories.Implementations
             return await query.ToListAsync();
         }
 
+        /// <inheritdoc />
         public void Update(Product product)
         {
             _context.Products.Update(product);
         }
 
+        /// <inheritdoc />
         public void UpdateRange(IEnumerable<Product> products)
         {
             if (products == null || !products.Any()) throw new ArgumentNullException(nameof(products));
@@ -48,15 +51,7 @@ namespace EcommerceApp.Data.Repositories.Implementations
             _context.Products.UpdateRange(products);
         }
 
-        /// <summary>
-        /// A method that will apply a filter to get products as well as pagination options.
-        /// Returns the total of number of products also so that you can calculate number of pages if needed.
-        /// </summary>
-        /// <param name="includeProperties"></param>
-        /// <param name="filter"></param>
-        /// <param name="pageNumber"></param>
-        /// <param name="itemsPerPage"></param>
-        /// <returns>Returns (totalNumberOfProducts, IEnumerable of your products)</returns>
+        /// <inheritdoc />
         public async Task<(int TotalCount, IEnumerable<Product> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20)
         {
             IQueryable<Product> query = _dbSet;
@@ -76,6 +71,7 @@ namespace EcommerceApp.Data.Repositories.Implementations
             return (totalCount, products);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<Sku>> GetProductVariationsAsync(int productId)
         {
             return await _context.Skus
@@ -85,6 +81,7 @@ namespace EcommerceApp.Data.Repositories.Implementations
                 .ToListAsync();
         }
 
+        /// <inheritdoc />
         public async Task CreateProductVariations(List<ProductVariationOption> variations)
         {
             await _context.ProductVariationOptions.AddRangeAsync(variations);

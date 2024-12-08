@@ -13,6 +13,7 @@ public class ProductVariationOptionRepository : BaseRepository<ProductVariationO
         _context = context;
     }
 
+    /// <inheritdoc />
     public async Task AddRangeAsync(IEnumerable<ProductVariationOption> variations)
     {
         await _context.ProductVariationOptions.AddRangeAsync(variations);
