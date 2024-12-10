@@ -15,6 +15,7 @@ using EcommerceApp.MVC.Models.Sku;
 using EcommerceApp.MVC.Models.VariationType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 
 namespace EcommerceApp.MVC.Controllers
@@ -456,6 +457,38 @@ namespace EcommerceApp.MVC.Controllers
             {
                 var mappedOptions = new List<ProductVariationOptionInputDto>();
                 var mappedSkus = new List<SkuDto>();
+
+                // TODO: we need to consider variations that already exist, to do that we need to pass some values into the page in above method
+         
+                // 1) check if there are any duplicate combinations of variation values.
+                // we do not want to allow the same combination of values to belong to more than one sku
+                var duplicates = createProductVariationOptionViewModel.Input
+                    .Select(input => new
+                    {
+                        VariationCombination = input.VariationValues
+                            .OrderBy(v => v.VariationTypeId) // Ensure consistent ordern regardless of how they are entered
+                            .Select(v => v.Value) // value is the name on the view model fyi
+                            .ToArray() // ["Large","Black"]
+                    })
+                    .GroupBy(x => string.Join(",", x.VariationCombination)) // Use a string to represent the combination e.g "Large,Black" // arrays cannot be used as keys as it will use the reference not the value... so we need to make them a string
+                    .Where(g => g.Count() > 1) // we only want duplicates
+                    .Select(g => g.Key)
+                    .ToList();
+
+                // NOTE ^^^^
+                // This is what it looks like after the grouping. From this we can see if any have a count > 1
+                // item1 and item2 refer to the original objects that have now been groups by our key "Large,Black" and "Small,Red".
+                //{
+                //    "Large,Black": [item1, item3],
+                //    "Small,Red": [item2]
+                //}
+
+                if (duplicates.Any())
+                {
+                    ModelState.AddModelError("", "Duplicate variation value combinations detected. Each variation combination must be unique.");
+                    return View(createProductVariationOptionViewModel);
+                }
+
 
                 foreach (var input in createProductVariationOptionViewModel.Input)
                 {
