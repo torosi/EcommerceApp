@@ -10,6 +10,7 @@ namespace EcommerceApp.Domain.Dtos.Products
 {
     public class ProductVariationOptionDto
     {
+        public int Id { get; set; }
         public int SkuId { get; set; }
         public int VariationTypeId { get; set; }
         public string VariationTypeName { get; set; }= string.Empty;

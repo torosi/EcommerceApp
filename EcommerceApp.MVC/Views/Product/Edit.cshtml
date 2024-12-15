@@ -67,6 +67,11 @@
                                 Choose image <input type="file" name="file" hidden accept="image/*">
                             </label>
                         </div>
+                        <div class="py-2 col-12">
+                            <a asp-action="Variations" asp-controller="Product" asp-route-productId="@Model.Product.Id" class="btn btn-secondary">
+                                Edit Variations
+                            </a>
+                        </div>
                         <div class="form-group">
                             <input type="submit" value="Save" class="btn btn-primary" />
                         </div>

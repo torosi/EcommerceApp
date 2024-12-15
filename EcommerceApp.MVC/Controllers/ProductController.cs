@@ -431,13 +431,31 @@ namespace EcommerceApp.MVC.Controllers
 
                 // TODO - We now need to get all of the existing product variation options based on this product and then pass them back to the view as the Input model on the below view model
                 // we need a collection of.... 1 sku and a collection of variations... in this format ProductVariationOptionInputViewModel
+                var skuWithVariationDtos = await _productService.GetProductVariationsAsync(productId);
+
+                var skuWithVariationViewModels = skuWithVariationDtos.Select(x => new ProductVariationOptionInputViewModel()
+                {
+                    Sku = new SkuViewModel()
+                    {
+                        Id = x.SkuId,
+                        Quantity = x.Quantity,
+                        SkuString = x.SkuString,
+                        ProductId = x.ProductId
+                    },
+                    VariationValues = x.VariationOptions.Select(y => new VariationValueInputViewModel()
+                    {
+                        Id = y.Id, // this is the productvariaitionoption id so we can track which ones to add
+                        VariationTypeId = y.VariationTypeId,
+                        Value = y.VariationValue,
+                    }).ToList()
+                });
 
                 // 3) create view model for page
                 var createViewModel = new CreateProductVariationOptionViewModel()
                 {
                     ProductId = productDto.Id,
                     VariationTypes = variationTypeViewModels.ToList(),
-                    // HERE ---> Input = something,
+                    Input = skuWithVariationViewModels.ToList()
                 };
 
                 // 3) pass to view
@@ -462,7 +480,7 @@ namespace EcommerceApp.MVC.Controllers
 
                 var areVariationsUnique = AreVariationsUnique(createProductVariationOptionViewModel.Input);
 
-                if (areVariationsUnique)
+                if (!areVariationsUnique)
                 {
                     ModelState.AddModelError("", "Duplicate variation value combinations detected. Each variation combination must be unique.");
                     return View(createProductVariationOptionViewModel);
@@ -471,7 +489,8 @@ namespace EcommerceApp.MVC.Controllers
                 foreach (var input in createProductVariationOptionViewModel.Input)
                 {
                     var sku = new SkuDto()
-                    {
+                    { // TODO - This needs the sku id on it so that we are not accidentially adding ones that already exist again
+                        Id = input.Sku.Id,
                         SkuString = input.Sku.SkuString,
                         Quantity = input.Sku.Quantity,
                         ProductId = createProductVariationOptionViewModel.ProductId,
@@ -485,6 +504,10 @@ namespace EcommerceApp.MVC.Controllers
                     {
                         var option = new ProductVariationOptionInputDto
                         {
+                            // this also needs the id on it so that we can track ones that already exist. this will mean that when we get them we also need to bring down the id
+                            // this might make some of the view models redundant? but worry about that later.
+                            // dont forget to add the id field to the views as hidden.
+                            Id = variationValue.Id,
                             SkuString = input.Sku.SkuString,
                             VariationTypeId = variationValue.VariationTypeId,
                             VariationValue = variationValue.Value,
@@ -496,8 +519,10 @@ namespace EcommerceApp.MVC.Controllers
                     }
                 }
 
-                await _productService.CreateProductVariations(mappedSkus, mappedOptions);
-                return View(createProductVariationOptionViewModel); // todo, we wont want to go back to the view, i just put this here for now to keep things simple when testing this out
+                if (mappedSkus.Any() && mappedOptions.Any())
+                {
+                    await _productService.CreateProductVariations(mappedSkus, mappedOptions);
+                }
             }
             catch (Exception ex)
             {
@@ -508,6 +533,11 @@ namespace EcommerceApp.MVC.Controllers
         }
 
 
+        /// <summary>
+        /// Method to determine if there are duplicate variation options in our collection of ProductVariationOptionInputViewModels
+        /// </summary>
+        /// <param name="inputs"></param>
+        /// <returns></returns>
         private bool AreVariationsUnique(IEnumerable<ProductVariationOptionInputViewModel> inputs)
         {
             var combinations = new List<string>();

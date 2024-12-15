@@ -75,7 +75,7 @@ namespace EcommerceApp.Data.Repositories.Implementations
         public async Task<IEnumerable<Sku>> GetProductVariationsAsync(int productId)
         {
             return await _context.Skus
-                .Where(sku => sku.ProductId == productId)
+                .Where(sku => sku.ProductId == productId && sku.ProductVariationOptions.Any()) // to be like an inner join as there might be a sku without options (ideally shouldnt be but for now this will make sure the page loads)
                 .Include(sku => sku.ProductVariationOptions)
                 .ThenInclude(option => option.VariationType)
                 .ToListAsync();

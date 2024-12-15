@@ -29,24 +29,26 @@
                             <tbody id="variation-options">
                                 @if (Model.Input.Any())
                                 {
-                                    @for (int i = 0; i < Model.Input.Count(); i++)
+                                    @for (int i = 0; i < Model.Input.Count; i++)
                                     {
                                         <tr>
-                                            <input type="hidden" asp-for="@Model.Input.ElementAt(i).Sku.ProductId" value="@Model.ProductId" />
                                             <td>
-                                                <input asp-for="@Model.Input.ElementAt(i).Sku.SkuString" class="form-control" />
+                                                <input asp-for="@Model.Input[i].Sku.SkuString" disabled class="form-control" required/>
+                                                <input type="hidden" asp-for="@Model.Input[i].Sku.Id" />
+                                                <input type="hidden" asp-for="@Model.Input[i].Sku.ProductId" />
                                             </td>
-                                            <td>
-                                                <input asp-for="@Model.Input.ElementAt(i).Sku.Quantity" class="form-control" />
+                                            <td> 
+                                                <input asp-for="@Model.Input[i].Sku.Quantity" class="form-control" required/>
                                             </td>
-                                                @for (int j = 0; j < Model.VariationTypes.Count; j++)
-                                                {
-                                                    var variationType = Model.VariationTypes[j];
-                                                    <td>
-                                                        <input asp-for="@Model.Input[i].VariationValues[j].Value" placeholder="@variationType.Name" class="form-control" />
-                                                        <input type="hidden" asp-for="Input[i].VariationValues[j].VariationTypeId" value="@variationType.Id" />
-                                                    </td>
-                                                }
+                                            @for (int j = 0; j < Model.VariationTypes.Count; j++)
+                                            {
+                                                var variationType = Model.VariationTypes[j];
+                                                <td>
+                                                    <input asp-for="@Model.Input[i].VariationValues[j].Value" placeholder="@variationType.Name" class="form-control" required/>
+                                                    <input type="hidden" asp-for="@Model.Input[i].VariationValues[j].VariationTypeId" value="@variationType.Id" />
+                                                    <input type="hidden" asp-for="@Model.Input[i].VariationValues[j].Id" />
+                                                </td>
+                                            }
                                             <td>
                                                 <button type="button" class="btn btn-danger" onclick="removeOption(@i)">Remove</button>
                                             </td>
@@ -77,14 +79,14 @@
         let row = `
                 <input type="hidden" name="Input[${index}].Sku.ProductId" value="${productId}" />
             <tr>
-                <td><input name="Input[${index}].Sku.SkuString" class="form-control" /></td>
-                <td><input name="Input[${index}].Sku.Quantity" type="number" class="form-control" /></td>
+                <td><input name="Input[${index}].Sku.SkuString" class="form-control" required/></td>
+                <td><input name="Input[${index}].Sku.Quantity" type="number" class="form-control" required/></td>
                 ${variationTypes
                     .map(
                         (vt, colIndex) => `
                             <td>
                                 <input type="hidden" name="Input[${index}].VariationValues[${colIndex}].VariationTypeId" value="${vt.Id}" />
-                                <input name="Input[${index}].VariationValues[${colIndex}].Value" placeholder="${vt.Name}" class="form-control" />
+                                <input name="Input[${index}].VariationValues[${colIndex}].Value" placeholder="${vt.Name}" class="form-control" required/>
                             </td>`
                         ).join('')}
                 <td>

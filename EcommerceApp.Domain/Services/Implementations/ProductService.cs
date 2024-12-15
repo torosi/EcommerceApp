@@ -106,6 +106,7 @@ namespace EcommerceApp.Domain.Services.Implementations
                 ProductId = sku.ProductId,
                 VariationOptions = sku.ProductVariationOptions.Select(option => new ProductVariationOptionDto
                 {
+                    Id = option.Id,
                     SkuId = sku.Id,
                     VariationTypeId = option.VariationTypeId,
                     VariationValue = option.VariationValue,
@@ -124,12 +125,12 @@ namespace EcommerceApp.Domain.Services.Implementations
 
             // We only want to save the skus that currently dont exist, so we need to get them from the db and pull out only the ones that are not in out db result
 
-            // Step 1: Retrieve existing SKUs
-            var existingSkus = await _skuRepository.GetBySkuStringsAsync(skus.Select(s => s.SkuString));
+            // // Step 1: Retrieve existing SKUs
+            // var existingSkus = await _skuRepository.GetBySkuStringsAsync(skus.Select(s => s.SkuString));
 
             // Step 2: Identify SKUs that need to be added
             var newSkus = skus
-                .Where(sku => !existingSkus.Any(e => e.SkuString == sku.SkuString))
+                .Where(sku => sku.Id == 0)
                 .Select(x => new Sku()
                 {
                     SkuString = x.SkuString,
@@ -146,32 +147,27 @@ namespace EcommerceApp.Domain.Services.Implementations
                 await _skuRepository.SaveChangesAsync();
             }
 
-            // Step 4: Combine existing and newly created SKUs
-            var allSkus = existingSkus.Concat(newSkus).ToList(); // add our newly created ones back into our db result so that we have a complete list of them from the db
+            // // Step 4: Combine existing and newly created SKUs
+            // var allSkus = existingSkus.Concat(newSkus).ToList(); // add our newly created ones back into our db result so that we have a complete list of them from the db
 
-            // Step 5: Map variations to ProductVariationOption entities
-            var variationOptionEntities = new List<ProductVariationOption>();
-
-            foreach (var sku in allSkus)
-            {
-                var matchingVariations = variations.Where(v => v.SkuString == sku.SkuString);
-
-                foreach (var variation in matchingVariations)
+            // Step 5: get all of the variation options that have an id of 0 (are new)
+            var newVariationOptionEntities = variations
+                .Where(variation => variation.Id == 0)
+                .Select(variation => new ProductVariationOption()
                 {
-                    variationOptionEntities.Add(new ProductVariationOption()
-                    {
-                        SkuId = sku.Id,
-                        VariationTypeId = variation.VariationTypeId,
-                        VariationValue = variation.VariationValue,
-                        Created = DateTime.Now,
-                        Updated = DateTime.Now,
-                    });
-                }
-            }
+                    SkuId = newSkus.First(s => s.SkuString == variation.SkuString).Id, // Match by SKU String
+                    VariationTypeId = variation.VariationTypeId,
+                    VariationValue = variation.VariationValue,
+                    Created = DateTime.Now,
+                    Updated = DateTime.Now,
+                }).ToList();
 
-            // Step 6: Save ProductVariationOption entities in bulk
-            await _productVariationOptionRepository.AddRangeAsync(variationOptionEntities);
-            await _productVariationOptionRepository.SaveChangesAsync();
+            if (newVariationOptionEntities.Any())
+            {
+                // Step 6: Save ProductVariationOption entities in bulk
+                await _productVariationOptionRepository.AddRangeAsync(newVariationOptionEntities);
+                await _productVariationOptionRepository.SaveChangesAsync(); 
+            }
         }
 
     }
