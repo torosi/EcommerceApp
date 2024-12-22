@@ -6,6 +6,7 @@ using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Dtos.Variations;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
+using EcommerceApp.MVC.Helpers.Interfaces;
 using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductType;
@@ -15,6 +16,7 @@ using EcommerceApp.MVC.Models.Sku;
 using EcommerceApp.MVC.Models.VariationType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
 
@@ -31,6 +33,7 @@ namespace EcommerceApp.MVC.Controllers
         private readonly IMapper _mapper;
         private IWebHostEnvironment _webHostEnvironment;
         private readonly ImageHelper _imageHelper;
+        private readonly IUserHelper _userHelper;
 
         public ProductController(
             IProductService productService,
@@ -40,7 +43,8 @@ namespace EcommerceApp.MVC.Controllers
             IShoppingCartService shoppingCartService,
             ICategoryService categoryService,
             IProductTypeService productTypeService,
-            IVariationTypeService variationTypeService
+            IVariationTypeService variationTypeService,
+            IUserHelper userHelper
         )
         {
             _productService = productService;
@@ -51,6 +55,7 @@ namespace EcommerceApp.MVC.Controllers
             _categoryService = categoryService;
             _productTypeService = productTypeService;
             _variationTypeService = variationTypeService;
+            _userHelper = userHelper;
         }
 
         public async Task<IActionResult> Index()
@@ -337,7 +342,8 @@ namespace EcommerceApp.MVC.Controllers
                             VariationTypeId = option.VariationTypeId,
                             VariationTypeName = option.VariationTypeName,
                             VariationValue = option.VariationValue
-                        }).ToList()
+                        }).ToList(),
+                        VariationOptionsString = string.Join(",", sku.VariationOptions.OrderBy(x => x.VariationTypeId).Select(y => y.VariationValue))
                     }).ToList();
 
                     var productDetailsViewModel = new ProductDetailsViewModel()
@@ -356,9 +362,9 @@ namespace EcommerceApp.MVC.Controllers
                 Console.WriteLine(ex);
             }
 
+            return RedirectToAction("Index", "Home");
+        }
 
-        return RedirectToAction("Index", "Home");
-    }
 
         [Authorize]
         [HttpPost("AddToCart")]
@@ -566,5 +572,22 @@ namespace EcommerceApp.MVC.Controllers
             return true;
         }
 
+
+        #region API CALLS
+
+        public void AddToCart(string skuString)
+        {
+            try
+            {
+                var userId = _userHelper.GetUserId();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
+        #endregion
     }
 }

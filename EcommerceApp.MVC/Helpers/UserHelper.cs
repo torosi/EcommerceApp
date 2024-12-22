@@ -1,8 +1,9 @@
-﻿using System.Security.Claims;
+﻿using EcommerceApp.MVC.Helpers.Interfaces;
+using System.Security.Claims;
 
 namespace EcommerceApp.MVC.Helpers
 {
-    public class UserHelper
+    public class UserHelper : IUserHelper
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 

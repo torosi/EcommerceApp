@@ -7,4 +7,5 @@ public class SkuWithVariationsViewModel
 {
     public SkuViewModel Sku { get; set; }
     public ICollection<ProductVariationOptionViewModel> VariationOptions { get; set; } = new List<ProductVariationOptionViewModel>();
+    public string VariationOptionsString = string.Empty;
 }

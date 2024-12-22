@@ -5,6 +5,7 @@ using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Automapper;
 using EcommerceApp.MVC.Helpers;
+using EcommerceApp.MVC.Helpers.Interfaces;
 using EcommerceApp.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -56,7 +57,7 @@ builder.Services.AddScoped<IProductVariationOptionRepository, ProductVariationOp
 // The ImageHelper class is registered as a singleton service using AddSingleton<ImageHelper>().
 // This means that a single instance of ImageHelper will be created and shared throughout the application.
 builder.Services.AddSingleton<ImageHelper>();
-builder.Services.AddScoped<UserHelper>();
+builder.Services.AddScoped<IUserHelper, UserHelper>();
 
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();

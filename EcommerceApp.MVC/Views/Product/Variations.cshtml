@@ -77,7 +77,7 @@
         let productId = @Html.Raw(Model.ProductId);
 
         let row = `
-                <input type="hidden" name="Input[${index}].Sku.ProductId" value="${productId}" />
+            <input type="hidden" name="Input[${index}].Sku.ProductId" value="${productId}" />
             <tr>
                 <td><input name="Input[${index}].Sku.SkuString" class="form-control" required/></td>
                 <td><input name="Input[${index}].Sku.Quantity" type="number" class="form-control" required/></td>
