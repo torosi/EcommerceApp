@@ -10,10 +10,10 @@ namespace EcommerceApp.Domain.Mappings
             return new ShoppingCartDto()
             {
                 Id = cart.Id,
-                ProductId = cart.ProductId,
+                SkuId = cart.SkuId,
                 ApplicationUserId = cart.ApplicationUserId,
                 Count = cart.Count,
-                Product = cart.Product.ToDto()
+                Product = cart.Sku.Product.ToDto()
             };
         }
 
@@ -22,7 +22,7 @@ namespace EcommerceApp.Domain.Mappings
             return new ShoppingCart()
             {
                 Id = cart.Id,
-                ProductId = cart.ProductId,
+                SkuId = cart.SkuId,
                 ApplicationUserId = cart.ApplicationUserId,
                 Count = cart.Count
             };

@@ -10,7 +10,7 @@ namespace EcommerceApp.Domain.Dtos
     {
         public int Id { get; set; }
         public string ApplicationUserId { get; set; }
-        public int ProductId { get; set; }
+        public int SkuId { get; set; }
         public ProductDto Product { get; set; }
         public int Count { get; set; }
     }

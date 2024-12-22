@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EcommerceApp.Data.Entities.Products;
+using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Dtos.Products;
@@ -17,6 +18,7 @@ using EcommerceApp.MVC.Models.VariationType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
 
@@ -34,6 +36,7 @@ namespace EcommerceApp.MVC.Controllers
         private IWebHostEnvironment _webHostEnvironment;
         private readonly ImageHelper _imageHelper;
         private readonly IUserHelper _userHelper;
+        private readonly ISkuRepository _skuRepository;
 
         public ProductController(
             IProductService productService,
@@ -44,7 +47,8 @@ namespace EcommerceApp.MVC.Controllers
             ICategoryService categoryService,
             IProductTypeService productTypeService,
             IVariationTypeService variationTypeService,
-            IUserHelper userHelper
+            IUserHelper userHelper,
+            ISkuRepository skuRepository
         )
         {
             _productService = productService;
@@ -56,6 +60,7 @@ namespace EcommerceApp.MVC.Controllers
             _productTypeService = productTypeService;
             _variationTypeService = variationTypeService;
             _userHelper = userHelper;
+            _skuRepository = skuRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -366,51 +371,51 @@ namespace EcommerceApp.MVC.Controllers
         }
 
 
-        [Authorize]
-        [HttpPost("AddToCart")]
-        public async Task<IActionResult> AddToCart(ShoppingCartViewModel cart)
-        {
-            try
-            {
-                // 1) we need the currently logged in user
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
+        // [Authorize]
+        // [HttpPost("AddToCart")]
+        // public async Task<IActionResult> AddToCart(ShoppingCartViewModel cart)
+        // {
+        //     try
+        //     {
+        //         // 1) we need the currently logged in user
+        //         var claimsIdentity = (ClaimsIdentity)User.Identity;
 
-                if (claimsIdentity == null) throw new Exception("User could not be found");
+        //         if (claimsIdentity == null) throw new Exception("User could not be found");
 
-                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+        //         var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-                if (userId == null) throw new Exception("User could not be found");
+        //         if (userId == null) throw new Exception("User could not be found");
 
-                // 2) if there is already a cart item for this product then we want to add the product to the existing one
-                var cartFromDb = await _shoppingCartService.GetFirstOrDefaultAsync(x => x.ApplicationUserId == userId && x.ProductId == cart.Product.Id, tracked: false);
+        //         // 2) if there is already a cart item for this product then we want to add the product to the existing one
+        //         var cartFromDb = await _shoppingCartService.GetFirstOrDefaultAsync(x => x.ApplicationUserId == userId && x.ProductId == cart.Product.Id, tracked: false);
 
-                if (cartFromDb != null)
-                {
-                    cartFromDb.Count += cart.Count;
-                    await _shoppingCartService.UpdateAsync(cartFromDb);
-                }
-                else // 3) if there is no product already then we can just add the new item to cart
-                {
-                    var shoppingCartDto = new ShoppingCartDto()
-                    { 
-                        ProductId = cart.Product.Id,
-                        ApplicationUserId = userId,
-                        Count = cart.Count,
-                        Id = cart.Id
-                    };
+        //         if (cartFromDb != null)
+        //         {
+        //             cartFromDb.Count += cart.Count;
+        //             await _shoppingCartService.UpdateAsync(cartFromDb);
+        //         }
+        //         else // 3) if there is no product already then we can just add the new item to cart
+        //         {
+        //             var shoppingCartDto = new ShoppingCartDto()
+        //             { 
+        //                 ProductId = cart.Product.Id,
+        //                 ApplicationUserId = userId,
+        //                 Count = cart.Count,
+        //                 Id = cart.Id
+        //             };
 
-                    await _shoppingCartService.AddAsync(shoppingCartDto);
-                }
+        //             await _shoppingCartService.AddAsync(shoppingCartDto);
+        //         }
 
-                //return Redirect(Request.Headers["Referer"].ToString()); // takes you to the previous page
-                return RedirectToAction("Index", "ShoppingCart"); // change to shopping cart
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return RedirectToAction("Index", "Home");
-            }
-        }
+        //         //return Redirect(Request.Headers["Referer"].ToString()); // takes you to the previous page
+        //         return RedirectToAction("Index", "ShoppingCart"); // change to shopping cart
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Console.WriteLine(ex);
+        //         return RedirectToAction("Index", "Home");
+        //     }
+        // }
 
         [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
@@ -575,15 +580,51 @@ namespace EcommerceApp.MVC.Controllers
 
         #region API CALLS
 
-        public void AddToCart(string skuString)
+        /// <summary>
+        /// Method to add sku item to shopping cart
+        /// </summary>
+        /// <param name="skuString"></param>
+        /// <param name="count"></param>
+        /// <returns>Json object</returns>
+        public async Task<IActionResult> AddToCart(string skuString, int count)
         {
             try
             {
                 var userId = _userHelper.GetUserId();
+                if (userId == null) throw new Exception("User could not be found");
+
+                var skuDto = await _skuRepository.GetFirstOrDefaultAsync(x => x.SkuString == skuString);
+                if (skuDto == null) throw new Exception("Product could not be found");
+
+                // 1) get the current cart from the db to see if the product is already in there
+                var cartFromDb = await _shoppingCartService.GetFirstOrDefaultAsync(x => x.ApplicationUserId == userId && x.Sku.SkuString == skuString, tracked: false);
+                
+                // if this is null we need to add a new record
+                if (cartFromDb == null) 
+                {
+                    var newCartItemDto = new ShoppingCartDto()
+                    {
+                        SkuId = skuDto.Id,
+                        ApplicationUserId = userId,
+                        Count = count,
+                        Id = 0 // 0 because it is new so does not matter
+                    };
+
+                    await _shoppingCartService.AddAsync(newCartItemDto);
+                } 
+                else 
+                {
+                    // if the cart does exist then we only want to increase the quantity
+                    cartFromDb.Count += count;
+                    await _shoppingCartService.UpdateAsync(cartFromDb);
+                }
+
+                return Json(new {success = true, message = "Cart updated successfully"});
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex);
+                return Json(new {success = false, message = ex.Message});
             }
         }
 

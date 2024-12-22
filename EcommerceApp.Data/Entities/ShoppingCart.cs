@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using EcommerceApp.Data.Entities.Products;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,10 +11,10 @@ namespace EcommerceApp.Data.Entities
 {
     public class ShoppingCart : BaseEntity
     {
-        public int ProductId { get; set; }
-        [ForeignKey("ProductId")]
+        public int SkuId { get; set; }
+        [ForeignKey("SkuId")]
         [ValidateNever]
-        public Product Product { get; set; }
+        public Sku Sku { get; set; }
 
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
