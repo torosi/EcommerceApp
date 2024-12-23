@@ -33,6 +33,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 //Scoped: Scoped instances are created once per client request.
 
 builder.Services.AddLogging();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -57,6 +58,7 @@ builder.Services.AddScoped<IProductVariationOptionRepository, ProductVariationOp
 // The ImageHelper class is registered as a singleton service using AddSingleton<ImageHelper>().
 // This means that a single instance of ImageHelper will be created and shared throughout the application.
 builder.Services.AddSingleton<ImageHelper>();
+
 builder.Services.AddScoped<IUserHelper, UserHelper>();
 
 

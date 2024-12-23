@@ -65,12 +65,6 @@
     <script>
         let selectedSkuString = null;
 
-
-        function logAllVariationOptions() {
-            
-        }
-
-
         document.querySelectorAll('.variationOption').forEach(input => {
             input.addEventListener('change', function () {
                 let allValues = [];
@@ -86,10 +80,13 @@
 
                 for (let product of skusWithVariations) {
                     if (product.VariationOptionsString == selectedOptions) {
-                        selectedSkuString = product.Sku.SkuString || null;
+                        selectedSkuString = product.Sku.SkuString;
                         console.log("Sku: " + product.Sku.SkuString)
-                        break;
+                    } else {
+                        selectedSkuString = null;
                     }
+                    
+                    break;
                 }
             });
         });
@@ -102,7 +99,7 @@
                 //     url: '/AddToCart',
                 //     method: 'POST',
                 //     contentType: 'application/json',
-                //     data: JSON.stringify({ sku: selectedSkuString }),
+                //     data: JSON.stringify({ skuString: selectedSkuString, count: 1 }),
                 //     success: function (response) {
                 //         console.log("Successfully added to cart:", response);
                 //     },
@@ -111,7 +108,7 @@
                 //     }
                 // });
             } else {
-                alert("Please select all variations before adding to cart.");
+                console.log("Please select all variations before adding to cart.");
             }
         });
 

@@ -611,8 +611,8 @@ namespace EcommerceApp.MVC.Controllers
                     };
 
                     await _shoppingCartService.AddAsync(newCartItemDto);
-                } 
-                else 
+                }
+                else
                 {
                     // if the cart does exist then we only want to increase the quantity
                     cartFromDb.Count += count;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
+using EcommerceApp.MVC.Helpers.Interfaces;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
@@ -13,9 +14,9 @@ namespace EcommerceApp.MVC.Controllers
     {
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IMapper _mapper;
-        private readonly UserHelper _userHelper;
+        private readonly IUserHelper _userHelper;
 
-        public ShoppingCartController(IShoppingCartService shoppingCartService, IMapper mapper, UserHelper userHelper)
+        public ShoppingCartController(IShoppingCartService shoppingCartService, IMapper mapper, IUserHelper userHelper)
         {
             _shoppingCartService = shoppingCartService;
             _mapper = mapper;
