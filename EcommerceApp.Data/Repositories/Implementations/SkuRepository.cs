@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
@@ -27,4 +28,5 @@ public class SkuRepository : BaseRepository<Sku>, ISkuRepository
             .Where(s => skuStrings.Contains(s.SkuString))
             .ToListAsync();
     }
+
 }

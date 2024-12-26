@@ -51,8 +51,10 @@ builder.Services.AddScoped<IVariationTypeRepository, VariationTypeRepository>();
 builder.Services.AddScoped<IVariationTypeService, VariationTypeService>();
 
 builder.Services.AddScoped<ISkuRepository, SkuRepository>();
+builder.Services.AddScoped<ISkuService, SkuService>();
 
 builder.Services.AddScoped<IProductVariationOptionRepository, ProductVariationOptionRepository>();
+
 
 
 // The ImageHelper class is registered as a singleton service using AddSingleton<ImageHelper>().

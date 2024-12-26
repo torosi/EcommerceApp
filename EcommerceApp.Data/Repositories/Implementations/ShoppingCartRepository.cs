@@ -23,10 +23,10 @@ namespace EcommerceApp.Data.Repositories.Implementations
         /// <inheritdoc />
         public async Task<IEnumerable<ShoppingCart>> GetShoppingCartByUser(string userId)
         {
-            IQueryable<ShoppingCart> query = _dbSet;
-
-            query = query.Where(x => x.ApplicationUserId == userId);
-            query = query.Include("Product");
+            IQueryable<ShoppingCart> query = _dbSet
+                .Where(x => x.ApplicationUserId == userId)
+                .Include(x => x.Sku)
+                .ThenInclude(s => s.Product);
 
             return await query.ToListAsync();
         }

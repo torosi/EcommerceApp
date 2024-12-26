@@ -1,5 +1,8 @@
 ﻿using EcommerceApp.Data.Entities;
+using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Dtos;
+using EcommerceApp.Domain.Dtos.Products;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace EcommerceApp.Domain.Mappings
 {
@@ -13,6 +16,8 @@ namespace EcommerceApp.Domain.Mappings
                 SkuId = cart.SkuId,
                 ApplicationUserId = cart.ApplicationUserId,
                 Count = cart.Count,
+                Product = cart.Sku != null && cart.Sku.Product != null ? cart.Sku.Product.ToDto() : null,
+                Sku = cart.Sku != null ? cart.Sku.ToDto() : null
             };
         }
 
@@ -26,5 +31,19 @@ namespace EcommerceApp.Domain.Mappings
                 Count = cart.Count
             };
         }
+
+        public static SkuDto ToDto(this Sku sku)
+        {
+            return new SkuDto()
+            {
+                Id = sku.Id,
+                Created = sku.Created,
+                Updated = sku.Updated,
+                SkuString = sku.SkuString,
+                Quantity = sku.Quantity,
+                ProductId = sku.ProductId
+            };
+        }
+        
     }
 }

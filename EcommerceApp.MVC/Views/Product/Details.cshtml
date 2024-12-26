@@ -96,7 +96,7 @@
             if (selectedSkuString) {
                 console.log("This is where you make the request and pass in :" + selectedSkuString)
                 $.ajax({
-                    url: '/Product/AddToCart?SkuString=' + selectedSkuString + '&count=1',
+                    url: '/ShoppingCart/AddToCart?SkuString=' + selectedSkuString + '&count=1',
                     method: 'POST',
                     contentType: 'application/json',
                     // data: {

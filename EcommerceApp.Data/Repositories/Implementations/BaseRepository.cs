@@ -7,7 +7,7 @@ namespace EcommerceApp.Data.Repositories.Implementations
 {
     public class BaseRepository<T> : IRepository<T> where T : class
     {
-        internal DbSet<T> _dbSet; // i think that this needs to be internal rather than private because inheriting classes may use?
+        protected DbSet<T> _dbSet; // i think that this needs to be internal rather than private because inheriting classes may use?
         private readonly ApplicationDbContext _context;
         private readonly ILogger<BaseRepository<T>> _logger;
 

@@ -12,7 +12,8 @@ namespace EcommerceApp.Domain.Dtos
         public int Id { get; set; }
         public string ApplicationUserId { get; set; }
         public int SkuId { get; set; }
-        public SkuDto Sku { get; set; }
+        public SkuDto? Sku { get; set; }
         public int Count { get; set; }
+        public ProductDto? Product { get; set;}
     }
 }
