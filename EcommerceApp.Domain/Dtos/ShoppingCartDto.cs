@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EcommerceApp.Domain.Dtos.Products;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace EcommerceApp.Domain.Dtos
         public int Id { get; set; }
         public string ApplicationUserId { get; set; }
         public int SkuId { get; set; }
-        public ProductDto Product { get; set; }
+        public SkuDto Sku { get; set; }
         public int Count { get; set; }
     }
 }

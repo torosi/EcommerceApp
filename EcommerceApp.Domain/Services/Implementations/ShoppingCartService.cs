@@ -33,7 +33,7 @@ namespace EcommerceApp.Domain.Services.Implementations
         /// <inheritdoc/>
         public async Task<ShoppingCartDto?> GetFirstOrDefaultAsync(Expression<Func<ShoppingCart, bool>> filter, bool tracked = true)
         {
-            var shoppingCart = await _shoppingCartRepository.GetFirstOrDefaultAsync(filter, tracked: tracked, includeProperties: "Product");
+            var shoppingCart = await _shoppingCartRepository.GetFirstOrDefaultAsync(filter, tracked: tracked, includeProperties: "Sku");
             if (shoppingCart == null) return null;
             return shoppingCart.ToDto();
         }

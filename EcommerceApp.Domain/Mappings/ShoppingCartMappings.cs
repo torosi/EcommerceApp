@@ -13,7 +13,6 @@ namespace EcommerceApp.Domain.Mappings
                 SkuId = cart.SkuId,
                 ApplicationUserId = cart.ApplicationUserId,
                 Count = cart.Count,
-                Product = cart.Sku.Product.ToDto()
             };
         }
 

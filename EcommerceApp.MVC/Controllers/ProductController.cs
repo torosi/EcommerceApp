@@ -586,6 +586,7 @@ namespace EcommerceApp.MVC.Controllers
         /// <param name="skuString"></param>
         /// <param name="count"></param>
         /// <returns>Json object</returns>
+        [HttpPost]
         public async Task<IActionResult> AddToCart(string skuString, int count)
         {
             try
@@ -597,7 +598,7 @@ namespace EcommerceApp.MVC.Controllers
                 if (skuDto == null) throw new Exception("Product could not be found");
 
                 // 1) get the current cart from the db to see if the product is already in there
-                var cartFromDb = await _shoppingCartService.GetFirstOrDefaultAsync(x => x.ApplicationUserId == userId && x.Sku.SkuString == skuString, tracked: false);
+                var cartFromDb = await _shoppingCartService.GetFirstOrDefaultAsync(x => x.ApplicationUserId == userId && x.SkuId == 1, tracked: false);
                 
                 // if this is null we need to add a new record
                 if (cartFromDb == null) 

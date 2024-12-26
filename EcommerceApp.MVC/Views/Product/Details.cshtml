@@ -95,18 +95,21 @@
         document.querySelector('#addToCartButton').addEventListener('click', function () {
             if (selectedSkuString) {
                 console.log("This is where you make the request and pass in :" + selectedSkuString)
-                // $.ajax({
-                //     url: '/AddToCart',
-                //     method: 'POST',
-                //     contentType: 'application/json',
-                //     data: JSON.stringify({ skuString: selectedSkuString, count: 1 }),
-                //     success: function (response) {
-                //         console.log("Successfully added to cart:", response);
-                //     },
-                //     error: function (xhr, status, error) {
-                //         console.error("Error adding to cart:", error);
-                //     }
-                // });
+                $.ajax({
+                    url: '/Product/AddToCart?SkuString=' + selectedSkuString + '&count=1',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    // data: {
+                    //     skuString: selectedSkuString,
+                    //     count: 1
+                    // },
+                    success: function (response) {
+                        console.log("Successfully added to cart:", response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error adding to cart:", error);
+                    }
+                });
             } else {
                 console.log("Please select all variations before adding to cart.");
             }

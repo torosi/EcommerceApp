@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using EcommerceApp.Domain.Services.Contracts;
-using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Helpers.Interfaces;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace EcommerceApp.MVC.Controllers
 {
@@ -38,7 +36,7 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     Id = x.Id,
                     Count = x.Count, 
-                    Product = _mapper.Map<ProductViewModel>(x.Product)
+                    //Product = _mapper.Map<ProductViewModel>(x.Product)
                 });
 
                 return View(shoppingCartViewModels);
@@ -75,7 +73,7 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     success = true,
                     count = shoppingCartDto.Count,
-                    totalPrice = shoppingCartDto.Count * shoppingCartDto.Product.Price
+                    totalPrice = 0//shoppingCartDto.Count * shoppingCartDto.Product.Price
                 });
             }
             catch (Exception ex)
@@ -103,7 +101,7 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     success = true,
                     count = shoppingCartDto.Count,
-                    totalPrice = shoppingCartDto.Count * shoppingCartDto.Product.Price
+                    totalPrice = 0//shoppingCartDto.Count * shoppingCartDto.Product.Price
                 });
             }
             catch (Exception ex)
