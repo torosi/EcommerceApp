@@ -79,14 +79,18 @@
                     console.log('Serialized Model:', skusWithVariations);
 
                 for (let product of skusWithVariations) {
+                    console.log(product.VariationOptionsString)
+                    console.log(selectedOptions)
+
                     if (product.VariationOptionsString == selectedOptions) {
+                        console.log(">>> reached 1")
                         selectedSkuString = product.Sku.SkuString;
                         console.log("Sku: " + product.Sku.SkuString)
+                        break;
                     } else {
+                        console.log(">>> reached 2")
                         selectedSkuString = null;
                     }
-                    
-                    break;
                 }
             });
         });
