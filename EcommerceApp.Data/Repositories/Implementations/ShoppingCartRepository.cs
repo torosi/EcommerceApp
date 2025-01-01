@@ -26,7 +26,10 @@ namespace EcommerceApp.Data.Repositories.Implementations
             IQueryable<ShoppingCart> query = _dbSet
                 .Where(x => x.ApplicationUserId == userId)
                 .Include(x => x.Sku)
-                .ThenInclude(s => s.Product);
+                .ThenInclude(s => s.Product)
+                .Include(x => x.Sku)
+                .ThenInclude(s => s.ProductVariationOptions)
+                .ThenInclude(v => v.VariationType);
 
             return await query.ToListAsync();
         }

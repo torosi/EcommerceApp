@@ -6,5 +6,5 @@ public class VariationValueInputViewModel
 {
     public int Id { get; set; }
     public int VariationTypeId { get; set; }
-    public string Value { get; set; } // Could be parsed into an integer if needed
+    public string Value { get; set; }
 }

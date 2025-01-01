@@ -98,6 +98,7 @@ namespace EcommerceApp.Domain.Services.Implementations
         {
             var skus = await _productRepository.GetProductVariationsAsync(productId);
 
+            // TODO: This can be made into an extention method in mappings?
             var skuDtos = skus.Select(sku => new SkuWithVariationsDto
             {
                 SkuId = sku.Id,

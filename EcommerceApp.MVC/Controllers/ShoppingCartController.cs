@@ -4,9 +4,12 @@ using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers.Interfaces;
 using EcommerceApp.MVC.Models.Product;
+using EcommerceApp.MVC.Models.ProductVariationOption;
 using EcommerceApp.MVC.Models.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace EcommerceApp.MVC.Controllers
 {
@@ -40,7 +43,15 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     Id = x.Id,
                     Count = x.Count, 
-                    Product = _mapper.Map<ProductViewModel>(x.Product)
+                    Product = _mapper.Map<ProductViewModel>(x.Product),
+                    Variations = x.Sku.VariationOptions
+                        .OrderBy(x => x.VariationTypeId)
+                        .Select(x => new ProductVariationOptionViewModel()
+                        {
+                            VariationTypeId = x.VariationTypeId,
+                            VariationTypeName = x.VariationTypeName,
+                            VariationValue = x.VariationValue,
+                        })
                 });
 
                 return View(shoppingCartViewModels);
@@ -148,12 +159,6 @@ namespace EcommerceApp.MVC.Controllers
         }
 
 
-        /// <summary>
-        /// Method to add sku item to shopping cart
-        /// </summary>
-        /// <param name="skuString"></param>
-        /// <param name="count"></param>
-        /// <returns>Json object</returns>
         [HttpPost]
         public async Task<IActionResult> AddToCart(string skuString, int count)
         {

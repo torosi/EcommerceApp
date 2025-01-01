@@ -20,6 +20,15 @@
                     </div>
                 </div>
 
+                @foreach (var variation in line.Variations)
+                {
+                    <div class="row">
+                        <div class="col">
+                            <p>@variation.VariationTypeName <span class="fw-bold">@variation.VariationValue</span></p>
+                        </div>
+                    </div>
+                }
+
                 <div class="row">
                     <div class="col">
                         <p id="total-price-@line.Id">Total: <span class="fw-bold">@((line.Product.Price * line.Count).ToString("c"))</span></p>

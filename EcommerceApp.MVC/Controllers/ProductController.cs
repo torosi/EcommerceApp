@@ -496,11 +496,7 @@ namespace EcommerceApp.MVC.Controllers
             return RedirectToAction("Index");
         }
 
-        /// <summary>
-        /// Method to determine if there are duplicate variation options in our collection of ProductVariationOptionInputViewModels
-        /// </summary>
-        /// <param name="inputs"></param>
-        /// <returns></returns>
+
         private bool AreVariationsUnique(IEnumerable<ProductVariationOptionInputViewModel> inputs)
         {
             var combinations = new List<string>();

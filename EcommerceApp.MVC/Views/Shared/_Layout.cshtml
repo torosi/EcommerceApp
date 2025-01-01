@@ -1,4 +1,5 @@
 ﻿@using EcommerceApp.Domain.Constants
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,12 +61,15 @@
                         }
                     </ul>
 
-                    <div class="mx-3">
-                        <a class="btn btn-secondary position-relative" asp-controller="ShoppingCart" asp-action="Index">
-                            <i class="bi bi-bag"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count"></span>
-                        </a>
-                    </div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="mx-3">
+                            <a class="btn btn-secondary position-relative" asp-controller="ShoppingCart" asp-action="Index">
+                                <i class="bi bi-bag"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count"></span>
+                            </a>
+                        </div>
+                    }
                     
                     <partial name="_LoginPartial" />
                 </div>

@@ -4,7 +4,6 @@ using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Services.Implementations;
 using Moq;
 using EcommerceApp.Domain.Mappings;
-using EcommerceApp.Domain.Dtos.Products;
 using System.Linq.Expressions;
 
 namespace EcommerceApp.Tests.Services;
@@ -84,7 +83,7 @@ public class ProductServiceTests
             ProductTypeId = 1
         };
 
-        _productRepositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Product, bool>>>(), false, null))
+        _productRepositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Product, bool>>>(), true, null)) // this has to match what is being called so true null is the default parameters because the service class does not pass them in.
                               .ReturnsAsync(productEntity);
         _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
@@ -98,7 +97,7 @@ public class ProductServiceTests
         Assert.Equal(productDto.CategoryId, productEntity.CategoryId);
         Assert.Equal(productDto.ProductTypeId, productEntity.ProductTypeId);
 
-        _productRepositoryMock.Verify(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Product, bool>>>(), false, null), Times.Once);
+        _productRepositoryMock.Verify(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Product, bool>>>(), true, null), Times.Once);
         _productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
         _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
     }

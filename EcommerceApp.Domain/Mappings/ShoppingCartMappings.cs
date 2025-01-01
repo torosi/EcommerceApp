@@ -17,7 +17,7 @@ namespace EcommerceApp.Domain.Mappings
                 ApplicationUserId = cart.ApplicationUserId,
                 Count = cart.Count,
                 Product = cart.Sku != null && cart.Sku.Product != null ? cart.Sku.Product.ToDto() : null,
-                Sku = cart.Sku != null ? cart.Sku.ToDto() : null
+                Sku = cart.Sku != null && cart.Sku.ProductVariationOptions.Any() ? cart.Sku.ToDtoWithVariations() : null
             };
         }
 
@@ -41,7 +41,27 @@ namespace EcommerceApp.Domain.Mappings
                 Updated = sku.Updated,
                 SkuString = sku.SkuString,
                 Quantity = sku.Quantity,
-                ProductId = sku.ProductId
+                ProductId = sku.ProductId,
+            };
+        }
+
+
+        public static SkuWithVariationsDto ToDtoWithVariations(this Sku sku)
+        {
+            return new SkuWithVariationsDto
+            {
+                SkuId = sku.Id,
+                SkuString = sku.SkuString,
+                Quantity = sku.Quantity,
+                ProductId = sku.ProductId,
+                VariationOptions = sku.ProductVariationOptions.Select(option => new ProductVariationOptionDto
+                {
+                    Id = option.Id,
+                    SkuId = sku.Id,
+                    VariationTypeId = option.VariationTypeId,
+                    VariationValue = option.VariationValue,
+                    VariationTypeName = option.VariationType.Name
+                }).ToList()
             };
         }
         
