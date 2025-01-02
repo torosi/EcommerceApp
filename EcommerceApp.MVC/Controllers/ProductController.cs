@@ -90,22 +90,7 @@ namespace EcommerceApp.MVC.Controllers
         public IActionResult Create()
         {
             try
-            {
-                // var productViewModel = new CreateProductViewModel();
-                
-                // // get variation types and map to view models
-                // var variationTypeDtos = await _variationTypeService.GetAllAsync();
-                // var variationTypeViewModels = variationTypeDtos.Select(x => new VariationTypeViewModel()
-                //     {
-                //         Id = x.Id,
-                //         Name = x.Name,
-                //         Created = x.Created,
-                //         Updated = x.Updated
-                //     });
-                
-                // // set variation types onto view model to pass to view
-                // productViewModel.VariationsTypes = variationTypeViewModels;
-                
+            {                
                 return View();
             }
             catch (Exception ex)
@@ -342,12 +327,7 @@ namespace EcommerceApp.MVC.Controllers
                             Quantity = sku.Quantity,
                             ProductId = sku.ProductId
                         },
-                        VariationOptions = sku.VariationOptions.Select(option => new ProductVariationOptionViewModel
-                        {
-                            VariationTypeId = option.VariationTypeId,
-                            VariationTypeName = option.VariationTypeName,
-                            VariationValue = option.VariationValue
-                        }).ToList(),
+                        VariationOptions = sku.VariationOptions.Select(option => _mapper.Map<ProductVariationOptionViewModel>(option)).ToList(),
                         VariationOptionsString = string.Join(",", sku.VariationOptions.OrderBy(x => x.VariationTypeId).Select(y => y.VariationValue))
                     }).ToList();
 

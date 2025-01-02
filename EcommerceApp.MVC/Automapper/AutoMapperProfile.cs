@@ -4,6 +4,7 @@ using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductType;
+using EcommerceApp.MVC.Models.ProductVariationOption;
 
 namespace EcommerceApp.MVC.Automapper
 {
@@ -40,6 +41,9 @@ namespace EcommerceApp.MVC.Automapper
             CreateMap<ProductTypeViewModel, ProductTypeDto>()
                 .ForMember(dest => dest.Created, opt => opt.MapFrom(src => (DateTime?)src.Created))
                 .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => (DateTime?)src.Updated));
+
+            // Mapping from ProductVariationOptionDto to ProductVariationOptionViewModel
+            CreateMap<ProductVariationOptionDto, ProductVariationOptionViewModel>();
         }
 
     }
