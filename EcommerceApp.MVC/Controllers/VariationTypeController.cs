@@ -47,22 +47,22 @@ namespace EcommerceApp.MVC.Controllers
         {
             try 
             {
-                var productTypeDtos = await _productTypeService.GetAllAsync();
-                var productTypeViewModels = productTypeDtos.Select(x => new ProductTypeViewModel()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
-                    Created = x.Created,
-                    Updated = x.Updated
-                });
+                // var productTypeDtos = await _productTypeService.GetAllAsync();
+                // var productTypeViewModels = productTypeDtos.Select(x => new ProductTypeViewModel()
+                // {
+                //     Id = x.Id,
+                //     Name = x.Name,
+                //     Description = x.Description,
+                //     Created = x.Created,
+                //     Updated = x.Updated
+                // });
 
-                var createVariationTypeViewModel = new CreateVariationTypeViewModel()
-                {
-                    ProductTypes = productTypeViewModels
-                };
+                // var createVariationTypeViewModel = new CreateVariationTypeViewModel()
+                // {
+                //     ProductTypes = productTypeViewModels
+                // };
 
-                return View(createVariationTypeViewModel);
+                return View();
             }
             catch (Exception ex)
             {
@@ -89,7 +89,7 @@ namespace EcommerceApp.MVC.Controllers
                     };
 
                     // save to db
-                    await _variationTypeService.CreateVariationTypeAsync(variationTypeDto, variationType.ProductTypeId);
+                    await _variationTypeService.CreateVariationTypeAsync(variationTypeDto);
                 }
             }
             catch (Exception ex)

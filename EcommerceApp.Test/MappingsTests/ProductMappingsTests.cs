@@ -1,4 +1,6 @@
 ﻿using EcommerceApp.Data.Entities;
+using EcommerceApp.Domain.Dtos;
+using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Mappings;
 
 
@@ -42,6 +44,40 @@ namespace EcommerceApp.Test.Mappings
             Assert.Equal(product.Price, dto.Price);
             Assert.NotNull(dto.Category);
             Assert.NotNull(dto.ProductType);
+        }
+
+        [Fact]
+        public void ToEntity_Should_Map_Product_To_Product_Correctly()
+        {
+            // Arrange
+            var product = new ProductDto
+            {
+                Id = 1,
+                Name = "Test Product",
+                Description = "Test Description",
+                Created = DateTime.UtcNow,
+                Updated = DateTime.UtcNow,
+                ImageUrl = "testImage.jpg",
+                CategoryId = 2,
+                Category = new CategoryDto { Id = 2, Name = "Electronics" },
+                ProductTypeId = 3,
+                ProductType = new ProductTypeDto { Id = 3, Name = "Gadget" },
+                Price = 100.0
+            };
+
+            // Act
+            var entity = product.ToEntity();
+
+            // Assert
+            Assert.Equal(product.Id, entity.Id);
+            Assert.Equal(product.Name, entity.Name);
+            Assert.Equal(product.Description, entity.Description);
+            Assert.Equal(product.Created, entity.Created);
+            Assert.Equal(product.Updated, entity.Updated);
+            Assert.Equal(product.ImageUrl, entity.ImageUrl);
+            Assert.Equal(product.CategoryId, entity.CategoryId);
+            Assert.Equal(product.ProductTypeId, entity.ProductTypeId);
+            Assert.Equal(product.Price, entity.Price);
         }
 
     }

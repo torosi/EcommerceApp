@@ -17,7 +17,7 @@
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="py-2 col-12">
+                    @* <div class="py-2 col-12">
                         <label asp-for="ProductTypeId" class="control-label">Product Type</label>
                         <select asp-for="ProductTypeId" id="product-types-drop-down" class="form-select">
                             <option class="dummy-select-item" disabled selected>Select a Product Type</option>
@@ -27,7 +27,7 @@
                             }
                         </select>
                         <span asp-validation-for="ProductTypeId" class="text-danger"></span>
-                    </div>
+                    </div> *@
                     <div class="form-group mt-2">
                         <input type="submit" value="Create" class="btn btn-primary" />
                     </div>

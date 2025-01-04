@@ -20,10 +20,10 @@ public class VariationTypeService : IVariationTypeService
     }
 
     /// <inheritdoc />
-    public async Task CreateVariationTypeAsync(VariationTypeDto variationTypeDto, int productTypeId)
+    public async Task CreateVariationTypeAsync(VariationTypeDto variationTypeDto)
     {
         if (variationTypeDto == null) throw new ArgumentNullException(nameof(variationTypeDto));
-        if (productTypeId == 0) throw new ArgumentNullException(nameof(productTypeId));
+        // if (productTypeId == 0) throw new ArgumentNullException(nameof(productTypeId));
 
         // map variationTypeDto to entity
         var variationType = variationTypeDto.ToEntity();
@@ -33,14 +33,14 @@ public class VariationTypeService : IVariationTypeService
         await _variationTypeRepository.SaveChangesAsync(); // we have to save the product type first so that we have the id to add the mappings table
 
         // create new ProductTypeVariationMapping object
-        var productTypeVariationMapping = new ProductTypeVariationMapping()
-        {
-            VariationTypeId = variationType.Id,
-            ProductTypeId = productTypeId   
-        };
+        // var productTypeVariationMapping = new ProductTypeVariationMapping()
+        // {
+        //     VariationTypeId = variationType.Id,
+        //     ProductTypeId = productTypeId   
+        // };
 
-        await _variationTypeRepository.CreateProductTypeVariationMappingAsync(productTypeVariationMapping);
-        await _variationTypeRepository.SaveChangesAsync();
+        // await _variationTypeRepository.CreateProductTypeVariationMappingAsync(productTypeVariationMapping);
+        // await _variationTypeRepository.SaveChangesAsync();
     }
 
     /// <inheritdoc />

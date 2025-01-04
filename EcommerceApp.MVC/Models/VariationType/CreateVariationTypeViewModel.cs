@@ -10,6 +10,6 @@ public class CreateVariationTypeViewModel
     public string Name { get; set; }
     public int ProductTypeId { get; set; }
 
-    [ValidateNever]
-    public IEnumerable<ProductTypeViewModel> ProductTypes { get; set; }
+    // [ValidateNever]
+    // public IEnumerable<ProductTypeViewModel> ProductTypes { get; set; }
 }

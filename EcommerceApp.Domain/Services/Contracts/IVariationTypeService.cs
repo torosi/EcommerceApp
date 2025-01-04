@@ -19,9 +19,8 @@ public interface IVariationTypeService
     /// Method to create a new VariationType
     /// </summary>
     /// <param name="variationType"></param>
-    /// <param name="productTypeId"></param>
     /// <returns></returns>
-    public Task CreateVariationTypeAsync(VariationTypeDto variationType, int productTypeId);
+    public Task CreateVariationTypeAsync(VariationTypeDto variationType);
 
     /// <summary>
     /// Method to get all VariationType by ProductTypeId
