@@ -1,4 +1,5 @@
 using EcommerceApp.Data.Entities;
+using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Mappings;
@@ -13,15 +14,17 @@ public class ProductTypeService : IProductTypeService
 {
     private readonly IProductTypeRepository _productTypeRepository;
     private readonly ILogger<ProductTypeService> _logger;
+    private readonly IVariationTypeRepository _variationTypeRepository;
 
-    public ProductTypeService(IProductTypeRepository productTypeRepository, ILogger<ProductTypeService> logger)
+    public ProductTypeService(IProductTypeRepository productTypeRepository, ILogger<ProductTypeService> logger, IVariationTypeRepository variationTypeRepository)
     {
         _productTypeRepository = productTypeRepository;
         _logger = logger;
+        _variationTypeRepository = variationTypeRepository;
     }
 
     /// <inheritdoc />
-    public async Task AddAsync(ProductTypeDto entity)
+    public async Task<int> AddAsync(ProductTypeDto entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
 
@@ -29,6 +32,8 @@ public class ProductTypeService : IProductTypeService
 
         await _productTypeRepository.AddAsync(productEntity);
         await _productTypeRepository.SaveChangesAsync();
+
+        return productEntity.Id;
     }
 
     /// <inheritdoc />
@@ -60,6 +65,8 @@ public class ProductTypeService : IProductTypeService
     /// <inheritdoc />
     public async Task RemoveAsync(ProductTypeDto entity)
     {
+        // this method already deletes the mappings associated with the productType in the db -> must be cascade delete or something???
+
         if (entity == null) throw new ArgumentNullException(nameof(entity));
 
         var productEntity = await _productTypeRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
@@ -93,4 +100,5 @@ public class ProductTypeService : IProductTypeService
             _logger.LogDebug("Updated Product Type Entity with id: '{id}'", entity.Id);
         }
     }
+
 }

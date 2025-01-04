@@ -37,7 +37,6 @@ namespace EcommerceApp.Data
         public DbSet<Sku> Skus { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // Seed user roles
@@ -87,7 +86,12 @@ namespace EcommerceApp.Data
                 .HasMany(s => s.ProductVariationOptions)
                 .WithOne(pvo => pvo.Sku)
                 .HasForeignKey(pvo => pvo.SkuId)
-                .OnDelete(DeleteBehavior.Cascade); // IMPORTANT - how will this impact deleting?
+                .OnDelete(DeleteBehavior.Cascade); // IMPORTANT - how will this impact deleting? other tables already have this in sqlserver?
+
+            // Apply Unique Constraint on SkuString
+            builder.Entity<Sku>()
+                .HasIndex(s => s.SkuString)
+                .IsUnique();
 
             base.OnModelCreating(builder);
         }

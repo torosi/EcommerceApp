@@ -1,5 +1,4 @@
 using EcommerceApp.Data.Entities;
-using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Dtos.Products;
 using System.Linq.Expressions;
 
@@ -12,7 +11,7 @@ public interface IProductTypeService
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    public Task AddAsync(ProductTypeDto entity);
+    public Task<int> AddAsync(ProductTypeDto entity);
 
     /// <summary>
     /// Method to get all product types

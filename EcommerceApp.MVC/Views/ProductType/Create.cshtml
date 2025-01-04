@@ -1,4 +1,4 @@
-﻿@model ProductTypeViewModel
+﻿@model CreateProductTypeViewModel
 
 <div class="container">
     <div class="card shadow border-0 mt-4">
@@ -13,15 +13,32 @@
             <div class="row">
                 <form asp-action="Create" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <label asp-for="ProductType.Name" class="control-label"></label>
+                        <input asp-for="ProductType.Name" class="form-control" />
+                        <span asp-validation-for="ProductType.Name" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Description" class="control-label"></label>
-                        <input asp-for="Description" class="form-control" />
-                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <label asp-for="ProductType.Description" class="control-label"></label>
+                        <input asp-for="ProductType.Description" class="form-control" />
+                        <span asp-validation-for="ProductType.Description" class="text-danger"></span>
                     </div>
+
+                    @* Use for loop as the default model binder does not work with foreach loop with MVC *@
+                    <div class="form-group mt-2">
+                        <p class="">Please select the variations this product type will have</p>
+                        @for (int i = 0; i < Model.VariationTypes.Count(); i++)
+                        {
+                            <div class="">
+                                <input type="hidden" asp-for="@Model.VariationTypes[i].Id" />
+                                <input type="hidden" asp-for="@Model.VariationTypes[i].Name" />
+
+                                <input type="checkbox" asp-for="@Model.VariationTypes[i].IsSelected" />
+                                <label asp-for="@Model.VariationTypes[i].IsSelected">@Model.VariationTypes[i].Name</label>
+                            </div>
+                        }
+                    </div>
+                    
+
                     <div class="form-group mt-2">
                         <input type="submit" value="Create" class="btn btn-primary" />
                     </div>

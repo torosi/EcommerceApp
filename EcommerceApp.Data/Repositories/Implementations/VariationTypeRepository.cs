@@ -16,9 +16,9 @@ public class VariationTypeRepository : BaseRepository<VariationType>, IVariation
     }
 
     /// <inheritdoc />
-    public async Task CreateProductTypeVariationMappingAsync(ProductTypeVariationMapping mapping)
+    public async Task CreateProductTypeVariationMappingRangeAsync(IEnumerable<ProductTypeVariationMapping> mappings)
     {
-        await _context.ProductTypeVariationMappings.AddAsync(mapping);
+        await _context.ProductTypeVariationMappings.AddRangeAsync(mappings);
         await _context.SaveChangesAsync();
     }
 

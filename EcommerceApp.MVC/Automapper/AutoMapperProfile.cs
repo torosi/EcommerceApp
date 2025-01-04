@@ -5,6 +5,7 @@ using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductType;
 using EcommerceApp.MVC.Models.ProductVariationOption;
+using EcommerceApp.MVC.Models.VariationType;
 
 namespace EcommerceApp.MVC.Automapper
 {
@@ -44,6 +45,21 @@ namespace EcommerceApp.MVC.Automapper
 
             // Mapping from ProductVariationOptionDto to ProductVariationOptionViewModel
             CreateMap<ProductVariationOptionDto, ProductVariationOptionViewModel>();
+
+            // Mapping from VariationTypeDto to CreateProductTypeViewModel
+            CreateMap<VariationTypeDto, CreateVariationTypeViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created))
+                .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => src.Updated))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.IsSelected, opt => opt.Ignore());  // Default or handle separately
+
+            // Reverse Mapping
+            CreateMap<CreateVariationTypeViewModel, VariationTypeDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created))
+                .ForMember(dest => dest.Updated, opt => opt.MapFrom(src => src.Updated))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
         }
 
     }

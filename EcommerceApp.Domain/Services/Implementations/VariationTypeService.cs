@@ -1,10 +1,8 @@
-using System;
 using System.Linq.Expressions;
 using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Dtos.Products;
-using EcommerceApp.Domain.Dtos.Variations;
 using EcommerceApp.Domain.Mappings;
 using EcommerceApp.Domain.Services.Contracts;
 
@@ -32,15 +30,6 @@ public class VariationTypeService : IVariationTypeService
         await _variationTypeRepository.AddAsync(variationType); // do this one first incase of foreign keys
         await _variationTypeRepository.SaveChangesAsync(); // we have to save the product type first so that we have the id to add the mappings table
 
-        // create new ProductTypeVariationMapping object
-        // var productTypeVariationMapping = new ProductTypeVariationMapping()
-        // {
-        //     VariationTypeId = variationType.Id,
-        //     ProductTypeId = productTypeId   
-        // };
-
-        // await _variationTypeRepository.CreateProductTypeVariationMappingAsync(productTypeVariationMapping);
-        // await _variationTypeRepository.SaveChangesAsync();
     }
 
     /// <inheritdoc />
@@ -72,5 +61,28 @@ public class VariationTypeService : IVariationTypeService
         });
 
         return variationTypeDtos;
+    }
+
+    /// <inheritdoc />
+    public async Task CreateProductTypeAndVariationTypeMappings(IEnumerable<int> variationTypeIds, int productTypeId)
+    {
+        if (!variationTypeIds.Any() || variationTypeIds.Contains(0)) throw new ArgumentNullException(nameof(variationTypeIds));
+        if (productTypeId == 0) throw new ArgumentNullException(nameof(productTypeId));
+
+        // create ProductVaraitionTypeMapping
+        var productTypeVariationMappings = new List<ProductTypeVariationMapping>();
+
+        foreach (var id in  variationTypeIds)
+        {
+            productTypeVariationMappings.Add(new ProductTypeVariationMapping()
+            {
+                VariationTypeId = id,
+                ProductTypeId = productTypeId
+            });
+        }
+        
+        // save new ProductVaraitionTypeMappings
+        await _variationTypeRepository.CreateProductTypeVariationMappingRangeAsync(productTypeVariationMappings);
+        await _variationTypeRepository.SaveChangesAsync();
     }
 }

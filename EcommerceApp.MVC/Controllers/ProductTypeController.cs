@@ -4,7 +4,9 @@ using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Helpers;
+using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductType;
+using EcommerceApp.MVC.Models.VariationType;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,12 +18,14 @@ namespace EcommerceApp.MVC.Controllers
         private readonly IProductTypeService _productTypeService;
         private readonly IMapper _mapper;
         private readonly ILogger<ProductTypeController> _logger;
+        private readonly IVariationTypeService _variationTypeService;
 
-        public ProductTypeController(IProductTypeService productTypeService, IMapper mapper, ILogger<ProductTypeController> logger)
+        public ProductTypeController(IProductTypeService productTypeService, IMapper mapper, ILogger<ProductTypeController> logger, IVariationTypeService variationTypeService)
         {
             _productTypeService = productTypeService;
             _mapper = mapper;
             _logger = logger;
+            _variationTypeService = variationTypeService;
         }
 
         public async Task<IActionResult> Index()
@@ -49,11 +53,19 @@ namespace EcommerceApp.MVC.Controllers
         
 
         [HttpGet("Create")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             try
             {
-                return View();
+                var variationTypes = await _variationTypeService.GetAllAsync();
+
+                var createProductTypeViewModel = new CreateProductTypeViewModel()
+                {
+                    ProductType = new ProductTypeViewModel(),
+                    VariationTypes = _mapper.Map<IList<CreateVariationTypeViewModel>>(variationTypes)
+                };
+
+                return View(createProductTypeViewModel);
             }
             catch (Exception ex)
             {
@@ -64,17 +76,26 @@ namespace EcommerceApp.MVC.Controllers
 
 
         [HttpPost("Create")]
-        public async Task<IActionResult> Create(ProductTypeViewModel productType)
+        public async Task<IActionResult> Create(CreateProductTypeViewModel createProductType)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     // map product type view model to dto
-                    var productDto = _mapper.Map<ProductTypeDto>(productType);
+                    var productDto = _mapper.Map<ProductTypeDto>(createProductType.ProductType);
 
                     // save product type view model
-                    await _productTypeService.AddAsync(productDto);
+                    var productTypeId = await _productTypeService.AddAsync(productDto);
+
+                    var variationTypeIds = createProductType.VariationTypes
+                        .Where(x => x.IsSelected && x.Id != 0)
+                        .Select(x => x.Id);
+
+                    if (variationTypeIds.Any())
+                    {
+                        await _variationTypeService.CreateProductTypeAndVariationTypeMappings(variationTypeIds, productTypeId);
+                    }
                 }
             }
             catch (Exception ex)

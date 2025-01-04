@@ -28,4 +28,13 @@ public interface IVariationTypeService
     /// <param name="productTypeId"></param>
     /// <returns></returns>
     public Task<IEnumerable<VariationTypeDto>> GetAllByProductTypeAsync(int productTypeId); // this method is used to retrieve all of the variation types that are linked to a specific product type
+
+
+    /// <summary>
+    /// Method to create a new entry into the mappings table betweeen product type and variation type
+    /// </summary>
+    /// <param name="variationTypeIds"></param>
+    /// <param name="productTypeId"></param>
+    /// <returns></returns>
+    public Task CreateProductTypeAndVariationTypeMappings(IEnumerable<int> variationTypeIds, int productTypeId);
 }
