@@ -126,8 +126,10 @@ namespace EcommerceApp.Domain.Services.Implementations
 
             // We only want to save the skus that currently dont exist, so we need to get them from the db and pull out only the ones that are not in out db result
 
-            // // Step 1: Retrieve existing SKUs
-            // var existingSkus = await _skuRepository.GetBySkuStringsAsync(skus.Select(s => s.SkuString));
+            // Step 1: Retrieve existing SKUs so that we can check that the provided skustrings are unique across all products
+            var existingSkus = await _skuRepository.GetBySkuStringsAsync(skus.Select(s => s.SkuString));
+
+            if (existingSkus != null) throw new Exception("Sku's provided are not unique");
 
             // Step 2: Identify SKUs that need to be added
             var newSkus = skus
