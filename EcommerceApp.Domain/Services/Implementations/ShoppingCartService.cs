@@ -5,18 +5,20 @@ using EcommerceApp.Domain.Mappings;
 using EcommerceApp.Data.Repositories.Implementations;
 using System.Linq.Expressions;
 using EcommerceApp.Data.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.Domain.Services.Implementations
 {
     public class ShoppingCartService : IShoppingCartService
     {
         private readonly IShoppingCartRepository _shoppingCartRepository;
+        private readonly ILogger<ShoppingCartService> _logger;
 
-        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository)
+        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, ILogger<ShoppingCartService> logger)
         {
             _shoppingCartRepository = shoppingCartRepository;
+            _logger = logger;
         }
-
 
         /// <inheritdoc/>
         public async Task AddAsync(ShoppingCartDto cart)

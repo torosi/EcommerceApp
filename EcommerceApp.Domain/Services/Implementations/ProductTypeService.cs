@@ -1,5 +1,4 @@
 using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Mappings;

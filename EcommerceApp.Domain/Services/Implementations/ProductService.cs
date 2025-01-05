@@ -6,6 +6,7 @@ using EcommerceApp.Domain.Dtos.Products;
 using EcommerceApp.Domain.Dtos.Variations;
 using EcommerceApp.Domain.Mappings;
 using EcommerceApp.Domain.Services.Contracts;
+using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
 namespace EcommerceApp.Domain.Services.Implementations
@@ -15,12 +16,14 @@ namespace EcommerceApp.Domain.Services.Implementations
         private readonly IProductRepository _productRepository;
         private readonly ISkuRepository _skuRepository;
         private readonly IProductVariationOptionRepository _productVariationOptionRepository;
+        private readonly ILogger<ProductService> _logger;
 
-        public ProductService(IProductRepository productRepository, ISkuRepository skuRepository, IProductVariationOptionRepository productVariationOptionRepository)
+        public ProductService(IProductRepository productRepository, ISkuRepository skuRepository, IProductVariationOptionRepository productVariationOptionRepository, ILogger<ProductService> logger)
         {
             _productRepository = productRepository;
             _skuRepository = skuRepository;
             _productVariationOptionRepository = productVariationOptionRepository;
+            _logger = logger;
         }
 
         /// <inheritdoc />
@@ -33,6 +36,8 @@ namespace EcommerceApp.Domain.Services.Implementations
             await _productRepository.AddAsync(productEntity);
             await _productRepository.SaveChangesAsync();
 
+            _logger.LogDebug("New Product has been added with Id: {id}", productEntity.Id);
+
             return productEntity.ToDto();
         }
 
@@ -40,6 +45,9 @@ namespace EcommerceApp.Domain.Services.Implementations
         public async Task<IEnumerable<ProductDto>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null)
         {
             var productEntities = await _productRepository.GetAllAsync(includeProperties, filter);
+
+            _logger.LogDebug("Found '{count}' Product Entities", productEntities.Count());
+
             return productEntities.Select(x => x.ToDto());
         }
 
@@ -48,8 +56,10 @@ namespace EcommerceApp.Domain.Services.Implementations
         {
             var productEntity = await _productRepository.GetFirstOrDefaultAsync(filter, includeProperties: includeProperties, tracked: tracked);
             
-            if (productEntity == null) 
+            if (productEntity == null)
                 return null;
+
+            _logger.LogDebug("Found Product Entity with id: '{id}'", productEntity.Id);
 
             return productEntity.ToDto(); 
         }
@@ -58,8 +68,15 @@ namespace EcommerceApp.Domain.Services.Implementations
         public async Task RemoveAsync(ProductDto entity)
         {
             if (entity == null) throw new ArgumentException(nameof(entity));
-            _productRepository.Remove(entity.ToEntity());
-            await _productRepository.SaveChangesAsync();
+
+            var productFromDb = await _productRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            if (productFromDb != null)
+            {
+                _logger.LogDebug("Removing Product Entity with id: '{id}'", entity.Id);
+                _productRepository.Remove(productFromDb);
+                await _productRepository.SaveChangesAsync();
+            }
         }
 
         /// <inheritdoc />
@@ -69,6 +86,8 @@ namespace EcommerceApp.Domain.Services.Implementations
 
             // 1) get the entity from db
             var productFromDb = await _productRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+
+            _logger.LogDebug("Found Product Entity with id: '{id}'", entity.Id);
 
             // 2) update entity
             if (productFromDb != null)
@@ -82,6 +101,8 @@ namespace EcommerceApp.Domain.Services.Implementations
 
                 _productRepository.Update(productFromDb);
                 await _productRepository.SaveChangesAsync();
+
+                _logger.LogDebug("Updated Product Entity with id: '{id}'", entity.Id);
             }
         }
 
@@ -89,6 +110,9 @@ namespace EcommerceApp.Domain.Services.Implementations
         public async Task<(int TotalCount, IEnumerable<ProductDto> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20)
         {
             var productResult = await _productRepository.GetFilteredProductsAsync(includeProperties, filter, pageNumber, itemsPerPage);
+
+            _logger.LogDebug("'{count}' Product Entities returned from expression", productResult.TotalCount);
+
             var productDtos = productResult.Products.Select(x => x.ToDto());
             return (productResult.TotalCount, productDtos);
         }
@@ -98,22 +122,29 @@ namespace EcommerceApp.Domain.Services.Implementations
         {
             var skus = await _productRepository.GetProductVariationsAsync(productId);
 
-            // TODO: This can be made into an extention method in mappings?
-            var skuDtos = skus.Select(sku => new SkuWithVariationsDto
+            _logger.LogDebug("Found '{count}' Sku Entities", skus.Count());
+
+            var skuDtos = new List<SkuWithVariationsDto>();
+
+            if (skus.Any())
             {
-                SkuId = sku.Id,
-                SkuString = sku.SkuString,
-                Quantity = sku.Quantity,
-                ProductId = sku.ProductId,
-                VariationOptions = sku.ProductVariationOptions.Select(option => new ProductVariationOptionDto
+                // TODO: This can be made into an extention method in mappings?
+                skuDtos = skus.Select(sku => new SkuWithVariationsDto
                 {
-                    Id = option.Id,
                     SkuId = sku.Id,
-                    VariationTypeId = option.VariationTypeId,
-                    VariationValue = option.VariationValue,
-                    VariationTypeName = option.VariationType.Name
-                }).ToList()
-            }).ToList();
+                    SkuString = sku.SkuString,
+                    Quantity = sku.Quantity,
+                    ProductId = sku.ProductId,
+                    VariationOptions = sku.ProductVariationOptions.Select(option => new ProductVariationOptionDto
+                    {
+                        Id = option.Id,
+                        SkuId = sku.Id,
+                        VariationTypeId = option.VariationTypeId,
+                        VariationValue = option.VariationValue,
+                        VariationTypeName = option.VariationType.Name
+                    }).ToList()
+                }).ToList();
+            }
 
             return skuDtos;
         }
@@ -125,9 +156,12 @@ namespace EcommerceApp.Domain.Services.Implementations
             if (variations == null || !variations.Any()) throw new ArgumentNullException(nameof(variations));
 
             // We only want to save the skus that currently dont exist, so we need to get them from the db and pull out only the ones that are not in out db result
+            // TODO : This needs to be revisted, we should only be passing in the new variations, not all of them?
 
             // Step 1: Retrieve existing SKUs so that we can check that the provided skustrings are unique across all products
             var existingSkus = await _skuRepository.GetBySkuStringsAsync(skus.Select(s => s.SkuString));
+
+            _logger.LogDebug("Found '{count}' existing Sku entities", existingSkus.Count());
 
             if (existingSkus != null) throw new Exception("Sku's provided are not unique");
 
@@ -148,6 +182,8 @@ namespace EcommerceApp.Domain.Services.Implementations
             {
                 await _skuRepository.AddRangeAsync(newSkus);
                 await _skuRepository.SaveChangesAsync();
+
+                _logger.LogDebug("'{count}' new Sku entities saved", newSkus.Count());
             }
 
             // // Step 4: Combine existing and newly created SKUs
@@ -169,7 +205,9 @@ namespace EcommerceApp.Domain.Services.Implementations
             {
                 // Step 6: Save ProductVariationOption entities in bulk
                 await _productVariationOptionRepository.AddRangeAsync(newVariationOptionEntities);
-                await _productVariationOptionRepository.SaveChangesAsync(); 
+                await _productVariationOptionRepository.SaveChangesAsync();
+
+                _logger.LogDebug("'{count}' new ProductVariationOption entities saved", newVariationOptionEntities.Count());
             }
         }
 
