@@ -5,6 +5,7 @@ using EcommerceApp.Domain.Services.Implementations;
 using Moq;
 using EcommerceApp.Domain.Mappings;
 using System.Linq.Expressions;
+using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.Tests.Services;
 
@@ -14,17 +15,20 @@ public class ProductServiceTests
     private readonly Mock<ISkuRepository> _skuRepositoryMock;
     private readonly Mock<IProductVariationOptionRepository> _productVariationOptionRepositoryMock;
     private readonly ProductService _productService;
+    private readonly Mock<ILogger<ProductService>> _loggerMock;
 
     public ProductServiceTests()
     {
         _productRepositoryMock = new Mock<IProductRepository>();
         _skuRepositoryMock = new Mock<ISkuRepository>();
         _productVariationOptionRepositoryMock = new Mock<IProductVariationOptionRepository>();
+        _loggerMock = new Mock<ILogger<ProductService>>();
 
         _productService = new ProductService(
             _productRepositoryMock.Object,
             _skuRepositoryMock.Object,
-            _productVariationOptionRepositoryMock.Object);
+            _productVariationOptionRepositoryMock.Object,
+            _loggerMock.Object);
     }
 
     [Fact]

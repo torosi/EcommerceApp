@@ -44,7 +44,6 @@ namespace EcommerceApp.Domain.Mappings
             };
         }
 
-
         public static SkuWithVariationsDto ToDtoWithVariations(this Sku sku)
         {
             return new SkuWithVariationsDto
