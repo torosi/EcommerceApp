@@ -2,7 +2,6 @@
 using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Dtos;
 using EcommerceApp.Domain.Dtos.Products;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace EcommerceApp.Domain.Mappings
 {
