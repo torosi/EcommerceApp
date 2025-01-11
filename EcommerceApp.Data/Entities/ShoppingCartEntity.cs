@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceApp.Data.Entities
 {
-    public class ShoppingCart : BaseEntity
+    public class ShoppingCartEntity : BaseEntity
     {
         public int SkuId { get; set; }
         [ForeignKey("SkuId")]
@@ -14,7 +14,7 @@ namespace EcommerceApp.Data.Entities
         public string ApplicationUserId { get; set; }
         [ForeignKey("ApplicationUserId")]
         [ValidateNever]
-        public ApplicationUser ApplicationUser { get; set; }
+        public ApplicationUserEntity ApplicationUser { get; set; }
 
         public int Count { get; set; }
     }

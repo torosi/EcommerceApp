@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EcommerceApp.Data.Entities
 {
-    public class VariationType : BaseEntity
+    public class VariationTypeEntity : BaseEntity
     {
         public string Name { get; set; }
     }

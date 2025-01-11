@@ -19,7 +19,7 @@ namespace EcommerceApp.Data.Repositories
         /// <inheritdoc />
         public async Task<IEnumerable<ProductModel>> GetAllAsync(string? includeProperties = null)
         {
-            IQueryable<Product> query = _context.Set<Product>();
+            IQueryable<ProductEntity> query = _context.Set<ProductEntity>();
 
             if (!string.IsNullOrEmpty(includeProperties))
             {
@@ -54,13 +54,13 @@ namespace EcommerceApp.Data.Repositories
         {
             ArgumentOutOfRangeException.ThrowIfZero(categoryId);
 
-            IQueryable<Product> query = _context.Set<Product>();
+            IQueryable<ProductEntity> query = _context.Set<ProductEntity>();
 
             query = query.Where(x => x.CategoryId == categoryId);
 
             int totalCount = await query.CountAsync();
 
-            List<Product> productEntities = await query
+            List<ProductEntity> productEntities = await query
                 .Skip((pageNumber - 1) * itemsPerPage)
                 .Take(itemsPerPage)
                 .ToListAsync();

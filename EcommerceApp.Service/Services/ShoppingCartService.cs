@@ -1,5 +1,4 @@
 ﻿using EcommerceApp.Domain.Models;
-using System.Linq.Expressions;
 using Microsoft.Extensions.Logging;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Interfaces.Repositories;

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.Data.Repositories;
 
-public class VariationTypeRepository : BaseRepository<VariationType>, IVariationTypeRepository
+public class VariationTypeRepository : BaseRepository<VariationTypeEntity>, IVariationTypeRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -16,14 +16,14 @@ public class VariationTypeRepository : BaseRepository<VariationType>, IVariation
     }
 
     /// <inheritdoc />
-    public async Task CreateProductTypeVariationMappingRangeAsync(IEnumerable<ProductTypeVariationMapping> mappings)
+    public async Task CreateProductTypeVariationMappingRangeAsync(IEnumerable<ProductTypeVariationMappingEntity> mappings)
     {
         await _context.ProductTypeVariationMappings.AddRangeAsync(mappings);
         await _context.SaveChangesAsync();
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<VariationType?>> GetAllByProductTypeAsync(int productTypeId)
+    public async Task<IEnumerable<VariationTypeEntity?>> GetAllByProductTypeAsync(int productTypeId)
     {
         // Fetch the mappings including VariationType navigation property
         var productTypeVariationMappings = await _context.ProductTypeVariationMappings

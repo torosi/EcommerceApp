@@ -49,7 +49,7 @@ public class ProductServiceTests
 
         var productEntity = productModel.ToEntity();
 
-        _productRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Product>())).Returns(Task.CompletedTask);
+        _productRepositoryMock.Setup(r => r.AddAsync(It.IsAny<ProductEntity>())).Returns(Task.CompletedTask);
         _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
         // Act
@@ -59,7 +59,7 @@ public class ProductServiceTests
         Assert.NotNull(result);
         Assert.Equal(productModel.Name, result.Name);
 
-        _productRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Product>()), Times.Once); // how many times is has been called
+        _productRepositoryMock.Verify(r => r.AddAsync(It.IsAny<ProductEntity>()), Times.Once); // how many times is has been called
         _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
     }
 
@@ -78,7 +78,7 @@ public class ProductServiceTests
             ProductTypeId = 3
         };
 
-        var productEntity = new Product
+        var productEntity = new ProductEntity
         {
             Id = 1,
             Name = "Old Product",
@@ -88,7 +88,7 @@ public class ProductServiceTests
             ProductTypeId = 1
         };
 
-        _productRepositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Product, bool>>>(), true, null)) // this has to match what is being called so true null is the default parameters because the service class does not pass them in.
+        _productRepositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<ProductEntity, bool>>>(), true, null)) // this has to match what is being called so true null is the default parameters because the service class does not pass them in.
                               .ReturnsAsync(productEntity);
         _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
@@ -102,8 +102,8 @@ public class ProductServiceTests
         Assert.Equal(productModel.CategoryId, productEntity.CategoryId);
         Assert.Equal(productModel.ProductTypeId, productEntity.ProductTypeId);
 
-        _productRepositoryMock.Verify(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Product, bool>>>(), true, null), Times.Once);
-        _productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);
+        _productRepositoryMock.Verify(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<ProductEntity, bool>>>(), true, null), Times.Once);
+        _productRepositoryMock.Verify(r => r.Update(It.IsAny<ProductEntity>()), Times.Once);
         _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
     }
 }

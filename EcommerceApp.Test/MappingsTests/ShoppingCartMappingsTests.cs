@@ -1,7 +1,10 @@
+using System;
+using System.Xml.Serialization;
 using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Models;
-using EcommerceApp.Data.Mappings;
+using EcommerceApp.Domain.Models.Products;
+using EcommerceApp.Domain.Mappings;
 
 namespace EcommerceApp.Test.MappingsTests;
 
@@ -11,7 +14,7 @@ public class ShoppingCartMappingsTests
     public void ToModel_Should_Map_ShoppingCart_To_ShoppingCartModel_Correctly()
     {
         // Arrange
-        var shoppingCart = new ShoppingCart()
+        var shoppingCart = new ShoppingCartEntity()
         {
             Id = 1,
             SkuId = 19,
@@ -20,7 +23,7 @@ public class ShoppingCartMappingsTests
         };
 
         // Act
-        var shoppingCartModel = shoppingCart.ToDomain();
+        var shoppingCartModel = shoppingCart.ToModel();
 
         // Assert
         Assert.Equal(shoppingCartModel.Id, shoppingCart.Id);
@@ -55,7 +58,7 @@ public class ShoppingCartMappingsTests
     public void ToModel_Should_Map_Sku_To_SkuModel_Correctly()
     {
         // Arrange
-        var sku = new SkuEntity()
+        var sku = new Sku()
         {
             Id = 3,
             Created = DateTime.Now,
@@ -66,7 +69,7 @@ public class ShoppingCartMappingsTests
         };
 
         // Act
-        var skuModel = sku.ToDomain();
+        var skuModel = sku.ToModel();
 
         // Assert
         Assert.Equal(skuModel.Id, sku.Id);
@@ -81,7 +84,7 @@ public class ShoppingCartMappingsTests
     public void ToModelWithVariations_Should_Map_Sku_To_SkuWithVariationsModel_Correctly()
     {
         // Arrange
-        var sku = new SkuEntity()
+        var sku = new Sku()
         {
             Id = 3,
             Created = DateTime.Now,
@@ -89,27 +92,27 @@ public class ShoppingCartMappingsTests
             SkuString = "testskustring",
             Quantity = 7,
             ProductId = 1,
-            ProductVariationOptions = new List<ProductVariationOption>()
+            ProductVariationOptions = new List<ProductVariationOptionEntity>()
             {
-                new ProductVariationOption()
+                new ProductVariationOptionEntity()
                 {
                     Id = 3,
                     SkuId = 3,
                     VariationTypeId = 1,
                     VariationValue = "testvalue1",
-                    VariationType = new VariationType()
+                    VariationType = new VariationTypeEntity()
                     {
                         Id = 2, 
                         Name = "testvaraitiontype1"
                     }
                 },
-                new ProductVariationOption()
+                new ProductVariationOptionEntity()
                 {
                     Id = 4,
                     SkuId = 3,
                     VariationTypeId = 2,
                     VariationValue = "testvalue2",
-                    VariationType = new VariationType()
+                    VariationType = new VariationTypeEntity()
                     {
                         Id = 3,
                         Name = "testvaraitiontype2"

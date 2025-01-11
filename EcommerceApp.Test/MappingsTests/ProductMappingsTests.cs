@@ -2,7 +2,6 @@
 using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Mappings;
-using EcommerceApp.Data.Mappings;
 
 
 namespace EcommerceApp.Test.Mappings
@@ -13,7 +12,7 @@ namespace EcommerceApp.Test.Mappings
         public void ToModel_Should_Map_Product_To_ProductModel_Correctly()
         {
             // Arrange
-            var product = new Product
+            var product = new ProductEntity
             {
                 Id = 1,
                 Name = "Test Product",
@@ -22,14 +21,14 @@ namespace EcommerceApp.Test.Mappings
                 Updated = DateTime.UtcNow,
                 ImageUrl = "testImage.jpg",
                 CategoryId = 2,
-                Category = new CategoryEntity { Id = 2, Name = "Electronics" },
+                Category = new Category { Id = 2, Name = "Electronics" },
                 ProductTypeId = 3,
-                ProductType = new ProductTypeEntity { Id = 3, Name = "Gadget" },
+                ProductType = new ProductType { Id = 3, Name = "Gadget" },
                 Price = 100.0
             };
 
             // Act
-            var dto = product.ToDomain();
+            var dto = product.ToModel();
 
             // Assert
             Assert.Equal(product.Id, dto.Id);

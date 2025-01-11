@@ -2,10 +2,10 @@ using System;
 
 namespace EcommerceApp.Data.Entities.Products;
 
-public class ProductTypeVariationMapping
+public class ProductTypeVariationMappingEntity
 {
     public int ProductTypeId { get; set; }
     public ProductTypeEntity? ProcuctType { get; set; }
     public int VariationTypeId { get; set; }
-    public VariationType? VariationType { get; set; }
+    public VariationTypeEntity? VariationType { get; set; }
 }

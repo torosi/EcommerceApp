@@ -23,18 +23,18 @@ namespace EcommerceApp.Data
         {
         }
 
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<ApplicationUserEntity> ApplicationUsers { get; set; }
 
-        public DbSet<Product> Products { get; set; } // context.Products.Include(p => p.Image).ToList(); -- this is how you need to include images
+        public DbSet<ProductEntity> Products { get; set; } // context.Products.Include(p => p.Image).ToList(); -- this is how you need to include images
         public DbSet<ProductTypeEntity> ProductTypes { get; set; }
         public DbSet<CategoryEntity> Categories { get; set; }
-        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<ShoppingCartEntity> ShoppingCarts { get; set; }
 
-        public DbSet<VariationValue> VariationValues { get; set; }
-        public DbSet<VariationType> VariationTypes { get; set; }
-        public DbSet<ProductTypeVariationMapping> ProductTypeVariationMappings { get; set; }
-        public DbSet<ProductVariationOption> ProductVariationOptions { get; set; }
-        public DbSet<SkuEntity> Skus { get; set; }
+        public DbSet<VariationValueEntity> VariationValues { get; set; }
+        public DbSet<VariationTypeEntity> VariationTypes { get; set; }
+        public DbSet<ProductTypeVariationMappingEntity> ProductTypeVariationMappings { get; set; }
+        public DbSet<ProductVariationOptionEntity> ProductVariationOptions { get; set; }
+        public DbSet<Sku> Skus { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -56,12 +56,12 @@ namespace EcommerceApp.Data
             );
 
             // Configure Product-Category relationship
-            builder.Entity<Product>()
+            builder.Entity<ProductEntity>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId);
 
-            builder.Entity<Product>()
+            builder.Entity<ProductEntity>()
                 .HasOne(p => p.ProductType);
 
 
@@ -71,25 +71,25 @@ namespace EcommerceApp.Data
             //     .IsUnique();
 
             // Define the primary key for the table as the Id
-            builder.Entity<ProductVariationOption>()
+            builder.Entity<ProductVariationOptionEntity>()
                 .HasKey(p => p.Id);
 
             // Create a unique constraint on the combination of Sku and VariationType
-            builder.Entity<ProductVariationOption>()
+            builder.Entity<ProductVariationOptionEntity>()
                 .HasIndex(p => new { p.SkuId, p.VariationTypeId }) // we dont want to allow the same sku to have the multiple of the same variation type (one size, one colour etc)
                 .IsUnique(); // Ensure no repeats of VariationType for a given Sku
 
-            builder.Entity<ProductTypeVariationMapping>()
+            builder.Entity<ProductTypeVariationMappingEntity>()
                 .HasKey(p => new { p.ProductTypeId, p.VariationTypeId });
 
-            builder.Entity<SkuEntity>()
+            builder.Entity<Sku>()
                 .HasMany(s => s.ProductVariationOptions)
                 .WithOne(pvo => pvo.Sku)
                 .HasForeignKey(pvo => pvo.SkuId)
                 .OnDelete(DeleteBehavior.Cascade); // IMPORTANT - how will this impact deleting? other tables already have this in sqlserver?
 
             // Apply Unique Constraint on SkuString
-            builder.Entity<SkuEntity>()
+            builder.Entity<Sku>()
                 .HasIndex(s => s.SkuString)
                 .IsUnique();
 

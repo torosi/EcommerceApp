@@ -17,7 +17,7 @@ namespace EcommerceApp.Data.Repositories
         }
 
         /// <inheritdoc />
-        public void Update(ShoppingCart cart)
+        public void Update(ShoppingCartEntity cart)
         {
             _context.ShoppingCarts.Update(cart);
         }
@@ -27,7 +27,7 @@ namespace EcommerceApp.Data.Repositories
         {
             if (userId == null) throw new ArgumentNullException(nameof(userId));
 
-            IQueryable<ShoppingCart> query = _context.Set<ShoppingCart>()
+            IQueryable<ShoppingCartEntity> query = _context.Set<ShoppingCartEntity>()
                 .Where(x => x.ApplicationUserId == userId)
                 .Include(x => x.Sku)
                 .ThenInclude(s => s.Product)
@@ -45,7 +45,7 @@ namespace EcommerceApp.Data.Repositories
         {
             if (userId == null) throw new ArgumentNullException(nameof(userId));
 
-            IQueryable<ShoppingCart> query = _context.Set<ShoppingCart>();
+            IQueryable<ShoppingCartEntity> query = _context.Set<ShoppingCartEntity>();
 
             query = query.Where(x => x.ApplicationUserId == userId);
 

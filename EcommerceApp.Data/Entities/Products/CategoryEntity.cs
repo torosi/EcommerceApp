@@ -13,6 +13,6 @@ namespace EcommerceApp.Data.Entities
         public string ImageUrl { get; set; } = string.Empty;
 
         // Navigation property to products
-        public ICollection<Product> Products { get; set; }
+        public ICollection<ProductEntity> Products { get; set; }
     }
 }
