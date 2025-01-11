@@ -34,7 +34,7 @@ namespace EcommerceApp.Data
         public DbSet<VariationTypeEntity> VariationTypes { get; set; }
         public DbSet<ProductTypeVariationMappingEntity> ProductTypeVariationMappings { get; set; }
         public DbSet<ProductVariationOptionEntity> ProductVariationOptions { get; set; }
-        public DbSet<Sku> Skus { get; set; }
+        public DbSet<SkuEntity> Skus { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
