@@ -1,9 +1,9 @@
 using EcommerceApp.Data.Entities;
+using EcommerceApp.Data.Mappings;
 using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Domain.Models.Category;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace EcommerceApp.Data.Repositories
 {
@@ -17,15 +17,16 @@ namespace EcommerceApp.Data.Repositories
         }
 
         /// <inheritdoc />
-        public Task AddAsync(CreateCategoryModel category)
+        public async Task AddAsync(CreateCategoryModel category)
         {
-            throw new NotImplementedException();
+            if (category is null) throw new ArgumentNullException(nameof(category));
+            await _context.Categories.AddAsync(category.ToEntity());
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<CategoryModel>> GetAllAsync(string? includeProperties = null, int? limit = null)
         {
-            IQueryable<Category> query = _context.Set<Category>();
+            IQueryable<CategoryEntity> query = _context.Set<CategoryEntity>();
 
             if (!string.IsNullOrEmpty(includeProperties))
             {
@@ -44,33 +45,33 @@ namespace EcommerceApp.Data.Repositories
                 query = query.Take(limit.Value);
             }
 
-            // todo: map to domain model
-            return await query.ToListAsync();
-        }
-
-        public Task<CategoryModel?> GetFirstOrDefaultAsync(Expression<Func<CategoryModel, bool>> filter, bool tracked = true, string? includeProperties = null)
-        {
-            throw new NotImplementedException();
+            var entities = await query.ToListAsync();
+            return entities.Select(x => x.ToDomain());
         }
 
         /// <inheritdoc />
         public void Remove(int id)
         {
-            throw new NotImplementedException();
+            ArgumentOutOfRangeException.ThrowIfZero(id);
+
+            var model = _context.Categories.SingleOrDefault(c => c.Id == id);
+            if (model != null) throw new Exception($"Could not find Category with Id: {id}");
+
+            _context.Categories.Remove(model!);
         }
 
         /// <inheritdoc />
-        public Task SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
 
         /// <inheritdoc />
         public void Update(UpdateCategoryModel category)
         {
-            // todo: map to entity and pass into below
-            _context.Categories.Update(category);
+            if (category is null) throw new ArgumentNullException(nameof(category));
+            var entity = category.ToEntity();
+            _context.Categories.Update(entity);
         }
-
     }
 }

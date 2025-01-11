@@ -17,13 +17,6 @@ namespace EcommerceApp.Service.Contracts
         public Task<IEnumerable<CategoryModel>> GetAllAsync(int? limit = null);
 
         /// <summary>
-        /// A method to get the first of default category
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <returns>CategoryModel</returns>
-        public Task<CategoryModel?> GetFirstOrDefaultAsync(Expression<Func<Category, bool>> filter, bool tracked = true);
-
-        /// <summary>
         /// A method to add a single category
         /// </summary>
         /// <param name="entity"></param>

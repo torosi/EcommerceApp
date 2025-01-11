@@ -1,7 +1,7 @@
 using System;
 using EcommerceApp.Data.Entities;
-using EcommerceApp.Domain.Models;
-using EcommerceApp.Domain.Mappings;
+using EcommerceApp.Data.Mappings;
+using EcommerceApp.Domain.Models.Category;
 
 namespace EcommerceApp.Test.DomainTests.MappingsTests;
 
@@ -11,7 +11,7 @@ public class CategoryMappingsTests
     public void ToModel_Should_Map_Category_To_CategoryModel_Correctly()
     {
         // Arrange
-        var category = new Category()
+        var category = new CategoryEntity()
         {
             Id = 1,
             Name = "Test Category",
@@ -22,7 +22,7 @@ public class CategoryMappingsTests
         };
 
         // Act
-        var categoryModel = category.ToModel();
+        var categoryModel = category.ToDomain();
 
         // Assert
         Assert.Equal(categoryModel.Id, category.Id);

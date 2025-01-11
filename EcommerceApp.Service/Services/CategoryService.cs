@@ -1,9 +1,6 @@
-using System.Linq.Expressions;
-using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Repositories.Contracts;
-using EcommerceApp.Domain.Mappings;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Models.Category;
+using EcommerceApp.Domain.Interfaces.Repositories;
 
 namespace EcommerceApp.Service.Implementations
 {
@@ -18,30 +15,19 @@ namespace EcommerceApp.Service.Implementations
         }
 
         /// <inheritdoc />
-        public async Task AddAsync(CategoryModel entity)
+        public async Task AddAsync(CategoryModel category)
         {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (category == null) throw new ArgumentNullException(nameof(category));
 
-            var category = entity.ToEntity();
-
-            await _categoryRepository.AddAsync(category);
+            await _categoryRepository.AddAsync(category.ToCreateModel());
             await _categoryRepository.SaveChangesAsync();
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<CategoryModel>> GetAllAsync(int? limit = null)
         {
-            var categories = await _categoryRepository.GetAllAsync(limit: limit);
-            var categoryModels = categories.Select(c => c.ToModel());
-            return categoryModels;
-        }
-
-        /// <inheritdoc />
-        public async Task<CategoryModel?> GetFirstOrDefaultAsync(Expression<Func<Category, bool>> filter, bool tracked = true)
-        {
-            var category = await _categoryRepository.GetFirstOrDefaultAsync(filter, tracked);
-            if (category == null) return null;
-            return category.ToModel();
+            if (limit is null) throw new ArgumentNullException(nameof(limit));
+            return await _categoryRepository.GetAllAsync(limit: limit);
         }
 
         /// <inheritdoc />
@@ -49,9 +35,9 @@ namespace EcommerceApp.Service.Implementations
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-
             // we need to remove the categoryid from all of the products that currently have this category
             var products = await _productRepository.GetAllAsync(filter: x => x.CategoryId == entity.Id);
+
             // if there are any products in this category, then we need to remove them from category first
             if (products.Any())
             {
@@ -64,7 +50,7 @@ namespace EcommerceApp.Service.Implementations
                 await _productRepository.SaveChangesAsync();
             }
 
-            _categoryRepository.Remove(entity.ToEntity());
+            _categoryRepository.Remove(entity.Id);
             await _categoryRepository.SaveChangesAsync();
         }
 
@@ -73,18 +59,8 @@ namespace EcommerceApp.Service.Implementations
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-            var entityFromDb = await _categoryRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
-
-            if (entityFromDb != null)
-            {
-                entityFromDb.Description = entity.Description;
-                entityFromDb.Name = entity.Name;
-                entityFromDb.Updated = DateTime.Now;
-                entityFromDb.ImageUrl = entity.ImageUrl;
-
-                _categoryRepository.Update(entityFromDb);
-                await _categoryRepository.SaveChangesAsync();
-            }
+            _categoryRepository.Update(entity.ToUpdateModel());
+            await _categoryRepository.SaveChangesAsync();
         }
     }
 }

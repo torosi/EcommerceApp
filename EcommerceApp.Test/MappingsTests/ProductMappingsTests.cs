@@ -21,7 +21,7 @@ namespace EcommerceApp.Test.Mappings
                 Updated = DateTime.UtcNow,
                 ImageUrl = "testImage.jpg",
                 CategoryId = 2,
-                Category = new Category { Id = 2, Name = "Electronics" },
+                Category = new CategoryEntity { Id = 2, Name = "Electronics" },
                 ProductTypeId = 3,
                 ProductType = new ProductType { Id = 3, Name = "Gadget" },
                 Price = 100.0

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EcommerceApp.Domain.Models.Category
+﻿namespace EcommerceApp.Domain.Models.Category
 {
-    public class UpdateCategoryModel
+    public class UpdateCategoryModel : CategoryModel
     {
     }
 }
