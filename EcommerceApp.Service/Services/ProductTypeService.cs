@@ -1,11 +1,7 @@
-using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Models.Products;
-using EcommerceApp.Domain.Mappings;
-using EcommerceApp.Domain.Services.Contracts;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 using EcommerceApp.Service.Contracts;
+using EcommerceApp.Domain.Interfaces.Repositories;
 
 namespace EcommerceApp.Service.Implementations;
 
@@ -24,81 +20,58 @@ public class ProductTypeService : IProductTypeService
     }
 
     /// <inheritdoc />
-    public async Task<int> AddAsync(ProductTypeModel entity)
+    public async Task<int> AddAsync(ProductTypeModel productType)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (productType == null) throw new ArgumentNullException(nameof(productType));
 
-        var productEntity = entity.ToEntity();
-
-        await _productTypeRepository.AddAsync(productEntity);
+        var newId = await _productTypeRepository.AddAsync(productType);
         await _productTypeRepository.SaveChangesAsync();
 
-        return productEntity.Id;
+        return newId;
     }
 
     /// <inheritdoc />
     public async Task<IEnumerable<ProductTypeModel>> GetAllAsync()
     {
-        // Get product types
         var productEntities = await _productTypeRepository.GetAllAsync();
         _logger.LogDebug("Found '{count}' Product Type Entities", productEntities.Count());
 
-        // Map and return product types
-        return productEntities.Select(x => x.ToModel());
+        return productEntities;
     }
 
     /// <inheritdoc />
-    public async Task<ProductTypeModel?> GetFirstOrDefaultAsync(Expression<Func<ProductType, bool>> filter, string? includeProperties = null, bool tracked = true)
+    public ProductTypeModel? GetProductTypeById(int id)
     {
-        // get the product type from db
-        var productEntity = await _productTypeRepository.GetFirstOrDefaultAsync(filter, tracked, includeProperties);
+        ArgumentOutOfRangeException.ThrowIfZero(id);
 
-        if (productEntity == null)
-            return null;
-
+        var productEntity = _productTypeRepository.GetProductTypeById(id);
         _logger.LogDebug("Found Product Type Entity with id: '{id}'", productEntity.Id);
 
-        // map and return product type
-        return productEntity.ToModel();
+        return productEntity;
     }
 
     /// <inheritdoc />
-    public async Task RemoveAsync(ProductTypeModel entity)
+    public async Task RemoveAsync(ProductTypeModel productType)
     {
         // this method already deletes the mappings associated with the productType in the db -> must be cascade delete or something???
 
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (productType == null) throw new ArgumentNullException(nameof(productType));
 
-        var productEntity = await _productTypeRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+        _logger.LogDebug("Removing Product Type Entity with id: '{id}'", productType.Id);
 
-        if (productEntity != null)
-        {
-            _logger.LogDebug("Removing Product Type Entity with id: '{id}'", entity.Id);
-            _productTypeRepository.Remove(productEntity);
-            await _productTypeRepository.SaveChangesAsync();
-        }
+        _productTypeRepository.Remove(productType.Id);
+        await _productTypeRepository.SaveChangesAsync();
     }
 
     /// <inheritdoc />
-    public async Task UpdateAsync(ProductTypeModel entity)
+    public async Task UpdateAsync(ProductTypeModel productType)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (productType == null) throw new ArgumentNullException(nameof(productType));
 
-        var productFromDb = await _productTypeRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+        _productTypeRepository.Update(productType);
+        await _productTypeRepository.SaveChangesAsync();
 
-        _logger.LogDebug("Found Product Type Entity with id: '{id}'", entity.Id);
-
-        if (productFromDb != null)
-        {
-            productFromDb.Name = entity.Name;
-            productFromDb.Description = entity.Description;
-            productFromDb.Updated = DateTime.Now;
-
-            _productTypeRepository.Update(productFromDb);
-            await _productTypeRepository.SaveChangesAsync();
-
-            _logger.LogDebug("Updated Product Type Entity with id: '{id}'", entity.Id);
-        }
+        _logger.LogDebug("Updated Product Type Entity with id: '{id}'", productType.Id);
     }
 
 }

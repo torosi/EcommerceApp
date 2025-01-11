@@ -55,7 +55,7 @@ namespace EcommerceApp.Data.Repositories
             ArgumentOutOfRangeException.ThrowIfZero(id);
 
             var model = _context.Categories.SingleOrDefault(c => c.Id == id);
-            if (model != null) throw new Exception($"Could not find Category with Id: {id}");
+            if (model == null) throw new Exception($"Could not find Category with Id: {id}");
 
             _context.Categories.Remove(model!);
         }

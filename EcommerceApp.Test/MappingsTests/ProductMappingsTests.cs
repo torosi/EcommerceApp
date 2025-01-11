@@ -2,6 +2,7 @@
 using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Mappings;
+using EcommerceApp.Data.Mappings;
 
 
 namespace EcommerceApp.Test.Mappings
@@ -23,12 +24,12 @@ namespace EcommerceApp.Test.Mappings
                 CategoryId = 2,
                 Category = new CategoryEntity { Id = 2, Name = "Electronics" },
                 ProductTypeId = 3,
-                ProductType = new ProductType { Id = 3, Name = "Gadget" },
+                ProductType = new ProductTypeEntity { Id = 3, Name = "Gadget" },
                 Price = 100.0
             };
 
             // Act
-            var dto = product.ToModel();
+            var dto = product.ToDomain();
 
             // Assert
             Assert.Equal(product.Id, dto.Id);
