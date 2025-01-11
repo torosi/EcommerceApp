@@ -1,19 +1,9 @@
 using EcommerceApp.Domain.Models.Category;
-using System.Linq.Expressions;
 
 namespace EcommerceApp.Domain.Interfaces.Repositories
 {
     public interface ICategoryRepository
     { 
-        /// <summary>
-        /// Method to get first of default category based on filter
-        /// </summary>
-        /// <param name="filter"></param>
-        /// <param name="tracked"></param>
-        /// <param name="includeProperties"></param>
-        /// <returns></returns>
-        Task<CategoryModel?> GetFirstOrDefaultAsync(Expression<Func<CategoryModel, bool>> filter, bool tracked = true, string? includeProperties = null);
-
         /// <summary>
         /// Method to add new category
         /// </summary>
