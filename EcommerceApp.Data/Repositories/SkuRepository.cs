@@ -10,7 +10,7 @@ namespace EcommerceApp.Data.Repositories;
 public class SkuRepository : ISkuRepository
 {
     private readonly ApplicationDbContext _context;
-    public SkuRepository(ApplicationDbContext context, ILogger<BaseRepository<SkuEntity>> logger)
+    public SkuRepository(ApplicationDbContext context, ILogger<SkuEntity> logger)
     {
         _context = context;
     }

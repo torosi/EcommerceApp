@@ -1,29 +1,63 @@
 using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Entities.Products;
-using EcommerceApp.Data.Repositories.Contracts;
+using EcommerceApp.Data.Mappings;
+using EcommerceApp.Domain.Interfaces.Repositories;
+using EcommerceApp.Domain.Models.Products;
+using EcommerceApp.Domain.Models.Variations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.Data.Repositories;
 
-public class VariationTypeRepository : BaseRepository<VariationTypeEntity>, IVariationTypeRepository
+public class VariationTypeRepository : IVariationTypeRepository
 {
     private readonly ApplicationDbContext _context;
 
-    public VariationTypeRepository(ApplicationDbContext context, ILogger<VariationTypeRepository> logger) : base(context, logger)
+    public VariationTypeRepository(ApplicationDbContext context, ILogger<VariationTypeRepository> logger)
     {
         _context = context;
     }
 
-    /// <inheritdoc />
-    public async Task CreateProductTypeVariationMappingRangeAsync(IEnumerable<ProductTypeVariationMappingEntity> mappings)
+    public async Task AddAsync(VariationTypeModel variationTypeModel)
     {
-        await _context.ProductTypeVariationMappings.AddRangeAsync(mappings);
-        await _context.SaveChangesAsync();
+        if (variationTypeModel is null) throw new ArgumentNullException(nameof(variationTypeModel));
+        await _context.VariationTypes.AddAsync(variationTypeModel.ToEntity());
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<VariationTypeEntity?>> GetAllByProductTypeAsync(int productTypeId)
+    public async Task CreateProductTypeVariationMappingRangeAsync(IEnumerable<ProductTypeVariationMappingModel> mappings)
+    {
+        if (mappings is null) throw new ArgumentNullException(nameof(mappings));
+        if (!mappings.Any()) throw new ArgumentException(nameof(mappings));
+
+        foreach (var mapping in mappings)
+        {
+            await _context.ProductTypeVariationMappings.AddAsync(mapping.ToEntity());
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<VariationTypeModel>> GetAllAsync(string? includeProperties = null)
+    {
+        IQueryable<VariationTypeEntity> query = _context.Set<VariationTypeEntity>();
+
+        if (!string.IsNullOrEmpty(includeProperties))
+        {
+            foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(property);
+            }
+        }
+
+        // Order by name (or any relevant property) alphabetically
+        query = query.OrderBy(c => c.Name);
+
+        var entities = await query.ToListAsync();
+        return entities.Select(x => x.ToDomain());
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<VariationTypeModel?>> GetAllByProductTypeAsync(int productTypeId)
     {
         // Fetch the mappings including VariationType navigation property
         var productTypeVariationMappings = await _context.ProductTypeVariationMappings
@@ -37,7 +71,12 @@ public class VariationTypeRepository : BaseRepository<VariationTypeEntity>, IVar
             .Where(vt => vt != null) // Ensure no nulls are included
             .Distinct();
 
-        return variationTypes;
+        return variationTypes.Select(x => x.ToDomain());
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 
 }
