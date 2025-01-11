@@ -52,7 +52,7 @@ namespace EcommerceApp.Data.Repositories
         /// <inheritdoc />
         public async Task<(int TotalCount, IEnumerable<ProductModel> Products)> SearchProductByCategoryId(int categoryId, string? includeProperties = null, int pageNumber = 1, int itemsPerPage = 20)
         {
-            if (categoryId == 0) throw new ArgumentNullException(nameof(categoryId));
+            ArgumentOutOfRangeException.ThrowIfZero(categoryId);
 
             IQueryable<Product> query = _context.Set<Product>();
 
@@ -102,11 +102,11 @@ namespace EcommerceApp.Data.Repositories
         }
 
         /// <inheritdoc />
-        public async void Remove(int id)
+        public async void Remove(int productId)
         {
-            if (id == 0) throw new ArgumentOutOfRangeException(nameof(id));
+            ArgumentOutOfRangeException.ThrowIfZero(productId);
 
-            var productFromDb = await _context.Products.SingleOrDefaultAsync(x => x.Id == id);
+            var productFromDb = await _context.Products.SingleOrDefaultAsync(x => x.Id == productId);
             if (productFromDb != null)
             {
                 _context.Products.Remove(productFromDb);
@@ -122,7 +122,7 @@ namespace EcommerceApp.Data.Repositories
         /// <inheritdoc />
         public async Task<ProductModel?> GetProductById(int productId = 0, bool tracked = true, string? includeProperties = null)
         {
-            if (productId == 0) throw new ArgumentOutOfRangeException(nameof(productId));
+            ArgumentOutOfRangeException.ThrowIfZero(productId);
 
             var productEntity = await _context.Products.SingleOrDefaultAsync(x => x.Id == productId);
             return productEntity != null ? productEntity.ToDomain() : null;
