@@ -1,26 +1,19 @@
 ﻿using AutoMapper;
-using EcommerceApp.Data.Entities.Products;
-using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Models.Variations;
-using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Helpers.Interfaces;
 using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductType;
 using EcommerceApp.MVC.Models.ProductVariationOption;
-using EcommerceApp.MVC.Models.ShoppingCart;
 using EcommerceApp.MVC.Models.Sku;
-using EcommerceApp.MVC.Models.VariationType;
+using EcommerceApp.Service.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using System.Net.NetworkInformation;
-using System.Security.Claims;
 
 namespace EcommerceApp.MVC.Controllers
 {
@@ -36,7 +29,7 @@ namespace EcommerceApp.MVC.Controllers
         private IWebHostEnvironment _webHostEnvironment;
         private readonly ImageHelper _imageHelper;
         private readonly IUserHelper _userHelper;
-        private readonly ISkuRepository _skuRepository;
+        private readonly ISkuService _skuService;
 
         public ProductController(
             IProductService productService,
@@ -48,7 +41,7 @@ namespace EcommerceApp.MVC.Controllers
             IProductTypeService productTypeService,
             IVariationTypeService variationTypeService,
             IUserHelper userHelper,
-            ISkuRepository skuRepository
+            ISkuService skuService
         )
         {
             _productService = productService;
@@ -60,7 +53,7 @@ namespace EcommerceApp.MVC.Controllers
             _productTypeService = productTypeService;
             _variationTypeService = variationTypeService;
             _userHelper = userHelper;
-            _skuRepository = skuRepository;
+            _skuService = skuService;
         }
 
         public async Task<IActionResult> Index()

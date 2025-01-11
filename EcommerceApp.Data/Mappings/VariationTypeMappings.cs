@@ -1,5 +1,7 @@
 using EcommerceApp.Data.Entities;
+using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Models.Products;
+using EcommerceApp.Domain.Models.Variations;
 
 namespace EcommerceApp.Data.Mappings;
 
@@ -26,4 +28,14 @@ public static class VariationTypeMappings
             Updated = variationTypeModel.Updated,
         };
     }
+
+    public static ProductTypeVariationMappingEntity ToEntity(this ProductTypeVariationMappingModel variationType)
+    {
+        return new ProductTypeVariationMappingEntity()
+        {
+            ProductTypeId = variationType.ProductTypeId,
+            VariationTypeId = variationType.VariationTypeId
+        };
+    }
+
 }

@@ -10,13 +10,11 @@ public class ProductTypeService : IProductTypeService
 {
     private readonly IProductTypeRepository _productTypeRepository;
     private readonly ILogger<ProductTypeService> _logger;
-    private readonly IVariationTypeRepository _variationTypeRepository;
 
-    public ProductTypeService(IProductTypeRepository productTypeRepository, ILogger<ProductTypeService> logger, IVariationTypeRepository variationTypeRepository)
+    public ProductTypeService(IProductTypeRepository productTypeRepository, ILogger<ProductTypeService> logger)
     {
         _productTypeRepository = productTypeRepository;
         _logger = logger;
-        _variationTypeRepository = variationTypeRepository;
     }
 
     /// <inheritdoc />

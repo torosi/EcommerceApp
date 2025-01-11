@@ -1,6 +1,3 @@
-using System;
-using System.Linq.Expressions;
-using EcommerceApp.Data.Entities;
 using EcommerceApp.Domain.Models.Products;
 
 namespace EcommerceApp.Service.Contracts;
@@ -13,7 +10,7 @@ public interface IVariationTypeService
     /// <param name="includeProperties"></param>
     /// <param name="filter"></param>
     /// <returns></returns>
-    public Task<IEnumerable<VariationTypeModel>> GetAllAsync(string? includeProperties = null, Expression<Func<VariationType, bool>>? filter = null);
+    public Task<IEnumerable<VariationTypeModel>> GetAllAsync(string? includeProperties = null);
 
     /// <summary>
     /// Method to create a new VariationType

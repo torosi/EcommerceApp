@@ -1,11 +1,7 @@
-using System.Linq.Expressions;
-using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Entities.Products;
-using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Models.Products;
-using EcommerceApp.Domain.Mappings;
-using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Service.Contracts;
+using EcommerceApp.Domain.Interfaces.Repositories;
+using EcommerceApp.Domain.Models.Variations;
 
 namespace EcommerceApp.Service.Implementations;
 
@@ -22,23 +18,15 @@ public class VariationTypeService : IVariationTypeService
     public async Task CreateVariationTypeAsync(VariationTypeModel variationTypeModel)
     {
         if (variationTypeModel == null) throw new ArgumentNullException(nameof(variationTypeModel));
-        // if (productTypeId == 0) throw new ArgumentNullException(nameof(productTypeId));
-
-        // map variationTypeModel to entity
-        var variationType = variationTypeModel.ToEntity();
-
-        // save variation type and then the mapping
-        await _variationTypeRepository.AddAsync(variationType); // do this one first incase of foreign keys
-        await _variationTypeRepository.SaveChangesAsync(); // we have to save the product type first so that we have the id to add the mappings table
-
+        await _variationTypeRepository.AddAsync(variationTypeModel);
+        await _variationTypeRepository.SaveChangesAsync();
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<VariationTypeModel>> GetAllAsync(string? includeProperties = null, Expression<Func<VariationType, bool>>? filter = null)
+    public async Task<IEnumerable<VariationTypeModel>> GetAllAsync(string? includeProperties = null)
     {
-        var variationTypes = await _variationTypeRepository.GetAllAsync(includeProperties: includeProperties, filter: filter);
-        var variationModels = variationTypes.Select(x => x.ToModel());
-        return variationModels;
+        var variationTypes = await _variationTypeRepository.GetAllAsync(includeProperties: includeProperties);
+        return variationTypes;
     }
 
     /// <inheritdoc />
@@ -71,11 +59,11 @@ public class VariationTypeService : IVariationTypeService
         if (productTypeId == 0) throw new ArgumentNullException(nameof(productTypeId));
 
         // create ProductVaraitionTypeMapping
-        var productTypeVariationMappings = new List<ProductTypeVariationMapping>();
+        var productTypeVariationMappings = new List<ProductTypeVariationMappingModel>();
 
         foreach (var id in variationTypeIds)
         {
-            productTypeVariationMappings.Add(new ProductTypeVariationMapping()
+            productTypeVariationMappings.Add(new ProductTypeVariationMappingModel()
             {
                 VariationTypeId = id,
                 ProductTypeId = productTypeId

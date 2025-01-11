@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using EcommerceApp.Domain.Constants;
 using EcommerceApp.Domain.Models.Products;
-using EcommerceApp.Domain.Services.Contracts;
-using EcommerceApp.Domain.Services.Implementations;
-using EcommerceApp.MVC.Helpers;
-using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductType;
 using EcommerceApp.MVC.Models.VariationType;
+using EcommerceApp.Service.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
