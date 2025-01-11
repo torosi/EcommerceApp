@@ -122,16 +122,7 @@ namespace EcommerceApp.Service.Implementations
             if (existingSkus != null) throw new Exception("Sku's provided are not unique");
 
             // Step 2: Identify SKUs that need to be added
-            var newSkus = skus
-                .Where(sku => sku.Id == 0)
-                .Select(x => new Sku()
-                {
-                    SkuString = x.SkuString,
-                    Quantity = x.Quantity,
-                    ProductId = x.ProductId,
-                    Created = DateTime.Now,
-                    Updated = DateTime.Now,
-                }).ToList();
+            var newSkus = skus.Where(sku => sku.Id == 0).ToList();
 
             // Step 3: Save new SKUs
             if (newSkus.Any())
@@ -146,16 +137,7 @@ namespace EcommerceApp.Service.Implementations
             // var allSkus = existingSkus.Concat(newSkus).ToList(); // add our newly created ones back into our db result so that we have a complete list of them from the db
 
             // Step 5: get all of the variation options that have an id of 0 (are new)
-            var newVariationOptionEntities = variations
-                .Where(variation => variation.Id == 0)
-                .Select(variation => new ProductVariationOption()
-                {
-                    SkuId = newSkus.First(s => s.SkuString == variation.SkuString).Id, // Match by SKU String
-                    VariationTypeId = variation.VariationTypeId,
-                    VariationValue = variation.VariationValue,
-                    Created = DateTime.Now,
-                    Updated = DateTime.Now,
-                }).ToList();
+            var newVariationOptionEntities = variations.Where(variation => variation.Id == 0).ToList();
 
             if (newVariationOptionEntities.Any())
             {

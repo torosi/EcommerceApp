@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace EcommerceApp.Service.Contracts
 {
-    public interface IProductService
+    interface IProductService
     {
         /// <summary>
         /// A method to retrieve all product.
         /// </summary>
         /// <returns>A collection of products.</returns>
-        public Task<IEnumerable<ProductModel>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null);
+        Task<IEnumerable<ProductModel>> GetAllAsync(string? includeProperties = null);
 
         /// <summary>
         /// Method to retrieve first of detault ProductModel by passed in expression
@@ -28,28 +28,28 @@ namespace EcommerceApp.Service.Contracts
         /// <param name="includeProperties"></param>
         /// <param name="tracked"></param>
         /// <returns></returns>
-        public Task<ProductModel?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null, bool tracked = true);
+        Task<ProductModel?> GetProductById(int productId, string? includeProperties = null);
 
         /// <summary>
         /// Method to add new ProductModel
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public Task<ProductModel> AddAsync(ProductModel entity);
+        Task<ProductModel> AddAsync(ProductModel entity);
 
         /// <summary>
         /// Method to remove ProductModel
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public Task RemoveAsync(ProductModel entity);
+        Task RemoveAsync(int productId);
 
         /// <summary>
         /// Method to Update ProductModel
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public Task UpdateAsync(ProductModel entity);
+        Task UpdateAsync(ProductModel entity);
 
         /// <summary>
         /// Method to get collection of ProductModels that accepts pagination values to offset the returned results
@@ -59,14 +59,14 @@ namespace EcommerceApp.Service.Contracts
         /// <param name="pageNumber"></param>
         /// <param name="itemsPerPage"></param>
         /// <returns></returns>
-        public Task<(int TotalCount, IEnumerable<ProductModel> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20);
+        Task<(int TotalCount, IEnumerable<ProductModel> Products)> SearchProductByCategoryId(int categoryId, string? includeProperties = null, int pageNumber = 1, int itemsPerPage = 20);
 
         /// <summary>
         /// Method to get a collection of SkuModels paired with their corresponding VariationModel values
         /// </summary>
         /// <param name="productId"></param>
         /// <returns>IEnumerable<SkuWithVariationsModel></returns>
-        public Task<IEnumerable<SkuWithVariationsModel>> GetProductVariationsAsync(int productId);
+        Task<IEnumerable<SkuWithVariationsModel>> GetProductVariationsAsync(int productId);
 
         /// <summary>
         /// Method to create a new Sku and new ProductVariationOptions
@@ -74,6 +74,6 @@ namespace EcommerceApp.Service.Contracts
         /// <param name="skus"></param>
         /// <param name="variations"></param>
         /// <returns></returns>
-        public Task CreateProductVariations(IEnumerable<SkuModel> skus, IEnumerable<ProductVariationOptionInputModel> variations);
+        Task CreateProductVariations(IEnumerable<SkuModel> skus, IEnumerable<ProductVariationOptionInputModel> variations);
     }
 }
