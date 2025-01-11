@@ -17,9 +17,9 @@ namespace EcommerceApp.Data.Mappings
                 Updated = product.Updated,
                 ImageUrl = product.ImageUrl,
                 CategoryId = product.CategoryId,
-                Category = product.Category != null ? product.Category.ToModel() : null,
+                Category = product.Category != null ? product.Category.ToDomain() : null,
                 ProductTypeId = product.ProductTypeId,
-                ProductType = product.ProductType != null ? product.ProductType.ToModel() : null,
+                ProductType = product.ProductType != null ? product.ProductType.ToDomain() : null,
                 Price = product.Price,
             };
         }

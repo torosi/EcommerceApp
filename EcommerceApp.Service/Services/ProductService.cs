@@ -1,6 +1,5 @@
 ﻿using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Models.Products;
-using EcommerceApp.Domain.Models.Variations;
 using Microsoft.Extensions.Logging;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Interfaces.Repositories;
@@ -105,7 +104,7 @@ namespace EcommerceApp.Service.Implementations
         }
 
         /// <inheritdoc />
-        public async Task CreateProductVariations(IEnumerable<SkuModel> skus, IEnumerable<ProductVariationOptionInputModel> variations)
+        public async Task CreateProductVariations(IEnumerable<SkuModel> skus, IEnumerable<ProductVariationOptionModel> variations)
         {
             if (skus == null || !skus.Any()) throw new ArgumentNullException(nameof(skus));
             if (variations == null || !variations.Any()) throw new ArgumentNullException(nameof(variations));
@@ -136,15 +135,15 @@ namespace EcommerceApp.Service.Implementations
             // var allSkus = existingSkus.Concat(newSkus).ToList(); // add our newly created ones back into our db result so that we have a complete list of them from the db
 
             // Step 5: get all of the variation options that have an id of 0 (are new)
-            var newVariationOptionEntities = variations.Where(variation => variation.Id == 0).ToList();
+            var newVariationOptions = variations.Where(variation => variation.Id == 0).ToList();
 
-            if (newVariationOptionEntities.Any())
+            if (newVariationOptions.Any())
             {
                 // Step 6: Save ProductVariationOption entities in bulk
-                await _productVariationOptionRepository.AddRangeAsync(newVariationOptionEntities);
+                await _productVariationOptionRepository.AddRangeAsync(newVariationOptions);
                 await _productVariationOptionRepository.SaveChangesAsync();
 
-                _logger.LogDebug("'{count}' new ProductVariationOption entities saved", newVariationOptionEntities.Count());
+                _logger.LogDebug("'{count}' new ProductVariationOption entities saved", newVariationOptions.Count());
             }
         }
 

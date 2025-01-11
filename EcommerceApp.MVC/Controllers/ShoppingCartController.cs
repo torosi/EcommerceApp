@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
-using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Models;
-using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers.Interfaces;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductVariationOption;
 using EcommerceApp.MVC.Models.ShoppingCart;
+using EcommerceApp.Service.Contracts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace EcommerceApp.MVC.Controllers
 {
@@ -167,7 +164,7 @@ namespace EcommerceApp.MVC.Controllers
                 var userId = _userHelper.GetUserId();
                 if (userId == null) throw new Exception("User could not be found");
 
-                var skuModel = await _skuService.GetFirstOrDefaultAsync(x => x.SkuString == skuString);
+                var skuModel = await _skuService.GetBySkuStringsAsync(new List<string>() { skuString });
                 if (skuModel == null) throw new Exception("Product could not be found");
 
                 // 1) get the current cart from the db to see if the product is already in there

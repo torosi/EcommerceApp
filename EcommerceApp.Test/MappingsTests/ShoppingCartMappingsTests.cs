@@ -1,10 +1,7 @@
-using System;
-using System.Xml.Serialization;
 using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Models;
-using EcommerceApp.Domain.Models.Products;
-using EcommerceApp.Domain.Mappings;
+using EcommerceApp.Data.Mappings;
 
 namespace EcommerceApp.Test.MappingsTests;
 
@@ -23,7 +20,7 @@ public class ShoppingCartMappingsTests
         };
 
         // Act
-        var shoppingCartModel = shoppingCart.ToModel();
+        var shoppingCartModel = shoppingCart.ToDomain();
 
         // Assert
         Assert.Equal(shoppingCartModel.Id, shoppingCart.Id);
@@ -58,7 +55,7 @@ public class ShoppingCartMappingsTests
     public void ToModel_Should_Map_Sku_To_SkuModel_Correctly()
     {
         // Arrange
-        var sku = new Sku()
+        var sku = new SkuEntity()
         {
             Id = 3,
             Created = DateTime.Now,
@@ -69,7 +66,7 @@ public class ShoppingCartMappingsTests
         };
 
         // Act
-        var skuModel = sku.ToModel();
+        var skuModel = sku.ToDomain();
 
         // Assert
         Assert.Equal(skuModel.Id, sku.Id);
@@ -84,7 +81,7 @@ public class ShoppingCartMappingsTests
     public void ToModelWithVariations_Should_Map_Sku_To_SkuWithVariationsModel_Correctly()
     {
         // Arrange
-        var sku = new Sku()
+        var sku = new SkuEntity()
         {
             Id = 3,
             Created = DateTime.Now,
