@@ -4,7 +4,7 @@ using EcommerceApp.Domain.Models.Variations;
 
 namespace EcommerceApp.Service.Contracts
 {
-    interface IProductService
+    public interface IProductService
     {
         /// <summary>
         /// A method to retrieve all product.

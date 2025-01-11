@@ -1,8 +1,7 @@
 using AutoMapper;
-using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Models;
 using EcommerceApp.MVC.Models.Category;
-using EcommerceApp.MVC.Models.Product;
+using EcommerceApp.Service.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

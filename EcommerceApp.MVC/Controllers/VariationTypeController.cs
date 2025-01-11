@@ -1,11 +1,8 @@
 using EcommerceApp.Domain.Models.Products;
-using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Models.Product;
-using EcommerceApp.MVC.Models.ProductType;
 using EcommerceApp.MVC.Models.VariationType;
+using EcommerceApp.Service.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using NuGet.Common;
 
 namespace EcommerceApp.MVC.Controllers
 {

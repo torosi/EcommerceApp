@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
-using EcommerceApp.Data.Entities;
 using EcommerceApp.Domain.Models.Category;
-using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Category;
 using EcommerceApp.MVC.Models.Product;
+using EcommerceApp.Service.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.MVC.Controllers
 {
