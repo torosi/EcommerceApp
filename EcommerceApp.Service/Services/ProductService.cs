@@ -1,5 +1,4 @@
-﻿using EcommerceApp.Data.Entities.Products;
-using EcommerceApp.Domain.Models;
+﻿using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Models.Variations;
 using Microsoft.Extensions.Logging;
