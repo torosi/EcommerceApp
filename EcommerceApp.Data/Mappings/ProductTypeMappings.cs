@@ -5,7 +5,7 @@ namespace EcommerceApp.Data.Mappings;
 
 public static class ProductTypeMappings
 {
-    public static ProductTypeModel ToModel(this ProductType productType)
+    public static ProductTypeModel ToDomain(this ProductType productType)
     {
         return new ProductTypeModel()
         {

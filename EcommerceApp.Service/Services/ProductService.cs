@@ -1,13 +1,10 @@
-﻿using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Entities.Products;
-using EcommerceApp.Data.Repositories.Contracts;
+﻿using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Models.Variations;
-using EcommerceApp.Domain.Mappings;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 using EcommerceApp.Service.Contracts;
+using EcommerceApp.Domain.Interfaces.Repositories;
 
 namespace EcommerceApp.Service.Implementations
 {
@@ -27,94 +24,75 @@ namespace EcommerceApp.Service.Implementations
         }
 
         /// <inheritdoc />
-        public async Task<ProductModel> AddAsync(ProductModel entity)
+        public async Task<ProductModel> AddAsync(ProductModel product)
         {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (product == null) throw new ArgumentNullException(nameof(product));
 
-            var productEntity = entity.ToEntity();
-
-            await _productRepository.AddAsync(productEntity);
+            var newProduct = await _productRepository.AddAsync(product);
             await _productRepository.SaveChangesAsync();
 
-            _logger.LogDebug("New Product has been added with Id: {id}", productEntity.Id);
+            _logger.LogDebug("New Product has been added with Id: {id}", product.Id);
 
-            return productEntity.ToModel();
+            return newProduct;
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<ProductModel>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null)
+        public async Task<IEnumerable<ProductModel>> GetAllAsync(string? includeProperties = null)
         {
-            var productEntities = await _productRepository.GetAllAsync(includeProperties, filter);
+            var productEntities = await _productRepository.GetAllAsync(includeProperties);
 
             _logger.LogDebug("Found '{count}' Product Entities", productEntities.Count());
 
-            return productEntities.Select(x => x.ToModel());
+            return productEntities;
         }
 
         /// <inheritdoc />
-        public async Task<ProductModel?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null, bool tracked = true)
+        public async Task<ProductModel?> GetProductById(int productId, string? includeProperties = null)
         {
-            var productEntity = await _productRepository.GetFirstOrDefaultAsync(filter, includeProperties: includeProperties, tracked: tracked);
+            if (productId == 0) throw new ArgumentOutOfRangeException(nameof(productId));
 
-            if (productEntity == null)
-                return null;
+            var productEntity = await _productRepository.GetProductById(productId, includeProperties: includeProperties);
+            if (productEntity == null) return null;
 
             _logger.LogDebug("Found Product Entity with id: '{id}'", productEntity.Id);
 
-            return productEntity.ToModel();
+            return productEntity;
         }
 
         /// <inheritdoc />
-        public async Task RemoveAsync(ProductModel entity)
+        public async Task RemoveAsync(int productId)
         {
-            if (entity == null) throw new ArgumentException(nameof(entity));
+            if (productId == 0) throw new ArgumentOutOfRangeException(nameof(productId));
 
-            var productFromDb = await _productRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+            _logger.LogDebug("Removing Product Entity with id: '{id}'", productId);
+            _productRepository.Remove(productId);
 
-            if (productFromDb != null)
-            {
-                _logger.LogDebug("Removing Product Entity with id: '{id}'", entity.Id);
-                _productRepository.Remove(productFromDb);
-                await _productRepository.SaveChangesAsync();
-            }
+            await _productRepository.SaveChangesAsync();
         }
 
         /// <inheritdoc />
-        public async Task UpdateAsync(ProductModel entity)
+        public async Task UpdateAsync(ProductModel product)
         {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (product == null) throw new ArgumentNullException(nameof(product));
 
-            // 1) get the entity from db
-            var productFromDb = await _productRepository.GetFirstOrDefaultAsync(x => x.Id == entity.Id);
+            _logger.LogDebug("Found Product Entity with id: '{id}'", product.Id);
 
-            _logger.LogDebug("Found Product Entity with id: '{id}'", entity.Id);
+            _productRepository.Update(product);
+            await _productRepository.SaveChangesAsync();
 
-            // 2) update entity
-            if (productFromDb != null)
-            {
-                productFromDb.Description = entity.Description;
-                productFromDb.Name = entity.Name;
-                productFromDb.Updated = DateTime.Now;
-                productFromDb.ImageUrl = entity.ImageUrl;
-                productFromDb.CategoryId = entity.CategoryId;
-                productFromDb.ProductTypeId = entity.ProductTypeId;
-
-                _productRepository.Update(productFromDb);
-                await _productRepository.SaveChangesAsync();
-
-                _logger.LogDebug("Updated Product Entity with id: '{id}'", entity.Id);
-            }
+            _logger.LogDebug("Updated Product Entity with id: '{id}'", product.Id);
         }
 
         /// <inheritdoc />
-        public async Task<(int TotalCount, IEnumerable<ProductModel> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20)
+        public async Task<(int TotalCount, IEnumerable<ProductModel> Products)> SearchProductByCategoryId(int categoryId, string? includeProperties = null, int pageNumber = 1, int itemsPerPage = 20)
         {
-            var productResult = await _productRepository.GetFilteredProductsAsync(includeProperties, filter, pageNumber, itemsPerPage);
+            if (categoryId == 0) throw new ArgumentOutOfRangeException(nameof(categoryId));
 
-            _logger.LogDebug("'{count}' Product Entities returned from expression", productResult.TotalCount);
+            var result = await _productRepository.SearchProductByCategoryId(categoryId, includeProperties, pageNumber, itemsPerPage);
 
-            var productModels = productResult.Products.Select(x => x.ToModel());
-            return (productResult.TotalCount, productModels);
+            _logger.LogDebug("'{count}' Product Entities returned from expression", result.TotalCount);
+
+            return result;
         }
 
         /// <inheritdoc />
@@ -124,29 +102,7 @@ namespace EcommerceApp.Service.Implementations
 
             _logger.LogDebug("Found '{count}' Sku Entities", skus.Count());
 
-            var skuModels = new List<SkuWithVariationsModel>();
-
-            if (skus.Any())
-            {
-                // TODO: This can be made into an extention method in mappings?
-                skuModels = skus.Select(sku => new SkuWithVariationsModel
-                {
-                    SkuId = sku.Id,
-                    SkuString = sku.SkuString,
-                    Quantity = sku.Quantity,
-                    ProductId = sku.ProductId,
-                    VariationOptions = sku.ProductVariationOptions.Select(option => new ProductVariationOptionModel
-                    {
-                        Id = option.Id,
-                        SkuId = sku.Id,
-                        VariationTypeId = option.VariationTypeId,
-                        VariationValue = option.VariationValue,
-                        VariationTypeName = option.VariationType.Name
-                    }).ToList()
-                }).ToList();
-            }
-
-            return skuModels;
+            return skus;
         }
 
         /// <inheritdoc />

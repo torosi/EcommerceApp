@@ -6,7 +6,7 @@ namespace EcommerceApp.Data.Mappings
     public static class ProductMappings
     {
 
-        public static ProductModel ToModel(this Product product)
+        public static ProductModel ToDomain(this Product product)
         {
             return new ProductModel()
             {
@@ -17,9 +17,9 @@ namespace EcommerceApp.Data.Mappings
                 Updated = product.Updated,
                 ImageUrl = product.ImageUrl,
                 CategoryId = product.CategoryId,
-                Category = product.Category != null ? product.Category.ToModel() : null,
+                Category = product.Category != null ? product.Category.ToDomain() : null,
                 ProductTypeId = product.ProductTypeId,
-                ProductType = product.ProductType != null ? product.ProductType.ToModel() : null,
+                ProductType = product.ProductType != null ? product.ProductType.ToDomain() : null,
                 Price = product.Price,
             };
         }

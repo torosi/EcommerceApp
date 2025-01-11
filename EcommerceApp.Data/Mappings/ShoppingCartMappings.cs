@@ -7,7 +7,7 @@ namespace EcommerceApp.Data.Mappings
 {
     public static class ShoppingCartMappings
     {
-        public static ShoppingCartModel ToModel(this ShoppingCart cart)
+        public static ShoppingCartModel ToDomain(this ShoppingCart cart)
         {
             return new ShoppingCartModel()
             {
@@ -15,7 +15,7 @@ namespace EcommerceApp.Data.Mappings
                 SkuId = cart.SkuId,
                 ApplicationUserId = cart.ApplicationUserId,
                 Count = cart.Count,
-                Product = cart.Sku != null && cart.Sku.Product != null ? cart.Sku.Product.ToModel() : null,
+                Product = cart.Sku != null && cart.Sku.Product != null ? cart.Sku.Product.ToDomain() : null,
                 Sku = cart.Sku != null && cart.Sku.ProductVariationOptions.Any() ? cart.Sku.ToModelWithVariations() : null
             };
         }
@@ -31,7 +31,7 @@ namespace EcommerceApp.Data.Mappings
             };
         }
 
-        public static SkuModel ToModel(this Sku sku)
+        public static SkuModel ToDomain(this Sku sku)
         {
             return new SkuModel()
             {

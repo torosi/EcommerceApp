@@ -5,7 +5,7 @@ namespace EcommerceApp.Data.Mappings
 {
     public static class CategoryMappings
     {
-        public static CategoryModel ToModel(this Category category)
+        public static CategoryModel ToDomain(this Category category)
         {
             return new CategoryModel()
             {

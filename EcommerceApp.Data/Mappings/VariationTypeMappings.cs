@@ -5,7 +5,7 @@ namespace EcommerceApp.Data.Mappings;
 
 public static class VariationTypeMappings
 {
-    public static VariationTypeModel ToModel(this VariationType variationType)
+    public static VariationTypeModel ToDomain(this VariationType variationType)
     {
         return new VariationTypeModel() 
         {
