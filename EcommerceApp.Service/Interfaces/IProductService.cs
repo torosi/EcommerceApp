@@ -1,15 +1,6 @@
-﻿using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Entities.Products;
-using EcommerceApp.Domain.Models;
+﻿using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Models.Variations;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EcommerceApp.Service.Contracts
 {

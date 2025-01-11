@@ -1,10 +1,8 @@
-﻿using EcommerceApp.Data.Repositories.Contracts;
-using EcommerceApp.Domain.Models;
-using EcommerceApp.Domain.Mappings;
+﻿using EcommerceApp.Domain.Models;
 using System.Linq.Expressions;
-using EcommerceApp.Data.Entities;
 using Microsoft.Extensions.Logging;
 using EcommerceApp.Service.Contracts;
+using EcommerceApp.Domain.Interfaces.Repositories;
 
 namespace EcommerceApp.Service.Implementations
 {
@@ -20,36 +18,37 @@ namespace EcommerceApp.Service.Implementations
         }
 
         /// <inheritdoc/>
-        public async Task AddAsync(ShoppingCartModel cart)
+        public async Task AddAsync(ShoppingCartModel shoppingCart)
         {
-            if (cart == null) throw new ArgumentNullException(nameof(cart));
+            if (shoppingCart == null) throw new ArgumentNullException(nameof(shoppingCart));
 
-            var shoppingCartEntity = cart.ToEntity();
-            shoppingCartEntity.Created = DateTime.Now;
-            shoppingCartEntity.Updated = DateTime.Now;
-            await _shoppingCartRepository.AddAsync(shoppingCartEntity);
+            await _shoppingCartRepository.AddAsync(shoppingCart);
             await _shoppingCartRepository.SaveChangesAsync();
         }
 
         /// <inheritdoc/>
-        public async Task<ShoppingCartModel?> GetFirstOrDefaultAsync(Expression<Func<ShoppingCart, bool>> filter, bool tracked = true)
+        public async Task<ShoppingCartModel?> GetShoppingCartById(int cartId)
         {
-            var shoppingCart = await _shoppingCartRepository.GetFirstOrDefaultAsync(filter, tracked: tracked, includeProperties: "Sku");
-            if (shoppingCart == null) return null;
-            return shoppingCart.ToModel();
+            ArgumentOutOfRangeException.ThrowIfZero(cartId);
+
+            var shoppingCart = await _shoppingCartRepository.GetShoppingCartByIdAsync(cartId);
+            return shoppingCart;
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<ShoppingCartModel>> GetShoppingCartByUserAsync(string userId)
         {
-            var shoppingCartEntities = await _shoppingCartRepository.GetShoppingCartByUser(userId);
-            var shoppingCartModels = shoppingCartEntities.Select(x => x.ToModel()).ToList();
-            return shoppingCartModels;
+            if (userId == null) throw new ArgumentNullException(nameof(userId));
+
+            var shoppingCarts = await _shoppingCartRepository.GetShoppingCartByUser(userId);
+            return shoppingCarts;
         }
 
         /// <inheritdoc/>
         public async Task<int> GetShoppingCartCountByUserAsync(string userId)
         {
+            if (userId == null) throw new ArgumentNullException(nameof(userId));
+
             var count = await _shoppingCartRepository.GetShoppingCartCountByUser(userId);
             return count;
         }
@@ -57,18 +56,12 @@ namespace EcommerceApp.Service.Implementations
         /// <inheritdoc/>
         public async Task<bool> RemoveAsync(int cartId)
         {
-            var shoppingCartEntity = await _shoppingCartRepository.GetFirstOrDefaultAsync(x => x.Id == cartId);
+            ArgumentOutOfRangeException.ThrowIfZero(cartId);
 
-            var success = false;
+            await _shoppingCartRepository.RemoveAsync(cartId);
+            await _shoppingCartRepository.SaveChangesAsync();
 
-            if (shoppingCartEntity != null)
-            {
-                _shoppingCartRepository.Remove(shoppingCartEntity);
-                await _shoppingCartRepository.SaveChangesAsync();
-                success = true;
-            }
-
-            return success;
+            return true;
         }
 
         /// <inheritdoc/>
@@ -76,9 +69,7 @@ namespace EcommerceApp.Service.Implementations
         {
             if (cart == null) throw new ArgumentNullException(nameof(cart));
 
-            var shoppingCart = cart.ToEntity();
-            shoppingCart.Updated = DateTime.Now;
-            _shoppingCartRepository.Update(shoppingCart);
+            _shoppingCartRepository.Update(cart);
             await _shoppingCartRepository.SaveChangesAsync();
         }
     }

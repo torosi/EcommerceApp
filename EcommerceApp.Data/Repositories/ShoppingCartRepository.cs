@@ -1,15 +1,17 @@
 ﻿using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Repositories.Contracts;
+using EcommerceApp.Data.Mappings;
+using EcommerceApp.Domain.Interfaces.Repositories;
+using EcommerceApp.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.Data.Repositories
 {
-    public class ShoppingCartRepository : BaseRepository<ShoppingCart>, IShoppingCartRepository
+    public class ShoppingCartRepository : IShoppingCartRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public ShoppingCartRepository(ApplicationDbContext context, ILogger<ShoppingCartRepository> logger) : base(context, logger)
+        public ShoppingCartRepository(ApplicationDbContext context, ILogger<ShoppingCartRepository> logger)
         {
             _context = context;
         }
@@ -21,9 +23,11 @@ namespace EcommerceApp.Data.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<ShoppingCart>> GetShoppingCartByUser(string userId)
+        public async Task<IEnumerable<ShoppingCartModel>> GetShoppingCartByUser(string userId)
         {
-            IQueryable<ShoppingCart> query = _dbSet
+            if (userId == null) throw new ArgumentNullException(nameof(userId));
+
+            IQueryable<ShoppingCart> query = _context.Set<ShoppingCart>()
                 .Where(x => x.ApplicationUserId == userId)
                 .Include(x => x.Sku)
                 .ThenInclude(s => s.Product)
@@ -31,13 +35,17 @@ namespace EcommerceApp.Data.Repositories
                 .ThenInclude(s => s.ProductVariationOptions)
                 .ThenInclude(v => v.VariationType);
 
-            return await query.ToListAsync();
+            var shoppingCarts = await query.ToListAsync();
+
+            return shoppingCarts.Select(x => x.ToDomain());
         }
 
         /// <inheritdoc />
         public async Task<int> GetShoppingCartCountByUser(string userId)
         {
-            IQueryable<ShoppingCart> query = _dbSet;
+            if (userId == null) throw new ArgumentNullException(nameof(userId));
+
+            IQueryable<ShoppingCart> query = _context.Set<ShoppingCart>();
 
             query = query.Where(x => x.ApplicationUserId == userId);
 
@@ -49,6 +57,54 @@ namespace EcommerceApp.Data.Repositories
             {
                 return 0;
             }
+        }
+
+        public async Task AddAsync(ShoppingCartModel cart)
+        {
+            if (cart == null) throw new ArgumentNullException(nameof(cart));
+
+            var cartEntity = cart.ToEntity();
+            cartEntity.Created = DateTime.UtcNow;
+            cartEntity.Updated = DateTime.UtcNow;
+
+            await _context.ShoppingCarts.AddAsync(cartEntity);
+
+        }
+
+        public async Task RemoveAsync(int cartId)
+        {
+            ArgumentOutOfRangeException.ThrowIfZero(cartId);
+
+            var cartEntity = await _context.ShoppingCarts.SingleOrDefaultAsync(x => x.Id == cartId);
+
+            if (cartEntity != null)
+            {
+                _context.ShoppingCarts.Remove(cartEntity);
+            }
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public void Update(ShoppingCartModel cart)
+        {
+            if (cart == null) throw new ArgumentNullException(nameof(cart));
+
+            var cartEntity = cart.ToEntity();
+            cartEntity.Updated = DateTime.UtcNow;
+
+            _context.ShoppingCarts.Update(cartEntity);
+        }
+
+        public async Task<ShoppingCartModel?> GetShoppingCartByIdAsync(int cartId)
+        {
+            ArgumentOutOfRangeException.ThrowIfZero(cartId);
+
+            var shoppingCartEntity = await _context.ShoppingCarts.SingleOrDefaultAsync(x => x.Id == cartId);
+
+            return shoppingCartEntity == null ? null : shoppingCartEntity.ToDomain();
         }
     }
 }
