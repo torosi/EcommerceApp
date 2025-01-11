@@ -5,7 +5,7 @@ namespace EcommerceApp.Data.Mappings;
 
 public static class ProductTypeMappings
 {
-    public static ProductTypeModel ToDomain(this ProductType productType)
+    public static ProductTypeModel ToDomain(this ProductTypeEntity productType)
     {
         return new ProductTypeModel()
         {
@@ -17,9 +17,9 @@ public static class ProductTypeMappings
         };
     }
 
-    public static ProductType ToEntity(this ProductTypeModel productTypeModel)
+    public static ProductTypeEntity ToEntity(this ProductTypeModel productTypeModel)
     {
-        return new ProductType()
+        return new ProductTypeEntity()
         {
             Id = productTypeModel.Id,
             Name = productTypeModel.Name,

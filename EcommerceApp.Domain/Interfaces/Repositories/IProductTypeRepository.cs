@@ -2,11 +2,12 @@ using EcommerceApp.Domain.Models.Products;
 
 namespace EcommerceApp.Domain.Interfaces.Repositories;
 
-public interface IProductTypeRepository : IRepository<ProductTypeModel>
+public interface IProductTypeRepository
 {
-    /// <summary>
-    /// Method to update product type
-    /// </summary>
-    /// <param name="productType"></param>
     public void Update(ProductTypeModel productType);
+    Task<IEnumerable<ProductTypeModel>> GetAllAsync(string? includeProperties = null);
+    ProductTypeModel? GetProductTypeById(int id);
+    Task<int> AddAsync(ProductTypeModel model);
+    void Remove(int id);
+    Task SaveChangesAsync();
 }

@@ -1,6 +1,6 @@
 ﻿namespace EcommerceApp.Data.Entities
 {
-    public class ProductType : BaseEntity
+    public class ProductTypeEntity : BaseEntity
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }

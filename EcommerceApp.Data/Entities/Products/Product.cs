@@ -8,10 +8,10 @@ namespace EcommerceApp.Data.Entities
         public string? ImageUrl { get; set; }
 
         public int? CategoryId { get; set; }
-        public virtual Category? Category { get; set; } // navigation property
+        public virtual CategoryEntity? Category { get; set; } // navigation property
 
         public int ProductTypeId { get; set; }
-        public virtual ProductType ProductType { get; set; }
+        public virtual ProductTypeEntity ProductType { get; set; }
 
     }
 }
