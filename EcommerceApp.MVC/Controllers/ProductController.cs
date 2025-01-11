@@ -2,9 +2,9 @@
 using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Data.Repositories.Contracts;
 using EcommerceApp.Domain.Constants;
-using EcommerceApp.Domain.Dtos;
-using EcommerceApp.Domain.Dtos.Products;
-using EcommerceApp.Domain.Dtos.Variations;
+using EcommerceApp.Domain.Models;
+using EcommerceApp.Domain.Models.Products;
+using EcommerceApp.Domain.Models.Variations;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Helpers.Interfaces;
@@ -125,12 +125,12 @@ namespace EcommerceApp.MVC.Controllers
                         createProduct.ImageUrl = imageUrl;
                     }
 
-                    var productDto = _mapper.Map<ProductDto>(createProduct);
+                    var productModel = _mapper.Map<ProductModel>(createProduct);
 
                     // call our service
-                    var newProductDto = await _productService.AddAsync(productDto);
+                    var newProductModel = await _productService.AddAsync(productModel);
 
-                    return RedirectToAction("Variations", new { productId = newProductDto.Id });
+                    return RedirectToAction("Variations", new { productId = newProductModel.Id });
                 }
             }
             catch (Exception ex)
@@ -148,24 +148,24 @@ namespace EcommerceApp.MVC.Controllers
             try 
             {
                 // Get the product we want to edit
-                var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == id);
+                var productModel = await _productService.GetFirstOrDefaultAsync(x => x.Id == id);
                 // Get all categories for the dropdown
-                var categoryDtos = await _categoryService.GetAllAsync();
+                var categoryModels = await _categoryService.GetAllAsync();
                 // Get all producttypes for the dropdown
-                var productTypeDtos = await _productTypeService.GetAllAsync();
+                var productTypeModels = await _productTypeService.GetAllAsync();
 
                 // Create a new EditProductViewModel so we can return to view
                 var editProductViewModel = new EditProductViewModel();
 
                 // Map DTO to view models
-                if (productDto != null)
-                    editProductViewModel.Product = _mapper.Map<ProductViewModel>(productDto);
+                if (productModel != null)
+                    editProductViewModel.Product = _mapper.Map<ProductViewModel>(productModel);
                 
-                if (categoryDtos != null)
-                    editProductViewModel.Categories = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDtos);
+                if (categoryModels != null)
+                    editProductViewModel.Categories = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryModels);
                 
-                if (productTypeDtos != null)
-                    editProductViewModel.ProductTypes = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeDtos);
+                if (productTypeModels != null)
+                    editProductViewModel.ProductTypes = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeModels);
 
                 return View(editProductViewModel);
             }
@@ -184,9 +184,9 @@ namespace EcommerceApp.MVC.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var productDto = _mapper.Map<ProductDto>(product);
+                    var productModel = _mapper.Map<ProductModel>(product);
                     
-                    if (productDto != null)
+                    if (productModel != null)
                     {
 
                         // 1) check if there is a new file and upload/delete new/old images
@@ -199,9 +199,9 @@ namespace EcommerceApp.MVC.Controllers
                             }
 
                             // check if there is already an image, if so then we need to remove it first and then upload the next one
-                            if (!string.IsNullOrEmpty(productDto.ImageUrl)) // there is already an image so we need to delete it
+                            if (!string.IsNullOrEmpty(productModel.ImageUrl)) // there is already an image so we need to delete it
                             {
-                                var isDeleted = _imageHelper.DeleteImage(productDto.ImageUrl);
+                                var isDeleted = _imageHelper.DeleteImage(productModel.ImageUrl);
                                 
                                 // what should we do if the image couldnt be deleted?
                                 //if (!isDeleted)
@@ -212,11 +212,11 @@ namespace EcommerceApp.MVC.Controllers
 
                             // upload new image
                             var imageUrl = await _imageHelper.UploadImageAsync(file, "product");
-                            productDto.ImageUrl = imageUrl;
+                            productModel.ImageUrl = imageUrl;
                         }
 
                         // 3) Save changes
-                        await _productService.UpdateAsync(productDto);
+                        await _productService.UpdateAsync(productModel);
 
                         return RedirectToAction(nameof(Index));
                     }
@@ -236,11 +236,11 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == id);
+                var productModel = await _productService.GetFirstOrDefaultAsync(x => x.Id == id);
 
-                if (productDto != null)
+                if (productModel != null)
                 {
-                    var productViewModel = _mapper.Map<ProductViewModel>(productDto);
+                    var productViewModel = _mapper.Map<ProductViewModel>(productModel);
 
                     return View(productViewModel);
                 }
@@ -290,15 +290,15 @@ namespace EcommerceApp.MVC.Controllers
             try
             {
                 // 1) Retrieve the product
-                var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
+                var productModel = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
 
                 // 2) Retrieve all SKUs and their variations for the product
                 var skuWithVariations = await _productService.GetProductVariationsAsync(productId);
 
-                if (productDto != null && skuWithVariations.Any())
+                if (productModel != null && skuWithVariations.Any())
                 {
                     // 3) Map the product DTO to the product view model
-                    var productViewModel = _mapper.Map<ProductViewModel>(productDto);
+                    var productViewModel = _mapper.Map<ProductViewModel>(productModel);
 
                     // Populate the options (all variation options across all SKUs) - we dont need this for anything other than populating the drop down at the moment
                     var options = skuWithVariations
@@ -357,17 +357,17 @@ namespace EcommerceApp.MVC.Controllers
             try 
             {
                 // 1) get the product from the db
-                var productDto = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
-                if (productDto == null) return RedirectToAction("Index");
+                var productModel = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
+                if (productModel == null) return RedirectToAction("Index");
 
                 // map to view model
-                var productViewModel = _mapper.Map<ProductViewModel>(productDto);
+                var productViewModel = _mapper.Map<ProductViewModel>(productModel);
 
                 // 2) get the product type and fetch all of the linked variation types
-                var variationTypeDtos = await _variationTypeService.GetAllByProductTypeAsync(productDto.ProductTypeId);
+                var variationTypeModels = await _variationTypeService.GetAllByProductTypeAsync(productModel.ProductTypeId);
 
                 // map to view model
-                var variationTypeViewModels = variationTypeDtos.Select(x => new VariationTypeViewModel()
+                var variationTypeViewModels = variationTypeModels.Select(x => new VariationTypeViewModel()
                 {
                     Id = x.Id,
                     Name = x.Name
@@ -375,9 +375,9 @@ namespace EcommerceApp.MVC.Controllers
 
                 // TODO - We now need to get all of the existing product variation options based on this product and then pass them back to the view as the Input model on the below view model
                 // we need a collection of.... 1 sku and a collection of variations... in this format ProductVariationOptionInputViewModel
-                var skuWithVariationDtos = await _productService.GetProductVariationsAsync(productId);
+                var skuWithVariationModels = await _productService.GetProductVariationsAsync(productId);
 
-                var skuWithVariationViewModels = skuWithVariationDtos.Select(x => new ProductVariationOptionInputViewModel()
+                var skuWithVariationViewModels = skuWithVariationModels.Select(x => new ProductVariationOptionInputViewModel()
                 {
                     Sku = new SkuViewModel()
                     {
@@ -397,7 +397,7 @@ namespace EcommerceApp.MVC.Controllers
                 // 3) create view model for page
                 var createViewModel = new CreateProductVariationOptionViewModel()
                 {
-                    ProductId = productDto.Id,
+                    ProductId = productModel.Id,
                     VariationTypes = variationTypeViewModels.ToList(),
                     Input = skuWithVariationViewModels.ToList()
                 };
@@ -417,8 +417,8 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var mappedOptions = new List<ProductVariationOptionInputDto>();
-                var mappedSkus = new List<SkuDto>();
+                var mappedOptions = new List<ProductVariationOptionInputModel>();
+                var mappedSkus = new List<SkuModel>();
 
                 // TODO: we need to consider variations that already exist, to do that we need to pass some values into the page in above method
 
@@ -432,7 +432,7 @@ namespace EcommerceApp.MVC.Controllers
 
                 foreach (var input in createProductVariationOptionViewModel.Input)
                 {
-                    var sku = new SkuDto()
+                    var sku = new SkuModel()
                     { // TODO - This needs the sku id on it so that we are not accidentially adding ones that already exist again
                         Id = input.Sku.Id,
                         SkuString = input.Sku.SkuString,
@@ -446,7 +446,7 @@ namespace EcommerceApp.MVC.Controllers
                     
                     foreach (var variationValue in input.VariationValues)
                     {
-                        var option = new ProductVariationOptionInputDto
+                        var option = new ProductVariationOptionInputModel
                         {
                             // this also needs the id on it so that we can track ones that already exist. this will mean that when we get them we also need to bring down the id
                             // this might make some of the view models redundant? but worry about that later.

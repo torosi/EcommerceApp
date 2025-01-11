@@ -1,0 +1,79 @@
+﻿using EcommerceApp.Data.Entities;
+using EcommerceApp.Data.Entities.Products;
+using EcommerceApp.Domain.Models;
+using EcommerceApp.Domain.Models.Products;
+using EcommerceApp.Domain.Models.Variations;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EcommerceApp.Service.Contracts
+{
+    public interface IProductService
+    {
+        /// <summary>
+        /// A method to retrieve all product.
+        /// </summary>
+        /// <returns>A collection of products.</returns>
+        public Task<IEnumerable<ProductModel>> GetAllAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null);
+
+        /// <summary>
+        /// Method to retrieve first of detault ProductModel by passed in expression
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="includeProperties"></param>
+        /// <param name="tracked"></param>
+        /// <returns></returns>
+        public Task<ProductModel?> GetFirstOrDefaultAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null, bool tracked = true);
+
+        /// <summary>
+        /// Method to add new ProductModel
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public Task<ProductModel> AddAsync(ProductModel entity);
+
+        /// <summary>
+        /// Method to remove ProductModel
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public Task RemoveAsync(ProductModel entity);
+
+        /// <summary>
+        /// Method to Update ProductModel
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public Task UpdateAsync(ProductModel entity);
+
+        /// <summary>
+        /// Method to get collection of ProductModels that accepts pagination values to offset the returned results
+        /// </summary>
+        /// <param name="includeProperties"></param>
+        /// <param name="filter"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="itemsPerPage"></param>
+        /// <returns></returns>
+        public Task<(int TotalCount, IEnumerable<ProductModel> Products)> GetFilteredProductsAsync(string? includeProperties = null, Expression<Func<Product, bool>>? filter = null, int pageNumber = 1, int itemsPerPage = 20);
+
+        /// <summary>
+        /// Method to get a collection of SkuModels paired with their corresponding VariationModel values
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns>IEnumerable<SkuWithVariationsModel></returns>
+        public Task<IEnumerable<SkuWithVariationsModel>> GetProductVariationsAsync(int productId);
+
+        /// <summary>
+        /// Method to create a new Sku and new ProductVariationOptions
+        /// </summary>
+        /// <param name="skus"></param>
+        /// <param name="variations"></param>
+        /// <returns></returns>
+        public Task CreateProductVariations(IEnumerable<SkuModel> skus, IEnumerable<ProductVariationOptionInputModel> variations);
+    }
+}

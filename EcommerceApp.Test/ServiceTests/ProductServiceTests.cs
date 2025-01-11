@@ -1,10 +1,11 @@
 using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Repositories.Contracts;
-using EcommerceApp.Domain.Dtos;
+using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Services.Implementations;
 using Moq;
 using EcommerceApp.Domain.Mappings;
 using System.Linq.Expressions;
+using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.Tests.Services;
@@ -15,27 +16,27 @@ public class ProductServiceTests
     private readonly Mock<ISkuRepository> _skuRepositoryMock;
     private readonly Mock<IProductVariationOptionRepository> _productVariationOptionRepositoryMock;
     private readonly ProductService _productService;
-    private readonly Mock<ILogger<ProductService>> _loggerMock;
+    private readonly Mock<ILogger<ProductService>> _logger;
 
     public ProductServiceTests()
     {
         _productRepositoryMock = new Mock<IProductRepository>();
         _skuRepositoryMock = new Mock<ISkuRepository>();
         _productVariationOptionRepositoryMock = new Mock<IProductVariationOptionRepository>();
-        _loggerMock = new Mock<ILogger<ProductService>>();
+        _logger = new Mock<ILogger<ProductService>>();
 
         _productService = new ProductService(
             _productRepositoryMock.Object,
             _skuRepositoryMock.Object,
             _productVariationOptionRepositoryMock.Object,
-            _loggerMock.Object);
+            _logger.Object);
     }
 
     [Fact]
-    public async Task AddAsync_Should_Add_Product_And_Return_Dto()
+    public async Task AddAsync_Should_Add_Product_And_Return_Model()
     {
         // Arrange
-        var productDto = new ProductDto {
+        var productModel = new ProductModel {
             Id = 0,
             Name = "Test Product",
             Updated = DateTime.Now,
@@ -46,17 +47,17 @@ public class ProductServiceTests
             Price = 11.99
         };
 
-        var productEntity = productDto.ToEntity();
+        var productEntity = productModel.ToEntity();
 
         _productRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Product>())).Returns(Task.CompletedTask);
         _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
         // Act
-        var result = await _productService.AddAsync(productDto);
+        var result = await _productService.AddAsync(productModel);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(productDto.Name, result.Name);
+        Assert.Equal(productModel.Name, result.Name);
 
         _productRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Product>()), Times.Once); // how many times is has been called
         _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
@@ -67,7 +68,7 @@ public class ProductServiceTests
     public async Task UpdateAsync_Should_Update_Existing_Product()
     {
         // Arrange
-        var productDto = new ProductDto
+        var productModel = new ProductModel
         {
             Id = 1,
             Name = "Updated Product",
@@ -92,14 +93,14 @@ public class ProductServiceTests
         _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
         // Act
-        await _productService.UpdateAsync(productDto);
+        await _productService.UpdateAsync(productModel);
 
         // Assert
-        Assert.Equal(productDto.Name, productEntity.Name);
-        Assert.Equal(productDto.Description, productEntity.Description);
-        Assert.Equal(productDto.ImageUrl, productEntity.ImageUrl);
-        Assert.Equal(productDto.CategoryId, productEntity.CategoryId);
-        Assert.Equal(productDto.ProductTypeId, productEntity.ProductTypeId);
+        Assert.Equal(productModel.Name, productEntity.Name);
+        Assert.Equal(productModel.Description, productEntity.Description);
+        Assert.Equal(productModel.ImageUrl, productEntity.ImageUrl);
+        Assert.Equal(productModel.CategoryId, productEntity.CategoryId);
+        Assert.Equal(productModel.ProductTypeId, productEntity.ProductTypeId);
 
         _productRepositoryMock.Verify(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Product, bool>>>(), true, null), Times.Once);
         _productRepositoryMock.Verify(r => r.Update(It.IsAny<Product>()), Times.Once);

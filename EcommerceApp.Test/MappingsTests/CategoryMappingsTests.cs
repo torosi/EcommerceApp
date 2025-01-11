@@ -1,6 +1,6 @@
 using System;
 using EcommerceApp.Data.Entities;
-using EcommerceApp.Domain.Dtos;
+using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Mappings;
 
 namespace EcommerceApp.Test.DomainTests.MappingsTests;
@@ -8,7 +8,7 @@ namespace EcommerceApp.Test.DomainTests.MappingsTests;
 public class CategoryMappingsTests
 {
     [Fact]
-    public void ToDto_Should_Map_Category_To_CategoryDto_Correctly()
+    public void ToModel_Should_Map_Category_To_CategoryModel_Correctly()
     {
         // Arrange
         var category = new Category()
@@ -22,22 +22,22 @@ public class CategoryMappingsTests
         };
 
         // Act
-        var categoryDto = category.ToDto();
+        var categoryModel = category.ToModel();
 
         // Assert
-        Assert.Equal(categoryDto.Id, category.Id);
-        Assert.Equal(categoryDto.Name, category.Name);
-        Assert.Equal(categoryDto.Updated, category.Updated);
-        Assert.Equal(categoryDto.Created, category.Created);
-        Assert.Equal(categoryDto.Description, category.Description);
-        Assert.Equal(categoryDto.ImageUrl, category.ImageUrl);
+        Assert.Equal(categoryModel.Id, category.Id);
+        Assert.Equal(categoryModel.Name, category.Name);
+        Assert.Equal(categoryModel.Updated, category.Updated);
+        Assert.Equal(categoryModel.Created, category.Created);
+        Assert.Equal(categoryModel.Description, category.Description);
+        Assert.Equal(categoryModel.ImageUrl, category.ImageUrl);
     }
 
     [Fact]
-    public void ToEntity_Should_Map_CategoryDto_To_Category_Correctly()
+    public void ToEntity_Should_Map_CategoryModel_To_Category_Correctly()
     {
         // Arrange
-        var category = new CategoryDto()
+        var category = new CategoryModel()
         {
             Id = 1,
             Name = "Test Category",

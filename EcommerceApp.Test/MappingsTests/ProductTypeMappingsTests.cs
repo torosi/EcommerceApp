@@ -1,5 +1,5 @@
 ﻿using EcommerceApp.Data.Entities;
-using EcommerceApp.Domain.Dtos.Products;
+using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Mappings;
 
 namespace EcommerceApp.Test.MappingsTests
@@ -7,7 +7,7 @@ namespace EcommerceApp.Test.MappingsTests
     public class ProductTypeMappingsTests
     {
         [Fact]
-        public void ToDto_Should_Map_ProductType_To_ProductTypeDto_Correctly()
+        public void ToModel_Should_Map_ProductType_To_ProductTypeModel_Correctly()
         {
             var productType = new ProductType()
             {
@@ -18,34 +18,34 @@ namespace EcommerceApp.Test.MappingsTests
                 Updated = DateTime.Now,
             };
 
-            var productTypeDto = productType.ToDto();
+            var productTypeModel = productType.ToModel();
 
-            Assert.Equal(productType.Id, productTypeDto.Id);
-            Assert.Equal(productType.Name, productTypeDto.Name);
-            Assert.Equal(productType.Created, productTypeDto.Created);
-            Assert.Equal(productType.Updated, productTypeDto.Updated);
-            Assert.Equal(productType.Description, productTypeDto.Description);
+            Assert.Equal(productType.Id, productTypeModel.Id);
+            Assert.Equal(productType.Name, productTypeModel.Name);
+            Assert.Equal(productType.Created, productTypeModel.Created);
+            Assert.Equal(productType.Updated, productTypeModel.Updated);
+            Assert.Equal(productType.Description, productTypeModel.Description);
         }
 
         [Fact]
-        public void ToEntity_Should_Map_ProductTypeDto_To_ProductType_Correctly()
+        public void ToEntity_Should_Map_ProductTypeModel_To_ProductType_Correctly()
         {
-            var productTypeDto = new ProductTypeDto()
+            var productTypeModel = new ProductTypeModel()
             {
                 Id = 87,
-                Name = "Test Product Type Dto",
+                Name = "Test Product Type Model",
                 Description = "This is a test",
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
             };
 
-            var productType = productTypeDto.ToEntity();
+            var productType = productTypeModel.ToEntity();
 
-            Assert.Equal(productType.Id, productTypeDto.Id);
-            Assert.Equal(productType.Name, productTypeDto.Name);
-            Assert.Equal(productType.Created, productTypeDto.Created);
-            Assert.Equal(productType.Updated, productTypeDto.Updated);
-            Assert.Equal(productType.Description, productTypeDto.Description);
+            Assert.Equal(productType.Id, productTypeModel.Id);
+            Assert.Equal(productType.Name, productTypeModel.Name);
+            Assert.Equal(productType.Created, productTypeModel.Created);
+            Assert.Equal(productType.Updated, productTypeModel.Updated);
+            Assert.Equal(productType.Description, productTypeModel.Description);
         }
 
 

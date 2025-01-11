@@ -1,6 +1,6 @@
 ﻿using EcommerceApp.Data.Entities;
-using EcommerceApp.Domain.Dtos;
-using EcommerceApp.Domain.Dtos.Products;
+using EcommerceApp.Domain.Models;
+using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Mappings;
 
 
@@ -9,7 +9,7 @@ namespace EcommerceApp.Test.Mappings
     public class ProductMappingsTests
     {
         [Fact]
-        public void ToDto_Should_Map_Product_To_ProductDto_Correctly()
+        public void ToModel_Should_Map_Product_To_ProductModel_Correctly()
         {
             // Arrange
             var product = new Product
@@ -28,7 +28,7 @@ namespace EcommerceApp.Test.Mappings
             };
 
             // Act
-            var dto = product.ToDto();
+            var dto = product.ToModel();
 
             // Assert
             Assert.Equal(product.Id, dto.Id);
@@ -50,7 +50,7 @@ namespace EcommerceApp.Test.Mappings
         public void ToEntity_Should_Map_Product_To_Product_Correctly()
         {
             // Arrange
-            var product = new ProductDto
+            var product = new ProductModel
             {
                 Id = 1,
                 Name = "Test Product",
@@ -59,9 +59,9 @@ namespace EcommerceApp.Test.Mappings
                 Updated = DateTime.UtcNow,
                 ImageUrl = "testImage.jpg",
                 CategoryId = 2,
-                Category = new CategoryDto { Id = 2, Name = "Electronics" },
+                Category = new CategoryModel { Id = 2, Name = "Electronics" },
                 ProductTypeId = 3,
-                ProductType = new ProductTypeDto { Id = 3, Name = "Gadget" },
+                ProductType = new ProductTypeModel { Id = 3, Name = "Gadget" },
                 Price = 100.0
             };
 

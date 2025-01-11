@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EcommerceApp.Data.Entities;
-using EcommerceApp.Domain.Dtos;
+using EcommerceApp.Domain.Models.Category;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Helpers;
 using EcommerceApp.MVC.Models.Category;
@@ -41,11 +41,11 @@ namespace EcommerceApp.MVC.Controllers
 
             try 
             {
-                var categoryDtos = await _categoryService.GetAllAsync();
+                var categoryModels = await _categoryService.GetAllAsync();
 
-                if (categoryDtos.Any())
+                if (categoryModels.Any())
                 {
-                    categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDtos).ToList();
+                    categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryModels).ToList();
                 }
             }
             catch (Exception ex)
@@ -88,9 +88,9 @@ namespace EcommerceApp.MVC.Controllers
                     categoryViewModel.ImageUrl = imageUrl;
                 }
 
-                var categoryDto = _mapper.Map<CategoryDto>(categoryViewModel);
+                var categoryModel = _mapper.Map<CategoryModel>(categoryViewModel);
 
-                await _categoryService.AddAsync(categoryDto);
+                await _categoryService.AddAsync(categoryModel);
             }
             catch (Exception ex)
             {
@@ -105,11 +105,11 @@ namespace EcommerceApp.MVC.Controllers
         {
             try 
             {
-                var categoryDto = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == categoryId);
+                var categoryModel = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == categoryId);
 
-                if (categoryDto != null)
+                if (categoryModel != null)
                 {
-                    var cateogryViewModel = _mapper.Map<CategoryViewModel>(categoryDto);
+                    var cateogryViewModel = _mapper.Map<CategoryViewModel>(categoryModel);
                     return View(cateogryViewModel);
                 } 
 
@@ -129,7 +129,7 @@ namespace EcommerceApp.MVC.Controllers
                 if (ModelState.IsValid)
                 {
                     // 1) get the category from db
-                    var categoryFromDb = _mapper.Map<CategoryDto>(category);
+                    var categoryFromDb = _mapper.Map<CategoryModel>(category);
 
                     // 2) update category
                     if (categoryFromDb != null)
@@ -180,9 +180,9 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var categoryDto = await _categoryService.GetFirstOrDefaultAsync(x => x.Id==categoryId);
+                var categoryModel = await _categoryService.GetFirstOrDefaultAsync(x => x.Id==categoryId);
 
-                if (categoryDto != null)
+                if (categoryModel != null)
                 {
                     // Get products for this category
                     var productResult = await _productService.GetFilteredProductsAsync(filter: x => x.CategoryId == categoryId, pageNumber: page, itemsPerPage: itemsPerPage);
@@ -193,7 +193,7 @@ namespace EcommerceApp.MVC.Controllers
                         productViewModels = _mapper.Map<IEnumerable<ProductViewModel>>(productResult.Products).ToList();
                     }
 
-                    var categoryViewModel = _mapper.Map<CategoryViewModel>(categoryDto);
+                    var categoryViewModel = _mapper.Map<CategoryViewModel>(categoryModel);
 
                     var viewCategoryViewModel = new ViewCategoryViewModel()
                     {
@@ -220,14 +220,14 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var categoryDto = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == id);
+                var categoryModel = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == id);
                
-                if (categoryDto == null)
+                if (categoryModel == null)
                 {
                     return RedirectToAction(nameof(Index));
                 }
 
-                var categoryViewModel = _mapper.Map<CategoryViewModel>(categoryDto);
+                var categoryViewModel = _mapper.Map<CategoryViewModel>(categoryModel);
                 return View(categoryViewModel);
             }
             catch (Exception ex)
@@ -311,15 +311,15 @@ namespace EcommerceApp.MVC.Controllers
         {
             try 
             {
-                var categoryDtos = await _categoryService.GetAllAsync();
+                var categoryModels = await _categoryService.GetAllAsync();
 
                 // Handle null or empty list
-                if (categoryDtos == null || !categoryDtos.Any())
+                if (categoryModels == null || !categoryModels.Any())
                 {
                     return Json(new { success = false, data = new List<CategoryViewModel>() });
                 }
 
-                var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDtos);
+                var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryModels);
 
                 return Json(new { success = true, data = categoryViewModels.ToList() });
 

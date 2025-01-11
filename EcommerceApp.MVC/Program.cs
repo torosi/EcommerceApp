@@ -1,6 +1,6 @@
 using EcommerceApp.Data;
+using EcommerceApp.Data.Repositories;
 using EcommerceApp.Data.Repositories.Contracts;
-using EcommerceApp.Data.Repositories.Implementations;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Automapper;

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EcommerceApp.Domain.Constants;
-using EcommerceApp.Domain.Dtos.Products;
+using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Domain.Services.Implementations;
 using EcommerceApp.MVC.Helpers;
@@ -35,12 +35,12 @@ namespace EcommerceApp.MVC.Controllers
             try 
             {
                 // get all product types
-                var productTypeDtos = await _productTypeService.GetAllAsync();
+                var productTypeModels = await _productTypeService.GetAllAsync();
 
                 // map to view models
-                if (productTypeDtos.Any())
+                if (productTypeModels.Any())
                 {
-                    productTypeViewModels = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeDtos).ToList();
+                    productTypeViewModels = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeModels).ToList();
                 }
             } 
             catch (Exception ex)
@@ -83,10 +83,10 @@ namespace EcommerceApp.MVC.Controllers
                 if (ModelState.IsValid)
                 {
                     // map product type view model to dto
-                    var productDto = _mapper.Map<ProductTypeDto>(createProductType.ProductType);
+                    var productModel = _mapper.Map<ProductTypeModel>(createProductType.ProductType);
 
                     // save product type view model
-                    var productTypeId = await _productTypeService.AddAsync(productDto);
+                    var productTypeId = await _productTypeService.AddAsync(productModel);
 
                     var variationTypeIds = createProductType.VariationTypes
                         .Where(x => x.IsSelected && x.Id != 0)
@@ -112,11 +112,11 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var productTypeDto = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productTypeId);
+                var productTypeModel = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productTypeId);
 
-                if (productTypeDto != null)
+                if (productTypeModel != null)
                 {
-                    var productTypeVM = _mapper.Map<ProductTypeViewModel>(productTypeDto);
+                    var productTypeVM = _mapper.Map<ProductTypeViewModel>(productTypeModel);
                     return View(productTypeVM);
                 }
             }
@@ -137,10 +137,10 @@ namespace EcommerceApp.MVC.Controllers
                 if (ModelState.IsValid)
                 {
                     // map product type to dto
-                    var productTypeDto = _mapper.Map<ProductTypeDto>(productType);
+                    var productTypeModel = _mapper.Map<ProductTypeModel>(productType);
 
                     // update product type
-                    await _productTypeService.UpdateAsync(productTypeDto);
+                    await _productTypeService.UpdateAsync(productTypeModel);
                 }
             }
             catch (Exception ex)
@@ -158,12 +158,12 @@ namespace EcommerceApp.MVC.Controllers
             try
             {
                 // get product type
-                var productTypeDto = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productTypeId);
+                var productTypeModel = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productTypeId);
 
                 // delete the product type
-                if (productTypeDto != null)
+                if (productTypeModel != null)
                 {
-                    var productTypeVM = _mapper.Map<ProductTypeViewModel>(productTypeDto);
+                    var productTypeVM = _mapper.Map<ProductTypeViewModel>(productTypeModel);
                     return View(productTypeVM);
                 }
             }
@@ -209,14 +209,14 @@ namespace EcommerceApp.MVC.Controllers
             try
             {
                 _logger.LogInformation("Getting All Product Types");
-                var productTypeDtos = await _productTypeService.GetAllAsync();
+                var productTypeModels = await _productTypeService.GetAllAsync();
 
-                if (productTypeDtos == null || !productTypeDtos.Any())
+                if (productTypeModels == null || !productTypeModels.Any())
                 {
                     return Json(new { success = false, data = new List<ProductTypeViewModel>() });
                 }
 
-                var productTypeViewModels = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeDtos);
+                var productTypeViewModels = _mapper.Map<IEnumerable<ProductTypeViewModel>>(productTypeModels);
 
                 return Json(new { success = true, data = productTypeViewModels.ToList() });
             }

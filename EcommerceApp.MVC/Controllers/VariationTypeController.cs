@@ -1,4 +1,4 @@
-using EcommerceApp.Domain.Dtos.Products;
+using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductType;
@@ -25,8 +25,8 @@ namespace EcommerceApp.MVC.Controllers
         {
             try 
             {
-                var variationTypeDtos = await _variationTypeService.GetAllAsync();
-                var variationTypeViewModels = variationTypeDtos.Select(x => new VariationTypeViewModel()
+                var variationTypeModels = await _variationTypeService.GetAllAsync();
+                var variationTypeViewModels = variationTypeModels.Select(x => new VariationTypeViewModel()
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -47,8 +47,8 @@ namespace EcommerceApp.MVC.Controllers
         {
             try 
             {
-                // var productTypeDtos = await _productTypeService.GetAllAsync();
-                // var productTypeViewModels = productTypeDtos.Select(x => new ProductTypeViewModel()
+                // var productTypeModels = await _productTypeService.GetAllAsync();
+                // var productTypeViewModels = productTypeModels.Select(x => new ProductTypeViewModel()
                 // {
                 //     Id = x.Id,
                 //     Name = x.Name,
@@ -80,7 +80,7 @@ namespace EcommerceApp.MVC.Controllers
                 if (ModelState.IsValid)
                 {
                     // map view model to dto
-                    var variationTypeDto = new VariationTypeDto()
+                    var variationTypeModel = new VariationTypeModel()
                     { 
                         Id = 0,
                         Name = variationType.Name,
@@ -89,7 +89,7 @@ namespace EcommerceApp.MVC.Controllers
                     };
 
                     // save to db
-                    await _variationTypeService.CreateVariationTypeAsync(variationTypeDto);
+                    await _variationTypeService.CreateVariationTypeAsync(variationTypeModel);
                 }
             }
             catch (Exception ex)
