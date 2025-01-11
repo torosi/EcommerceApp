@@ -74,6 +74,6 @@ namespace EcommerceApp.Service.Contracts
         /// <param name="skus"></param>
         /// <param name="variations"></param>
         /// <returns></returns>
-        Task CreateProductVariations(IEnumerable<SkuModel> skus, IEnumerable<ProductVariationOptionInputModel> variations);
+        Task CreateProductVariations(IEnumerable<SkuModel> skus, IEnumerable<ProductVariationOptionModel> variations);
     }
 }

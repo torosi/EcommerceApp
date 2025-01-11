@@ -1,21 +1,33 @@
-using System;
 using EcommerceApp.Data.Entities.Products;
-using EcommerceApp.Data.Repositories.Contracts;
+using EcommerceApp.Data.Mappings;
+using EcommerceApp.Domain.Interfaces.Repositories;
+using EcommerceApp.Domain.Models.Products;
 using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.Data.Repositories;
 
-public class ProductVariationOptionRepository : BaseRepository<ProductVariationOption>, IProductVariationOptionRepository
+public class ProductVariationOptionRepository : IProductVariationOptionRepository
 {
     private readonly ApplicationDbContext _context;
-    public ProductVariationOptionRepository(ApplicationDbContext context, ILogger<BaseRepository<ProductVariationOption>> logger) : base(context, logger)
+
+    public ProductVariationOptionRepository(ApplicationDbContext context, ILogger<BaseRepository<ProductVariationOption>> logger)
     {
         _context = context;
     }
 
-    /// <inheritdoc />
-    public async Task AddRangeAsync(IEnumerable<ProductVariationOption> variations)
+    public async Task AddRangeAsync(IEnumerable<ProductVariationOptionModel> variations)
     {
-        await _context.ProductVariationOptions.AddRangeAsync(variations);
+        if (variations is null) throw new ArgumentNullException(nameof(variations));
+
+        foreach (var variation in variations) 
+        {
+            await _context.ProductVariationOptions.AddAsync(variation.ToEntity());
+        }
     }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
+
 }
