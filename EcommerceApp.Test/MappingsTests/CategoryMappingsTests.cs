@@ -1,4 +1,3 @@
-using System;
 using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Mappings;
 using EcommerceApp.Domain.Models.Category;
