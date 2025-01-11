@@ -1,10 +1,5 @@
-using System;
-using System.Linq.Expressions;
-using EcommerceApp.Data.Entities.Products;
-using EcommerceApp.Data.Repositories.Contracts;
+using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Domain.Models.Products;
-using EcommerceApp.Domain.Mappings;
-using EcommerceApp.Domain.Services.Contracts;
 using EcommerceApp.Service.Contracts;
 
 namespace EcommerceApp.Service.Implementations;
@@ -18,10 +13,12 @@ public class SkuService : ISkuService
     }
 
 
-    public async Task<SkuModel?> GetFirstOrDefaultAsync(Expression<Func<Sku, bool>> filter, bool tracked = true)
+    public async Task<IEnumerable<SkuModel>> GetBySkuStringsAsync(IEnumerable<string> skuStrings)
     {
-        var sku = await _skuRepository.GetFirstOrDefaultAsync(filter, tracked);
-        if (sku == null) return null;
-        return sku.ToModel();
+        if (skuStrings is null) throw new ArgumentNullException(nameof(skuStrings));
+        if (!skuStrings.Any()) throw new ArgumentException(nameof(skuStrings));
+
+        var skus = await _skuRepository.GetBySkuStringsAsync(skuStrings);
+        return skus;
     }
 }

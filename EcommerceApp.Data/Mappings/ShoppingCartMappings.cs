@@ -30,38 +30,6 @@ namespace EcommerceApp.Data.Mappings
                 Count = cart.Count
             };
         }
-
-        public static SkuModel ToDomain(this Sku sku)
-        {
-            return new SkuModel()
-            {
-                Id = sku.Id,
-                Created = sku.Created,
-                Updated = sku.Updated,
-                SkuString = sku.SkuString,
-                Quantity = sku.Quantity,
-                ProductId = sku.ProductId,
-            };
-        }
-
-        public static SkuWithVariationsModel ToModelWithVariations(this Sku sku)
-        {
-            return new SkuWithVariationsModel
-            {
-                SkuId = sku.Id,
-                SkuString = sku.SkuString,
-                Quantity = sku.Quantity,
-                ProductId = sku.ProductId,
-                VariationOptions = sku.ProductVariationOptions.Select(option => new ProductVariationOptionModel
-                {
-                    Id = option.Id,
-                    SkuId = sku.Id,
-                    VariationTypeId = option.VariationTypeId,
-                    VariationValue = option.VariationValue,
-                    VariationTypeName = option.VariationType.Name
-                }).ToList()
-            };
-        }
         
     }
 }

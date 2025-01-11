@@ -1,8 +1,6 @@
-using System;
-
 namespace EcommerceApp.Data.Entities.Products;
 
-public class Sku : BaseEntity
+public class SkuEntity : BaseEntity
 {
     public string SkuString { get; set; } = string.Empty;
     public int Quantity { get; set; }
