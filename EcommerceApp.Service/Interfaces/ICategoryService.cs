@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using EcommerceApp.Data.Entities;
 using EcommerceApp.Domain.Models.Category;
 
 namespace EcommerceApp.Service.Contracts

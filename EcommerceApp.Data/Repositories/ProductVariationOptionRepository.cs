@@ -9,7 +9,7 @@ public class ProductVariationOptionRepository : IProductVariationOptionRepositor
 {
     private readonly ApplicationDbContext _context;
 
-    public ProductVariationOptionRepository(ApplicationDbContext context, ILogger<BaseRepository<ProductVariationOptionModel>> logger)
+    public ProductVariationOptionRepository(ApplicationDbContext context, ILogger<ProductVariationOptionModel> logger)
     {
         _context = context;
     }

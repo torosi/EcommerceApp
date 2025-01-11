@@ -36,7 +36,7 @@ namespace EcommerceApp.Service.Implementations
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             // we need to remove the categoryid from all of the products that currently have this category
-            var products = await _productRepository.GetAllAsync(filter: x => x.CategoryId == entity.Id);
+            var products = await _productRepository.GetAllAsync();
 
             // if there are any products in this category, then we need to remove them from category first
             if (products.Any())

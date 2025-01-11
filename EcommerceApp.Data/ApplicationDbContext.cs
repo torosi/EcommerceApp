@@ -82,14 +82,14 @@ namespace EcommerceApp.Data
             builder.Entity<ProductTypeVariationMappingEntity>()
                 .HasKey(p => new { p.ProductTypeId, p.VariationTypeId });
 
-            builder.Entity<Sku>()
+            builder.Entity<SkuEntity>()
                 .HasMany(s => s.ProductVariationOptions)
                 .WithOne(pvo => pvo.Sku)
                 .HasForeignKey(pvo => pvo.SkuId)
                 .OnDelete(DeleteBehavior.Cascade); // IMPORTANT - how will this impact deleting? other tables already have this in sqlserver?
 
             // Apply Unique Constraint on SkuString
-            builder.Entity<Sku>()
+            builder.Entity<SkuEntity>()
                 .HasIndex(s => s.SkuString)
                 .IsUnique();
 

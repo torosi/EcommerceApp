@@ -1,7 +1,8 @@
 ﻿using EcommerceApp.Data.Entities;
 using EcommerceApp.Domain.Models;
 using EcommerceApp.Domain.Models.Products;
-using EcommerceApp.Domain.Mappings;
+using EcommerceApp.Data.Mappings;
+using EcommerceApp.Domain.Models.Category;
 
 
 namespace EcommerceApp.Test.Mappings
@@ -21,14 +22,14 @@ namespace EcommerceApp.Test.Mappings
                 Updated = DateTime.UtcNow,
                 ImageUrl = "testImage.jpg",
                 CategoryId = 2,
-                Category = new Category { Id = 2, Name = "Electronics" },
+                Category = new CategoryEntity { Id = 2, Name = "Electronics" },
                 ProductTypeId = 3,
-                ProductType = new ProductType { Id = 3, Name = "Gadget" },
+                ProductType = new ProductTypeEntity { Id = 3, Name = "Gadget" },
                 Price = 100.0
             };
 
             // Act
-            var dto = product.ToModel();
+            var dto = product.ToDomain();
 
             // Assert
             Assert.Equal(product.Id, dto.Id);
