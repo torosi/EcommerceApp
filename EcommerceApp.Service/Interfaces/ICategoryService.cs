@@ -8,27 +8,34 @@ namespace EcommerceApp.Service.Contracts
         /// A method to get all categories
         /// </summary>
         /// <returns>IEnumerable CategoryModel</returns>
-        public Task<IEnumerable<CategoryModel>> GetAllAsync(int? limit = null);
+        Task<IEnumerable<CategoryModel>> GetAllAsync(int? limit = null);
 
         /// <summary>
         /// A method to add a single category
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>Task</returns>
-        public Task AddAsync(CategoryModel entity);
+        Task AddAsync(CategoryModel entity);
 
         /// <summary>
         /// A method to remove a single category
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>Task</returns>
-        public Task RemoveAsync(CategoryModel entity);
+        Task RemoveAsync(CategoryModel entity);
 
         /// <summary>
         /// A method to update a single category
         /// </summary>
         /// <param name="entity"></param>
         /// <returns>Task</returns>
-        public Task UpdateAsync(CategoryModel entity);
+        Task UpdateAsync(CategoryModel entity);
+
+        /// <summary>
+        /// A method to get a single category by Id
+        /// </summary>
+        /// <param name="categoryId">Identifier for a category</param>
+        /// <returns></returns>
+        Task<CategoryModel?> GetCategoryById(int categoryId);
     }
 }

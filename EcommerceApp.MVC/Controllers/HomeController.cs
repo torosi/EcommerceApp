@@ -26,7 +26,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var categoryModels = await _categoryService.GetAllAsync(6); // change this to get top x amount
+                var categoryModels = await _categoryService.GetAllAsync(6);
                 var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryModels);
 
                 var homeViewModel = new HomePageViewModel();

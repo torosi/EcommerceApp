@@ -95,5 +95,11 @@ namespace EcommerceApp.Data
 
             base.OnModelCreating(builder);
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            base.OnConfiguring(optionsBuilder);
+        }
     }
 }

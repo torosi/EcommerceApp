@@ -98,7 +98,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try 
             {
-                var categoryModel = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == categoryId);
+                var categoryModel = await _categoryService.GetCategoryById(categoryId);
 
                 if (categoryModel != null)
                 {
@@ -173,12 +173,12 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var categoryModel = await _categoryService.GetFirstOrDefaultAsync(x => x.Id==categoryId);
+                var categoryModel = await _categoryService.GetCategoryById(categoryId);
 
                 if (categoryModel != null)
                 {
                     // Get products for this category
-                    var productResult = await _productService.GetFilteredProductsAsync(filter: x => x.CategoryId == categoryId, pageNumber: page, itemsPerPage: itemsPerPage);
+                    var productResult = await _productService.SearchProductByCategoryId(categoryId, pageNumber: page, itemsPerPage: itemsPerPage);
 
                     var productViewModels = new List<ProductViewModel>();
                     if (productResult.Products.Any())
@@ -213,7 +213,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var categoryModel = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == id);
+                var categoryModel = await _categoryService.GetCategoryById(id);
                
                 if (categoryModel == null)
                 {
@@ -235,7 +235,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var categoryFromDb = await _categoryService.GetFirstOrDefaultAsync(x => x.Id == category.Id, tracked: false);
+                var categoryFromDb = await _categoryService.GetCategoryById(category.Id);
                 if (categoryFromDb == null)
                 {
                     ModelState.AddModelError(string.Empty, "The category could not be found.");

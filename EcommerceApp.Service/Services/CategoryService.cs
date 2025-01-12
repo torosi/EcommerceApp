@@ -26,7 +26,6 @@ namespace EcommerceApp.Service.Implementations
         /// <inheritdoc />
         public async Task<IEnumerable<CategoryModel>> GetAllAsync(int? limit = null)
         {
-            if (limit is null) throw new ArgumentNullException(nameof(limit));
             return await _categoryRepository.GetAllAsync(limit: limit);
         }
 
@@ -61,6 +60,14 @@ namespace EcommerceApp.Service.Implementations
 
             _categoryRepository.Update(entity.ToUpdateModel());
             await _categoryRepository.SaveChangesAsync();
+        }
+
+        public async Task<CategoryModel?> GetCategoryById(int categoryId)
+        {
+            ArgumentOutOfRangeException.ThrowIfZero(categoryId);
+
+            var category = await _categoryRepository.GetCategoryById(categoryId);
+            return category;
         }
     }
 }

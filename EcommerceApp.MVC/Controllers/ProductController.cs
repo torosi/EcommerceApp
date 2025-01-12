@@ -141,7 +141,7 @@ namespace EcommerceApp.MVC.Controllers
             try 
             {
                 // Get the product we want to edit
-                var productModel = await _productService.GetFirstOrDefaultAsync(x => x.Id == id);
+                var productModel = await _productService.GetProductById(id);
                 // Get all categories for the dropdown
                 var categoryModels = await _categoryService.GetAllAsync();
                 // Get all producttypes for the dropdown
@@ -229,7 +229,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var productModel = await _productService.GetFirstOrDefaultAsync(x => x.Id == id);
+                var productModel = await _productService.GetProductById(id);
 
                 if (productModel != null)
                 {
@@ -252,7 +252,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var productFromDb = await _productService.GetFirstOrDefaultAsync(x => x.Id == product.Id, tracked: false);
+                var productFromDb = await _productService.GetProductById(product.Id);
 
                 if (productFromDb == null)
                 {
@@ -265,7 +265,7 @@ namespace EcommerceApp.MVC.Controllers
                     var isDeleted = _imageHelper.DeleteImage(productFromDb.ImageUrl);
                 }
 
-                await _productService.RemoveAsync(productFromDb);
+                await _productService.RemoveAsync(productFromDb.Id);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -283,7 +283,7 @@ namespace EcommerceApp.MVC.Controllers
             try
             {
                 // 1) Retrieve the product
-                var productModel = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
+                var productModel = await _productService.GetProductById(productId);
 
                 // 2) Retrieve all SKUs and their variations for the product
                 var skuWithVariations = await _productService.GetProductVariationsAsync(productId);
@@ -350,7 +350,7 @@ namespace EcommerceApp.MVC.Controllers
             try 
             {
                 // 1) get the product from the db
-                var productModel = await _productService.GetFirstOrDefaultAsync(x => x.Id == productId);
+                var productModel = await _productService.GetProductById(productId);
                 if (productModel == null) return RedirectToAction("Index");
 
                 // map to view model

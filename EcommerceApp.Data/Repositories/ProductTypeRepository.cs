@@ -46,10 +46,10 @@ public class ProductTypeRepository : IProductTypeRepository
         return results.Select(x => x.ToDomain());
     }
 
-    public ProductTypeModel? GetProductTypeById(int id)
+    public async Task<ProductTypeModel?> GetProductTypeById(int id)
     {
         ArgumentOutOfRangeException.ThrowIfZero(id);
-        var entity = _context.ProductTypes.SingleOrDefault(c => c.Id == id);
+        var entity = await _context.ProductTypes.SingleOrDefaultAsync(c => c.Id == id);
         return entity == null ? null : entity!.ToDomain();
     }
 

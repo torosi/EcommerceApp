@@ -4,7 +4,8 @@ namespace EcommerceApp.Domain.Interfaces.Repositories;
 
 public interface ISkuRepository
 {
-    public Task<IEnumerable<SkuModel>> GetBySkuStringsAsync(IEnumerable<string> skuStrings);
-    public Task AddRangeAsync(IEnumerable<SkuModel> skus);
+    Task<SkuModel?> GetSingleBySkuStringAsync(string skuString);
+    Task<IEnumerable<SkuModel>> GetBySkuStringsAsync(IEnumerable<string> skuStrings);
+    Task AddRangeAsync(IEnumerable<SkuModel> skus);
     Task SaveChangesAsync();
 }

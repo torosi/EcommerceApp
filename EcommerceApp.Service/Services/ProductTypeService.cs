@@ -38,14 +38,14 @@ public class ProductTypeService : IProductTypeService
     }
 
     /// <inheritdoc />
-    public ProductTypeModel? GetProductTypeById(int id)
+    public async Task<ProductTypeModel?> GetProductTypeByIdAsync(int id)
     {
         ArgumentOutOfRangeException.ThrowIfZero(id);
 
-        var productEntity = _productTypeRepository.GetProductTypeById(id);
-        _logger.LogDebug("Found Product Type Entity with id: '{id}'", productEntity.Id);
+        var productType = await _productTypeRepository.GetProductTypeById(id);
+        _logger.LogDebug("Found Product Type Entity with id: '{id}'", productType.Id);
 
-        return productEntity;
+        return productType;
     }
 
     /// <inheritdoc />

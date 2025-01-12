@@ -109,7 +109,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var productTypeModel = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productTypeId);
+                var productTypeModel = await _productTypeService.GetProductTypeByIdAsync(productTypeId);
 
                 if (productTypeModel != null)
                 {
@@ -155,7 +155,7 @@ namespace EcommerceApp.MVC.Controllers
             try
             {
                 // get product type
-                var productTypeModel = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productTypeId);
+                var productTypeModel = await _productTypeService.GetProductTypeByIdAsync(productTypeId);
 
                 // delete the product type
                 if (productTypeModel != null)
@@ -178,7 +178,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var productFromDb = await _productTypeService.GetFirstOrDefaultAsync(x => x.Id == productType.Id, tracked: false);
+                var productFromDb = await _productTypeService.GetProductTypeByIdAsync(productType.Id);
 
                 if (productFromDb == null)
                 {

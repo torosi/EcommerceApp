@@ -3,6 +3,7 @@ using EcommerceApp.Domain.Models.Products;
 using Microsoft.Extensions.Logging;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Interfaces.Repositories;
+using EcommerceApp.Domain.Models.Variations;
 
 namespace EcommerceApp.Service.Implementations
 {
@@ -104,7 +105,7 @@ namespace EcommerceApp.Service.Implementations
         }
 
         /// <inheritdoc />
-        public async Task CreateProductVariations(IEnumerable<SkuModel> skus, IEnumerable<ProductVariationOptionModel> variations)
+        public async Task CreateProductVariations(IEnumerable<SkuModel> skus, IEnumerable<ProductVariationOptionInputModel> variations)
         {
             if (skus == null || !skus.Any()) throw new ArgumentNullException(nameof(skus));
             if (variations == null || !variations.Any()) throw new ArgumentNullException(nameof(variations));
@@ -131,19 +132,30 @@ namespace EcommerceApp.Service.Implementations
                 _logger.LogDebug("'{count}' new Sku entities saved", newSkus.Count());
             }
 
-            // // Step 4: Combine existing and newly created SKUs
+            // Step 4: Combine existing and newly created SKUs
             // var allSkus = existingSkus.Concat(newSkus).ToList(); // add our newly created ones back into our db result so that we have a complete list of them from the db
 
             // Step 5: get all of the variation options that have an id of 0 (are new)
-            var newVariationOptions = variations.Where(variation => variation.Id == 0).ToList();
+            // var newVariationOptions = variations.Where(variation => variation.Id == 0).ToList();
 
-            if (newVariationOptions.Any())
+            var newVariationOptionModels = variations
+                .Where(variation => variation.Id == 0)
+                .Select(variation => new ProductVariationOptionModel()
+                {
+                    SkuId = newSkus.First(s => s.SkuString == variation.SkuString).Id, // Match by SKU String
+                    VariationTypeId = variation.VariationTypeId,
+                    VariationValue = variation.VariationValue,
+                    Created = DateTime.Now,
+                    Updated = DateTime.Now,
+                }).ToList();
+
+            if (newVariationOptionModels.Any())
             {
                 // Step 6: Save ProductVariationOption entities in bulk
-                await _productVariationOptionRepository.AddRangeAsync(newVariationOptions);
+                await _productVariationOptionRepository.AddRangeAsync(newVariationOptionModels);
                 await _productVariationOptionRepository.SaveChangesAsync();
 
-                _logger.LogDebug("'{count}' new ProductVariationOption entities saved", newVariationOptions.Count());
+                _logger.LogDebug("'{count}' new ProductVariationOption entities saved", newVariationOptionModels.Count());
             }
         }
 

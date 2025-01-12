@@ -17,6 +17,7 @@ public class VariationTypeRepository : IVariationTypeRepository
         _context = context;
     }
 
+    /// <inheritdoc />
     public async Task AddAsync(VariationTypeModel variationTypeModel)
     {
         if (variationTypeModel is null) throw new ArgumentNullException(nameof(variationTypeModel));
@@ -37,6 +38,7 @@ public class VariationTypeRepository : IVariationTypeRepository
         await _context.SaveChangesAsync();
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<VariationTypeModel>> GetAllAsync(string? includeProperties = null)
     {
         IQueryable<VariationTypeEntity> query = _context.Set<VariationTypeEntity>();
@@ -74,6 +76,7 @@ public class VariationTypeRepository : IVariationTypeRepository
         return variationTypes.Select(x => x.ToDomain());
     }
 
+    /// <inheritdoc />
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

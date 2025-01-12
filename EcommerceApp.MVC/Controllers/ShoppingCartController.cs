@@ -70,7 +70,7 @@ namespace EcommerceApp.MVC.Controllers
             try
             {
                 // 1) get the cart from the db
-                var shoppingCartModel = await _shoppingCartService.GetFirstOrDefaultAsync(x => x.Id == cartId, tracked: false);
+                var shoppingCartModel = await _shoppingCartService.GetShoppingCartById(cartId);
 
                 // 2) increment, update and then return json
                 if (shoppingCartModel == null) return Json(new { success = false });
@@ -83,7 +83,7 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     success = true,
                     count = shoppingCartModel.Count,
-                    totalPrice = 0//shoppingCartModel.Count * shoppingCartModel.Product.Price
+                    totalPrice = shoppingCartModel.Count * shoppingCartModel.Product.Price
                 });
             }
             catch (Exception ex)
@@ -99,7 +99,7 @@ namespace EcommerceApp.MVC.Controllers
         {
             try
             {
-                var shoppingCartModel = await _shoppingCartService.GetFirstOrDefaultAsync(x => x.Id == cartId, tracked: false);
+                var shoppingCartModel = await _shoppingCartService.GetShoppingCartById(cartId);
 
                 if (shoppingCartModel == null) return Json(new { success = false });
 
@@ -111,7 +111,7 @@ namespace EcommerceApp.MVC.Controllers
                 {
                     success = true,
                     count = shoppingCartModel.Count,
-                    totalPrice = 0//shoppingCartModel.Count * shoppingCartModel.Product.Price
+                    totalPrice = shoppingCartModel.Count * shoppingCartModel.Product.Price
                 });
             }
             catch (Exception ex)
@@ -164,14 +164,15 @@ namespace EcommerceApp.MVC.Controllers
                 var userId = _userHelper.GetUserId();
                 if (userId == null) throw new Exception("User could not be found");
 
-                var skuModel = await _skuService.GetBySkuStringsAsync(new List<string>() { skuString });
+                var skuModel = await _skuService.GetSingleBySkuStringAsync(skuString);
                 if (skuModel == null) throw new Exception("Product could not be found");
 
                 // 1) get the current cart from the db to see if the product is already in there
-                var cartFromDb = await _shoppingCartService.GetFirstOrDefaultAsync(x => x.ApplicationUserId == userId && x.SkuId == skuModel.Id, tracked: false);
+                var shoppingCartModels = await _shoppingCartService.GetShoppingCartByUserAsync(userId);
+                var cartBySku = shoppingCartModels.SingleOrDefault(x => x.SkuId == skuModel.Id);
                 
                 // if this is null we need to add a new record
-                if (cartFromDb == null) 
+                if (cartBySku == null) 
                 {
                     var newCartItemModel = new ShoppingCartModel()
                     {
@@ -186,8 +187,8 @@ namespace EcommerceApp.MVC.Controllers
                 else
                 {
                     // if the cart does exist then we only want to increase the quantity
-                    cartFromDb.Count += count;
-                    await _shoppingCartService.UpdateAsync(cartFromDb);
+                    cartBySku.Count += count;
+                    await _shoppingCartService.UpdateAsync(cartBySku);
                 }
 
                 return Json(new {success = true, message = "Cart updated successfully"});

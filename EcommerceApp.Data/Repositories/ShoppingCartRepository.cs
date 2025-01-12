@@ -102,7 +102,10 @@ namespace EcommerceApp.Data.Repositories
         {
             ArgumentOutOfRangeException.ThrowIfZero(cartId);
 
-            var shoppingCartEntity = await _context.ShoppingCarts.SingleOrDefaultAsync(x => x.Id == cartId);
+            var shoppingCartEntity = await _context.ShoppingCarts
+                .Include(c => c.Sku)
+                .ThenInclude(s => s.Product)
+                .SingleOrDefaultAsync(x => x.Id == cartId);
 
             return shoppingCartEntity == null ? null : shoppingCartEntity.ToDomain();
         }

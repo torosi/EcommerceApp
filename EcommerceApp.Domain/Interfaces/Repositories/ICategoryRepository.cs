@@ -36,5 +36,12 @@ namespace EcommerceApp.Domain.Interfaces.Repositories
         /// <param name="limit">Accepts int value to limit the number of results to X amount</param>
         /// <returns></returns>
         Task<IEnumerable<CategoryModel>> GetAllAsync(string? includeProperties = null, int? limit = null);
+
+        /// <summary>
+        /// Method to get a single category by Id
+        /// </summary>
+        /// <param name="categoryId">Identifier for a catgeory</param>
+        /// <returns></returns>
+        Task<CategoryModel?> GetCategoryById(int categoryId);
     }
 }

@@ -12,7 +12,6 @@ public class SkuService : ISkuService
         _skuRepository = skuRepository;
     }
 
-
     public async Task<IEnumerable<SkuModel>> GetBySkuStringsAsync(IEnumerable<string> skuStrings)
     {
         if (skuStrings is null) throw new ArgumentNullException(nameof(skuStrings));
@@ -20,5 +19,13 @@ public class SkuService : ISkuService
 
         var skus = await _skuRepository.GetBySkuStringsAsync(skuStrings);
         return skus;
+    }
+
+    public async Task<SkuModel?> GetSingleBySkuStringAsync(string skuString)
+    {
+        if (skuString is null) throw new ArgumentNullException(nameof(skuString));
+
+        var sku = await _skuRepository.GetSingleBySkuStringAsync(skuString);
+        return sku;
     }
 }

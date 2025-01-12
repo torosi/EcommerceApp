@@ -73,5 +73,15 @@ namespace EcommerceApp.Data.Repositories
             var entity = category.ToEntity();
             _context.Categories.Update(entity);
         }
+
+        public async Task<CategoryModel?> GetCategoryById(int categoryId)
+        {
+            ArgumentOutOfRangeException.ThrowIfZero(categoryId);
+
+            var category = await _context.Categories.SingleOrDefaultAsync(x => x.Id == categoryId);
+            if (category == null) return null;
+
+            return category.ToDomain();
+        }
     }
 }

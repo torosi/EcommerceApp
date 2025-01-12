@@ -6,7 +6,7 @@ public interface IProductTypeService
 {
     public Task<int> AddAsync(ProductTypeModel entity);
     public Task<IEnumerable<ProductTypeModel>> GetAllAsync();
-    public ProductTypeModel? GetProductTypeById(int id);
+    public Task<ProductTypeModel?> GetProductTypeByIdAsync(int id);
     public Task UpdateAsync(ProductTypeModel entity);
     public Task RemoveAsync(ProductTypeModel entity);
 

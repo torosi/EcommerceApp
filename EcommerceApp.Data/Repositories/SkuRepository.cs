@@ -35,6 +35,16 @@ public class SkuRepository : ISkuRepository
             .ToListAsync();
     }
 
+    /// <inheritdoc />
+    public async Task<SkuModel?> GetSingleBySkuStringAsync(string skuString)
+    {
+        var skuEntity = await _context.Skus.SingleOrDefaultAsync(x => x.SkuString == skuString);
+        if (skuEntity == null) return null;
+
+        return skuEntity.ToDomain();
+    }
+
+    /// <inheritdoc />
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();
