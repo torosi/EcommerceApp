@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Service.Implementations;
 using EcommerceApp.Data.Mappings;
+using EcommerceApp.Service.Contracts;
 
 namespace EcommerceApp.Tests.Services;
 
@@ -14,7 +15,7 @@ public class ProductServiceTests
     private readonly Mock<IProductRepository> _productRepositoryMock;
     private readonly Mock<ISkuRepository> _skuRepositoryMock;
     private readonly Mock<IProductVariationOptionRepository> _productVariationOptionRepositoryMock;
-    private readonly ProductService _productService;
+    private readonly IProductService _productService;
     private readonly Mock<ILogger<ProductService>> _logger;
 
     public ProductServiceTests()
@@ -31,36 +32,34 @@ public class ProductServiceTests
             _logger.Object);
     }
 
-    //[Fact]
-    //public async Task AddAsync_Should_Add_Product_And_Return_Model()
-    //{
-    //    // Arrange
-    //    var productModel = new ProductModel {
-    //        Id = 0,
-    //        Name = "Test Product",
-    //        Updated = DateTime.Now,
-    //        Created = DateTime.Now,
-    //        Description = "Test Description",
-    //        ImageUrl = "testImageUrl",
-    //        ProductTypeId = 1,
-    //        Price = 11.99
-    //    };
+    [Fact]
+    public async Task AddAsync_Should_Add_Product_And_Return_Model()
+    {
+       // Arrange
+       var productModel = new ProductModel {
+           Id = 0,
+           Name = "Test Product",
+           Updated = DateTime.Now,
+           Created = DateTime.Now,
+           Description = "Test Description",
+           ImageUrl = "testImageUrl",
+           ProductTypeId = 1,
+           Price = 11.99
+       };
 
-    //    var productEntity = productModel.ToEntity();
+       _productRepositoryMock.Setup(r => r.AddAsync(It.IsAny<ProductModel>())).ReturnsAsync(productModel);
+       _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
-    //    _productRepositoryMock.Setup(r => r.AddAsync(It.IsAny<ProductModel>())).Returns(It.IsAny<ProductModel>);
-    //    _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
+       // Act
+       var result = await _productService.AddAsync(productModel);
 
-    //    // Act
-    //    var result = await _productService.AddAsync(productModel);
+       // Assert
+       Assert.NotNull(result);
+       Assert.Equal(productModel.Name, result.Name);
 
-    //    // Assert
-    //    Assert.NotNull(result);
-    //    Assert.Equal(productModel.Name, result.Name);
-
-    //    _productRepositoryMock.Verify(r => r.AddAsync(It.IsAny<ProductModel>()), Times.Once); // how many times is has been called
-    //    _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
-    //}
+       _productRepositoryMock.Verify(r => r.AddAsync(It.IsAny<ProductModel>()), Times.Once); // how many times is has been called
+       _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
+    }
 
 
     //[Fact]
