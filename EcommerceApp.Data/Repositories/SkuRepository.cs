@@ -16,14 +16,18 @@ public class SkuRepository : ISkuRepository
     }
 
     /// <inheritdoc />
-    public async Task AddRangeAsync(IEnumerable<SkuModel> skus)
+    public async Task<IEnumerable<SkuModel>> AddRangeAndSaveAsync(IEnumerable<SkuModel> skus)
     {
         if (skus is null) throw new ArgumentNullException(nameof(skus));
 
-        foreach (var skusItem in skus) 
-        {
-            await _context.Skus.AddAsync(skusItem.ToEntity());
-        }
+        var skuEntities = skus.Select(x => x.ToEntity()).ToList();
+        
+        await _context.Skus.AddRangeAsync(skuEntities);
+        await _context.SaveChangesAsync();
+
+        var skuModels = skuEntities.Select(x => x.ToDomain());
+
+        return skuModels;
     }
 
     /// <inheritdoc />

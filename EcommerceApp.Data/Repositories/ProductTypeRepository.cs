@@ -18,12 +18,13 @@ public class ProductTypeRepository : IProductTypeRepository
         _logger = logger;
     }
 
-    public async Task<int> AddAsync(ProductTypeModel productType)
+    public async Task<int> AddAndSaveAsync(ProductTypeModel productType)
     {
         if (productType is null) throw new ArgumentNullException(nameof(productType));
 
         var entity = productType.ToEntity();
         await _context.ProductTypes.AddAsync(entity);
+        await _context.SaveChangesAsync();
 
         return entity.Id;
     }

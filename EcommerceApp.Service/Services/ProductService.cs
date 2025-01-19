@@ -118,19 +118,22 @@ namespace EcommerceApp.Service.Implementations
 
             _logger.LogDebug("Found '{count}' existing Sku entities", existingSkus.Count());
 
-            if (existingSkus != null) throw new Exception("Sku's provided are not unique");
+            if (existingSkus.Any()) throw new Exception("Sku's provided are not unique");
 
             // Step 2: Identify SKUs that need to be added
             var newSkus = skus.Where(sku => sku.Id == 0).ToList();
+            var savedSkus = new List<SkuModel>(); // These will be the skus back from the db with their new ids
 
             // Step 3: Save new SKUs
             if (newSkus.Any())
             {
-                await _skuRepository.AddRangeAsync(newSkus);
+                savedSkus = (await _skuRepository.AddRangeAndSaveAsync(newSkus)).ToList();
                 await _skuRepository.SaveChangesAsync();
 
                 _logger.LogDebug("'{count}' new Sku entities saved", newSkus.Count());
             }
+
+            if (!savedSkus.Any()) return;
 
             // Step 4: Combine existing and newly created SKUs
             // var allSkus = existingSkus.Concat(newSkus).ToList(); // add our newly created ones back into our db result so that we have a complete list of them from the db
@@ -142,7 +145,7 @@ namespace EcommerceApp.Service.Implementations
                 .Where(variation => variation.Id == 0)
                 .Select(variation => new ProductVariationOptionModel()
                 {
-                    SkuId = newSkus.First(s => s.SkuString == variation.SkuString).Id, // Match by SKU String
+                    SkuId = savedSkus.First(s => s.SkuString == variation.SkuString).Id, // Match by SKU String
                     VariationTypeId = variation.VariationTypeId,
                     VariationValue = variation.VariationValue,
                     Created = DateTime.Now,

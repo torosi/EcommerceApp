@@ -6,6 +6,6 @@ public interface ISkuRepository
 {
     Task<SkuModel?> GetSingleBySkuStringAsync(string skuString);
     Task<IEnumerable<SkuModel>> GetBySkuStringsAsync(IEnumerable<string> skuStrings);
-    Task AddRangeAsync(IEnumerable<SkuModel> skus);
+    Task<IEnumerable<SkuModel>> AddRangeAndSaveAsync(IEnumerable<SkuModel> skus);
     Task SaveChangesAsync();
 }

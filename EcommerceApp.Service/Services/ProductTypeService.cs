@@ -22,8 +22,7 @@ public class ProductTypeService : IProductTypeService
     {
         if (productType == null) throw new ArgumentNullException(nameof(productType));
 
-        var newId = await _productTypeRepository.AddAsync(productType);
-        await _productTypeRepository.SaveChangesAsync();
+        var newId = await _productTypeRepository.AddAndSaveAsync(productType);
 
         return newId;
     }

@@ -7,7 +7,7 @@ public interface IProductTypeRepository
     public void Update(ProductTypeModel productType);
     Task<IEnumerable<ProductTypeModel>> GetAllAsync(string? includeProperties = null);
     Task<ProductTypeModel?> GetProductTypeById(int id);
-    Task<int> AddAsync(ProductTypeModel model);
+    Task<int> AddAndSaveAsync(ProductTypeModel model);
     void Remove(int id);
     Task SaveChangesAsync();
 }
