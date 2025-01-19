@@ -10,7 +10,7 @@ namespace EcommerceApp.Domain.Interfaces.Repositories
         /// Method to update product
         /// </summary>
         /// <param name="product"></param>
-        void Update(ProductModel product);
+        void Update(UpdateProductModel product);
 
         /// <summary>
         /// Method to update multiple products
@@ -59,7 +59,7 @@ namespace EcommerceApp.Domain.Interfaces.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<ProductModel> AddAsync(ProductModel product);
+        Task<ProductModel> AddAsync(CreateProductModel product);
 
         /// <summary>
         /// Method to remove product

@@ -1,6 +1,7 @@
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Models.Category;
 using EcommerceApp.Domain.Interfaces.Repositories;
+using EcommerceApp.Domain.Extentions.Mappings;
 
 namespace EcommerceApp.Service.Implementations
 {
@@ -54,11 +55,11 @@ namespace EcommerceApp.Service.Implementations
         }
 
         /// <inheritdoc />
-        public async Task UpdateAsync(CategoryModel entity)
+        public async Task UpdateAsync(CategoryModel category)
         {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            if (category == null) throw new ArgumentNullException(nameof(category));
 
-            _categoryRepository.Update(entity.ToUpdateModel());
+            _categoryRepository.Update(category.ToUpdateModel());
             await _categoryRepository.SaveChangesAsync();
         }
 

@@ -34,7 +34,7 @@ namespace EcommerceApp.Data.Repositories
         }
 
         /// <inheritdoc />
-        public void Update(ProductModel product)
+        public void Update(UpdateProductModel product)
         {
             if (product is null) throw new ArgumentNullException(nameof(product));
             var productEntity = product.ToEntity();
@@ -91,7 +91,7 @@ namespace EcommerceApp.Data.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<ProductModel> AddAsync(ProductModel product)
+        public async Task<ProductModel> AddAsync(CreateProductModel product)
         {
             if (product is null) throw new ArgumentNullException(nameof(product));
 

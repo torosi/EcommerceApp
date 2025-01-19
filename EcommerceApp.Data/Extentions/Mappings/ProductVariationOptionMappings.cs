@@ -1,10 +1,5 @@
 ﻿using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Models.Products;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EcommerceApp.Data.Mappings
 {

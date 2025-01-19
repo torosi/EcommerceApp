@@ -7,6 +7,7 @@ using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Service.Implementations;
 using EcommerceApp.Data.Mappings;
 using EcommerceApp.Service.Contracts;
+using EcommerceApp.Domain.Models.Products;
 
 namespace EcommerceApp.Tests.Services;
 
@@ -36,7 +37,7 @@ public class ProductServiceTests
     public async Task AddAsync_Should_Add_Product_And_Return_Model()
     {
        // Arrange
-       var productModel = new ProductModel {
+       var productModel = new CreateProductModel {
            Id = 0,
            Name = "Test Product",
            Updated = DateTime.Now,
@@ -47,7 +48,7 @@ public class ProductServiceTests
            Price = 11.99
        };
 
-       _productRepositoryMock.Setup(r => r.AddAsync(It.IsAny<ProductModel>())).ReturnsAsync(productModel);
+       _productRepositoryMock.Setup(r => r.AddAsync(It.IsAny<CreateProductModel>())).ReturnsAsync(productModel);
        _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
        // Act
@@ -57,7 +58,7 @@ public class ProductServiceTests
        Assert.NotNull(result);
        Assert.Equal(productModel.Name, result.Name);
 
-       _productRepositoryMock.Verify(r => r.AddAsync(It.IsAny<ProductModel>()), Times.Once); // how many times is has been called
+       _productRepositoryMock.Verify(r => r.AddAsync(It.IsAny<CreateProductModel>()), Times.Once); // how many times is has been called
        _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
     }
 

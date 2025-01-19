@@ -1,7 +1,5 @@
 ﻿using EcommerceApp.Data.Entities;
-using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Models;
-using EcommerceApp.Domain.Models.Products;
 
 namespace EcommerceApp.Data.Mappings
 {

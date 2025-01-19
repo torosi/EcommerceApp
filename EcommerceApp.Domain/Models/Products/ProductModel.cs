@@ -16,5 +16,6 @@ namespace EcommerceApp.Domain.Models
         public int ProductTypeId { get; set; }
         public ProductTypeModel? ProductType { get; set; }
         public double Price { get; set; }
+
     }
 }

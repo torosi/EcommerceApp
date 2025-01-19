@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Domain.Models.Variations;
+using EcommerceApp.Domain.Extentions.Mappings;
 
 namespace EcommerceApp.Service.Implementations
 {
@@ -27,7 +28,7 @@ namespace EcommerceApp.Service.Implementations
         {
             if (product == null) throw new ArgumentNullException(nameof(product));
 
-            var newProduct = await _productRepository.AddAsync(product);
+            var newProduct = await _productRepository.AddAsync(product.ToCreateModel());
             await _productRepository.SaveChangesAsync();
 
             _logger.LogDebug("New Product has been added with Id: {id}", product.Id);
@@ -76,7 +77,7 @@ namespace EcommerceApp.Service.Implementations
 
             _logger.LogDebug("Found Product Entity with id: '{id}'", product.Id);
 
-            _productRepository.Update(product);
+            _productRepository.Update(product.ToUpdateModel());
             await _productRepository.SaveChangesAsync();
 
             _logger.LogDebug("Updated Product Entity with id: '{id}'", product.Id);

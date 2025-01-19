@@ -9,6 +9,7 @@ namespace EcommerceApp.Test.MappingsTests
         [Fact]
         public void ToModel_Should_Map_ProductType_To_ProductTypeModel_Correctly()
         {
+            // Arrange
             var productType = new ProductTypeEntity()
             {
                 Id = 12,
@@ -18,8 +19,10 @@ namespace EcommerceApp.Test.MappingsTests
                 Updated = DateTime.Now,
             };
 
+            // Act
             var productTypeModel = productType.ToDomain();
 
+            // Assert
             Assert.Equal(productType.Id, productTypeModel.Id);
             Assert.Equal(productType.Name, productTypeModel.Name);
             Assert.Equal(productType.Created, productTypeModel.Created);
@@ -30,6 +33,7 @@ namespace EcommerceApp.Test.MappingsTests
         [Fact]
         public void ToEntity_Should_Map_ProductTypeModel_To_ProductType_Correctly()
         {
+            // Arrange
             var productTypeModel = new ProductTypeModel()
             {
                 Id = 87,
@@ -39,8 +43,10 @@ namespace EcommerceApp.Test.MappingsTests
                 Updated = DateTime.Now,
             };
 
+            // Act
             var productType = productTypeModel.ToEntity();
 
+            // Assert
             Assert.Equal(productType.Id, productTypeModel.Id);
             Assert.Equal(productType.Name, productTypeModel.Name);
             Assert.Equal(productType.Created, productTypeModel.Created);
