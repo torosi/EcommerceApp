@@ -79,7 +79,7 @@ namespace EcommerceApp.Data.Repositories
                 .ThenInclude(option => option.VariationType)
                 .ToListAsync();
 
-            return skusWithVariations.Select(x => x.ToModelWithVariations());
+            return skusWithVariations.Select(x => x.ToDomainWithVariations());
         }
 
         /// <inheritdoc />
@@ -127,5 +127,6 @@ namespace EcommerceApp.Data.Repositories
             var productEntity = await _context.Products.SingleOrDefaultAsync(x => x.Id == productId);
             return productEntity != null ? productEntity.ToDomain() : null;
         }
+
     }
 }

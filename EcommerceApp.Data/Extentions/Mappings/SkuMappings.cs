@@ -31,7 +31,7 @@ public static class SkuMappings
         };
     }
 
-    public static SkuWithVariationsModel ToModelWithVariations(this SkuEntity sku)
+    public static SkuWithVariationsModel ToDomainWithVariations(this SkuEntity sku)
     {
         return new SkuWithVariationsModel
         {

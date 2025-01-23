@@ -5,7 +5,7 @@ using EcommerceApp.Data.Mappings;
 using EcommerceApp.Domain.Models.Category;
 
 
-namespace EcommerceApp.Test.Mappings
+namespace EcommerceApp.Test.MappingsTests
 {
     public class ProductMappingsTests
     {

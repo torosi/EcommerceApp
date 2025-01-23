@@ -14,7 +14,7 @@ namespace EcommerceApp.Data.Mappings
                 ApplicationUserId = cart.ApplicationUserId,
                 Count = cart.Count,
                 Product = cart.Sku != null && cart.Sku.Product != null ? cart.Sku.Product.ToDomain() : null,
-                Sku = cart.Sku != null && cart.Sku.ProductVariationOptions.Any() ? cart.Sku.ToModelWithVariations() : null
+                Sku = cart.Sku != null && cart.Sku.ProductVariationOptions.Any() ? cart.Sku.ToDomainWithVariations() : null
             };
         }
 

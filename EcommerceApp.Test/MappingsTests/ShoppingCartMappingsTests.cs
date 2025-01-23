@@ -119,7 +119,7 @@ public class ShoppingCartMappingsTests
         };
 
         // Act
-        var skuWithVariationModel = sku.ToModelWithVariations();
+        var skuWithVariationModel = sku.ToDomainWithVariations();
 
         // Assert
         Assert.Equal(sku.Id, sku.Id);
