@@ -1,6 +1,6 @@
 ﻿using EcommerceApp.Domain.Models.Products;
 
-namespace EcommerceApp.Domain.Models
+namespace EcommerceApp.Domain.Models.ShoppingCart
 {
     public class ShoppingCartModel
     {
@@ -9,6 +9,6 @@ namespace EcommerceApp.Domain.Models
         public int SkuId { get; set; }
         public SkuWithVariationsModel? Sku { get; set; }
         public int Count { get; set; }
-        public ProductModel? Product { get; set;}
+        public ProductModel? Product { get; set; }
     }
 }

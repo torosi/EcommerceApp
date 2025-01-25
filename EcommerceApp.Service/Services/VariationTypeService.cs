@@ -2,6 +2,7 @@ using EcommerceApp.Domain.Models.Products;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Domain.Models.Variations;
+using EcommerceApp.Domain.Extentions.Mappings;
 
 namespace EcommerceApp.Service.Implementations;
 
@@ -18,7 +19,7 @@ public class VariationTypeService : IVariationTypeService
     public async Task CreateVariationTypeAsync(VariationTypeModel variationTypeModel)
     {
         if (variationTypeModel == null) throw new ArgumentNullException(nameof(variationTypeModel));
-        await _variationTypeRepository.AddAsync(variationTypeModel);
+        await _variationTypeRepository.AddAsync(variationTypeModel.ToCreateModel());
         await _variationTypeRepository.SaveChangesAsync();
     }
 

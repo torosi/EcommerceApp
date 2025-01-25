@@ -1,4 +1,4 @@
-﻿using EcommerceApp.Domain.Models;
+﻿using EcommerceApp.Domain.Models.ShoppingCart;
 using System.Linq.Expressions;
 
 namespace EcommerceApp.Service.Contracts

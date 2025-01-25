@@ -1,5 +1,5 @@
 ﻿using EcommerceApp.Data.Entities;
-using EcommerceApp.Domain.Models;
+using EcommerceApp.Domain.Models.ShoppingCart;
 
 namespace EcommerceApp.Data.Mappings
 {

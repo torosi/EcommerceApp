@@ -1,22 +1,24 @@
-﻿using EcommerceApp.Service.Contracts;
-using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using EcommerceApp.Domain.Models.Category;
+using EcommerceApp.Service.Contracts;
+using EcommerceApp.WebAPI.DTOs.Category;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json.Nodes;
 
 namespace EcommerceApp.WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IMapper mapper)
         {
             _categoryService = categoryService;
+            _mapper = mapper;
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetAllCategoriesAsync()
@@ -24,7 +26,8 @@ namespace EcommerceApp.WebAPI.Controllers
             try
             {
                 var categories = await _categoryService.GetAllAsync();
-                return Ok(categories);
+                var categoryDtos = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+                return Ok(categoryDtos);
             }
             catch (Exception ex)
             {
@@ -45,6 +48,22 @@ namespace EcommerceApp.WebAPI.Controllers
             {
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, $"An error occured while fetching category with id {id}");
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateCategoryAsync(UpdateCategoryDto category)
+        {
+            try
+            {
+                var categoryModel = _mapper.Map<CategoryModel>(category);
+                await _categoryService.UpdateAsync(categoryModel);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, $"An error occured while updating category");
             }
         }
 

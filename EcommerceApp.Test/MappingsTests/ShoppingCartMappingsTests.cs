@@ -2,6 +2,7 @@ using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Domain.Models;
 using EcommerceApp.Data.Mappings;
+using EcommerceApp.Domain.Models.ShoppingCart;
 
 namespace EcommerceApp.Test.MappingsTests;
 

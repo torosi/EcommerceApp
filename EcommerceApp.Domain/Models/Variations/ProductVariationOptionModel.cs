@@ -9,6 +9,5 @@
         public string VariationValue { get; set; } = string.Empty;
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
-
     }
 }

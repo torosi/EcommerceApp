@@ -1,9 +1,9 @@
-using EcommerceApp.Domain.Models.Products;
+using EcommerceApp.Domain.Models.Variations;
 
 namespace EcommerceApp.Domain.Interfaces.Repositories;
 
 public interface IProductVariationOptionRepository
 {
-    public Task AddRangeAsync(IEnumerable<ProductVariationOptionModel> variations);
+    public Task AddRangeAsync(IEnumerable<CreateProductVariationOptionModel> variations);
     Task SaveChangesAsync();
 }

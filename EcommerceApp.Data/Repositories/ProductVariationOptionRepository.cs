@@ -1,6 +1,7 @@
 using EcommerceApp.Data.Mappings;
 using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Domain.Models.Products;
+using EcommerceApp.Domain.Models.Variations;
 using Microsoft.Extensions.Logging;
 
 namespace EcommerceApp.Data.Repositories;
@@ -14,7 +15,7 @@ public class ProductVariationOptionRepository : IProductVariationOptionRepositor
         _context = context;
     }
 
-    public async Task AddRangeAsync(IEnumerable<ProductVariationOptionModel> variations)
+    public async Task AddRangeAsync(IEnumerable<CreateProductVariationOptionModel> variations)
     {
         if (variations is null) throw new ArgumentNullException(nameof(variations));
 

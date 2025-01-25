@@ -18,7 +18,7 @@ public class VariationTypeRepository : IVariationTypeRepository
     }
 
     /// <inheritdoc />
-    public async Task AddAsync(VariationTypeModel variationTypeModel)
+    public async Task AddAsync(CreateVariationTypeModel variationTypeModel)
     {
         if (variationTypeModel is null) throw new ArgumentNullException(nameof(variationTypeModel));
         await _context.VariationTypes.AddAsync(variationTypeModel.ToEntity());

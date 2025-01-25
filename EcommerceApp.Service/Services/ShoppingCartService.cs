@@ -1,7 +1,8 @@
-﻿using EcommerceApp.Domain.Models;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Interfaces.Repositories;
+using EcommerceApp.Domain.Models.ShoppingCart;
+using EcommerceApp.Domain.Extentions.Mappings;
 
 namespace EcommerceApp.Service.Implementations
 {
@@ -21,7 +22,7 @@ namespace EcommerceApp.Service.Implementations
         {
             if (shoppingCart == null) throw new ArgumentNullException(nameof(shoppingCart));
 
-            await _shoppingCartRepository.AddAsync(shoppingCart);
+            await _shoppingCartRepository.AddAsync(shoppingCart.ToCreateModel());
             await _shoppingCartRepository.SaveChangesAsync();
         }
 
@@ -68,7 +69,7 @@ namespace EcommerceApp.Service.Implementations
         {
             if (cart == null) throw new ArgumentNullException(nameof(cart));
 
-            _shoppingCartRepository.Update(cart);
+            _shoppingCartRepository.Update(cart.ToUpdateModel());
             await _shoppingCartRepository.SaveChangesAsync();
         }
     }

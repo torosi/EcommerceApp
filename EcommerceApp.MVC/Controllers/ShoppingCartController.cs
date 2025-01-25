@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EcommerceApp.Domain.Models;
+using EcommerceApp.Domain.Models.ShoppingCart;
 using EcommerceApp.MVC.Helpers.Interfaces;
 using EcommerceApp.MVC.Models.Product;
 using EcommerceApp.MVC.Models.ProductVariationOption;

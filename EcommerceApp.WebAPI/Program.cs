@@ -3,6 +3,7 @@ using EcommerceApp.Data.Repositories;
 using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Service.Implementations;
+using EcommerceApp.WebAPI.Automapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -59,7 +60,7 @@ builder.Services.AddScoped<ISkuService, SkuService>();
 
 builder.Services.AddScoped<IProductVariationOptionRepository, ProductVariationOptionRepository>();
 
-
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 var app = builder.Build();
 

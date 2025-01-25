@@ -145,7 +145,7 @@ namespace EcommerceApp.Service.Implementations
 
             var newVariationOptionModels = variations
                 .Where(variation => variation.Id == 0)
-                .Select(variation => new ProductVariationOptionModel()
+                .Select(variation => new CreateProductVariationOptionModel()
                 {
                     SkuId = savedSkus.First(s => s.SkuString == variation.SkuString).Id, // Match by SKU String
                     VariationTypeId = variation.VariationTypeId,

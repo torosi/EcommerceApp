@@ -8,6 +8,6 @@ public interface IVariationTypeRepository
     public Task CreateProductTypeVariationMappingRangeAsync(IEnumerable<ProductTypeVariationMappingModel> mapping);
     public Task<IEnumerable<VariationTypeModel?>> GetAllByProductTypeAsync(int productTypeId);
     Task SaveChangesAsync();
-    Task AddAsync(VariationTypeModel variationTypeModel);
+    Task AddAsync(CreateVariationTypeModel variationTypeModel);
     Task<IEnumerable<VariationTypeModel>> GetAllAsync(string? includeProperties = null);
 }

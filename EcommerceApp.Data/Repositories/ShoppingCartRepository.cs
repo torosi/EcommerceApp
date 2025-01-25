@@ -1,7 +1,7 @@
 ﻿using EcommerceApp.Data.Entities;
 using EcommerceApp.Data.Mappings;
 using EcommerceApp.Domain.Interfaces.Repositories;
-using EcommerceApp.Domain.Models;
+using EcommerceApp.Domain.Models.ShoppingCart;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -17,9 +17,9 @@ namespace EcommerceApp.Data.Repositories
         }
 
         /// <inheritdoc />
-        public void Update(ShoppingCartEntity cart)
+        public void Update(UpdateShoppingCartModel cart)
         {
-            _context.ShoppingCarts.Update(cart);
+            _context.ShoppingCarts.Update(cart.ToEntity());
         }
 
         /// <inheritdoc />
@@ -59,13 +59,13 @@ namespace EcommerceApp.Data.Repositories
             }
         }
 
-        public async Task AddAsync(ShoppingCartModel cart)
+        public async Task AddAsync(CreateShoppingCartModel cart)
         {
             if (cart == null) throw new ArgumentNullException(nameof(cart));
 
             var cartEntity = cart.ToEntity();
-            cartEntity.Created = DateTime.UtcNow;
-            cartEntity.Updated = DateTime.UtcNow;
+            cartEntity.Created = DateTime.Now;
+            cartEntity.Updated = DateTime.Now;
 
             await _context.ShoppingCarts.AddAsync(cartEntity);
 
@@ -93,7 +93,7 @@ namespace EcommerceApp.Data.Repositories
             if (cart == null) throw new ArgumentNullException(nameof(cart));
 
             var cartEntity = cart.ToEntity();
-            cartEntity.Updated = DateTime.UtcNow;
+            cartEntity.Updated = DateTime.Now;
 
             _context.ShoppingCarts.Update(cartEntity);
         }
