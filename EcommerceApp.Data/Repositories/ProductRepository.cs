@@ -42,7 +42,7 @@ namespace EcommerceApp.Data.Repositories
         }
 
         /// <inheritdoc />
-        public void UpdateRange(IEnumerable<ProductModel> products)
+        public void UpdateRange(IEnumerable<UpdateProductModel> products)
         {
             if (products == null || !products.Any()) throw new ArgumentNullException(nameof(products));
             var productEntities = products.Select(x => x.ToEntity());

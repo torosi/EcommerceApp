@@ -16,7 +16,7 @@ namespace EcommerceApp.Domain.Interfaces.Repositories
         /// Method to update multiple products
         /// </summary>
         /// <param name="products"></param>
-        void UpdateRange(IEnumerable<ProductModel> products);
+        void UpdateRange(IEnumerable<UpdateProductModel> products);
 
         /// <summary>
         /// Method to get all products

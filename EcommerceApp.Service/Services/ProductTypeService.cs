@@ -2,6 +2,7 @@ using EcommerceApp.Domain.Models.Products;
 using Microsoft.Extensions.Logging;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Interfaces.Repositories;
+using EcommerceApp.Domain.Extentions.Mappings;
 
 namespace EcommerceApp.Service.Implementations;
 
@@ -18,11 +19,11 @@ public class ProductTypeService : IProductTypeService
     }
 
     /// <inheritdoc />
-    public async Task<int> AddAsync(ProductTypeModel productType)
+    public async Task<int> AddAsync(ProductTypeModel productType) // TODO: this should be passing in the create product type model rather than converting it.
     {
         if (productType == null) throw new ArgumentNullException(nameof(productType));
 
-        var newId = await _productTypeRepository.AddAndSaveAsync(productType);
+        var newId = await _productTypeRepository.AddAndSaveAsync(productType.ToCreateModel());
 
         return newId;
     }
@@ -65,7 +66,7 @@ public class ProductTypeService : IProductTypeService
     {
         if (productType == null) throw new ArgumentNullException(nameof(productType));
 
-        _productTypeRepository.Update(productType);
+        _productTypeRepository.Update(productType.ToUpdateModel());
         await _productTypeRepository.SaveChangesAsync();
 
         _logger.LogDebug("Updated Product Type Entity with id: '{id}'", productType.Id);

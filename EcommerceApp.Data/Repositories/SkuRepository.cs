@@ -2,6 +2,7 @@ using EcommerceApp.Data.Entities.Products;
 using EcommerceApp.Data.Mappings;
 using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Domain.Models.Products;
+using EcommerceApp.Domain.Models.Sku;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -16,7 +17,7 @@ public class SkuRepository : ISkuRepository
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<SkuModel>> AddRangeAndSaveAsync(IEnumerable<SkuModel> skus)
+    public async Task<IEnumerable<SkuModel>> AddRangeAndSaveAsync(IEnumerable<CreateSkuModel> skus)
     {
         if (skus is null) throw new ArgumentNullException(nameof(skus));
 

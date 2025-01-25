@@ -128,7 +128,8 @@ namespace EcommerceApp.Service.Implementations
             // Step 3: Save new SKUs
             if (newSkus.Any())
             {
-                savedSkus = (await _skuRepository.AddRangeAndSaveAsync(newSkus)).ToList();
+                var createSkuModels = newSkus.Select(s => s.ToCreateModel());
+                savedSkus = (await _skuRepository.AddRangeAndSaveAsync(createSkuModels)).ToList();
                 await _skuRepository.SaveChangesAsync();
 
                 _logger.LogDebug("'{count}' new Sku entities saved", newSkus.Count());

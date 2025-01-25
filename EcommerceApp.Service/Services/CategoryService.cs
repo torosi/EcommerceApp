@@ -36,17 +36,19 @@ namespace EcommerceApp.Service.Implementations
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
             // we need to remove the categoryid from all of the products that currently have this category
-            var products = await _productRepository.GetAllAsync();
+            var productModels = await _productRepository.GetAllAsync();
 
             // if there are any products in this category, then we need to remove them from category first
-            if (products.Any())
+            if (productModels.Any())
             {
-                foreach (var product in products)
+                foreach (var product in productModels)
                 {
                     product.CategoryId = null;
                 }
 
-                _productRepository.UpdateRange(products);
+                var updateProductModels = productModels.Select(p => p.ToUpdateModel());
+
+                _productRepository.UpdateRange(updateProductModels);
                 await _productRepository.SaveChangesAsync();
             }
 
