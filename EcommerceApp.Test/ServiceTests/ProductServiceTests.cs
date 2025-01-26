@@ -1,13 +1,11 @@
-using EcommerceApp.Data.Entities;
-using EcommerceApp.Domain.Models;
 using Moq;
-using System.Linq.Expressions;
 using Microsoft.Extensions.Logging;
 using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Service.Implementations;
-using EcommerceApp.Data.Mappings;
 using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Models.Products;
+using EcommerceApp.Domain.Models;
+using EcommerceApp.Data.Entities;
 
 namespace EcommerceApp.Tests.Services;
 
@@ -16,6 +14,7 @@ public class ProductServiceTests
     private readonly Mock<IProductRepository> _productRepositoryMock;
     private readonly Mock<ISkuRepository> _skuRepositoryMock;
     private readonly Mock<IProductVariationOptionRepository> _productVariationOptionRepositoryMock;
+
     private readonly IProductService _productService;
     private readonly Mock<ILogger<ProductService>> _logger;
 
@@ -37,7 +36,8 @@ public class ProductServiceTests
     public async Task AddAsync_Should_Add_Product_And_Return_Model()
     {
        // Arrange
-       var productModel = new CreateProductModel {
+       var productModel = new CreateProductModel
+       {
            Id = 0,
            Name = "Test Product",
            Updated = DateTime.Now,
@@ -62,47 +62,28 @@ public class ProductServiceTests
        _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
     }
 
+    [Fact]
+    public async Task UpdateAsync_Should_Update_Existing_Product()
+    {
+        // Arrange
+        var productModel = new UpdateProductModel
+        {
+            Id = 1,
+            Name = "Updated Product",
+            Description = "Updated Description",
+            ImageUrl = "updated-image.jpg",
+            CategoryId = 2,
+            ProductTypeId = 3
+        };
 
-    //[Fact]
-    //public async Task UpdateAsync_Should_Update_Existing_Product()
-    //{
-    //    // Arrange
-    //    var productModel = new ProductModel
-    //    {
-    //        Id = 1,
-    //        Name = "Updated Product",
-    //        Description = "Updated Description",
-    //        ImageUrl = "updated-image.jpg",
-    //        CategoryId = 2,
-    //        ProductTypeId = 3
-    //    };
+        _productRepositoryMock.Setup(r => r.Update(It.IsAny<UpdateProductModel>()));
+        _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
 
-    //    var productEntity = new ProductEntity
-    //    {
-    //        Id = 1,
-    //        Name = "Old Product",
-    //        Description = "Old Description",
-    //        ImageUrl = "old-image.jpg",
-    //        CategoryId = 1,
-    //        ProductTypeId = 1
-    //    };
+        // Act
+        await _productService.UpdateAsync(productModel);
 
-    //    _productRepositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<ProductEntity, bool>>>(), true, null)) // this has to match what is being called so true null is the default parameters because the service class does not pass them in.
-    //                          .ReturnsAsync(productEntity);
-    //    _productRepositoryMock.Setup(r => r.SaveChangesAsync()).Returns(Task.CompletedTask);
-
-    //    // Act
-    //    await _productService.UpdateAsync(productModel);
-
-    //    // Assert
-    //    Assert.Equal(productModel.Name, productEntity.Name);
-    //    Assert.Equal(productModel.Description, productEntity.Description);
-    //    Assert.Equal(productModel.ImageUrl, productEntity.ImageUrl);
-    //    Assert.Equal(productModel.CategoryId, productEntity.CategoryId);
-    //    Assert.Equal(productModel.ProductTypeId, productEntity.ProductTypeId);
-
-    //    _productRepositoryMock.Verify(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<ProductEntity, bool>>>(), true, null), Times.Once);
-    //    _productRepositoryMock.Verify(r => r.Update(It.IsAny<ProductEntity>()), Times.Once);
-    //    _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
-    //}
+        // Assert
+        _productRepositoryMock.Verify(r => r.Update(It.IsAny<UpdateProductModel>()), Times.Once);
+        _productRepositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
+    }
 }

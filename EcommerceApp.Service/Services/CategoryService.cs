@@ -9,6 +9,7 @@ namespace EcommerceApp.Service.Implementations
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IProductRepository _productRepository;
+
         public CategoryService(ICategoryRepository categoryRepository, IProductRepository productRepository)
         {
             _categoryRepository = categoryRepository;
