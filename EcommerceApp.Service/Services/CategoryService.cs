@@ -2,6 +2,7 @@ using EcommerceApp.Service.Contracts;
 using EcommerceApp.Domain.Models.Category;
 using EcommerceApp.Domain.Interfaces.Repositories;
 using EcommerceApp.Domain.Extentions.Mappings;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace EcommerceApp.Service.Implementations
 {
@@ -36,22 +37,7 @@ namespace EcommerceApp.Service.Implementations
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-            // we need to remove the categoryid from all of the products that currently have this category
-            var productModels = await _productRepository.GetAllAsync();
-
-            // if there are any products in this category, then we need to remove them from category first
-            if (productModels.Any())
-            {
-                foreach (var product in productModels)
-                {
-                    product.CategoryId = null;
-                }
-
-                var updateProductModels = productModels.Select(p => p.ToUpdateModel());
-
-                _productRepository.UpdateRange(updateProductModels);
-                await _productRepository.SaveChangesAsync();
-            }
+            await RemoveProductsFromCategory(entity.Id);
 
             _categoryRepository.Remove(entity.Id);
             await _categoryRepository.SaveChangesAsync();
@@ -66,12 +52,48 @@ namespace EcommerceApp.Service.Implementations
             await _categoryRepository.SaveChangesAsync();
         }
 
+        /// <inheritdoc />
         public async Task<CategoryModel?> GetCategoryById(int categoryId)
         {
             ArgumentOutOfRangeException.ThrowIfZero(categoryId);
 
             var category = await _categoryRepository.GetCategoryById(categoryId);
             return category;
+        }
+
+        /// <inheritdoc />
+        public async Task RemoveByIdAsync(int categoryId)
+        {
+            ArgumentOutOfRangeException.ThrowIfZero(categoryId);
+
+            await RemoveProductsFromCategory(categoryId);
+
+            _categoryRepository.Remove(categoryId);
+            await _categoryRepository.SaveChangesAsync();
+        }
+
+
+        /// <summary>
+        /// A method to remove the products from a category. This method removes the categoryId from the product rather than deleting the products.
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        private async Task RemoveProductsFromCategory(int categoryId)
+        {
+            var productModels = await _productRepository.GetAllAsync();
+
+            if (productModels.Any())
+            {
+                foreach (var product in productModels)
+                {
+                    product.CategoryId = null;
+                }
+
+                var updateProductModels = productModels.Select(p => p.ToUpdateModel());
+
+                _productRepository.UpdateRange(updateProductModels);
+                await _productRepository.SaveChangesAsync();
+            }
         }
     }
 }

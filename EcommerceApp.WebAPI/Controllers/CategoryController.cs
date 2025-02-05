@@ -27,6 +27,7 @@ namespace EcommerceApp.WebAPI.Controllers
             {
                 var categories = await _categoryService.GetAllAsync();
                 var categoryDtos = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+
                 return Ok(categoryDtos);
             }
             catch (Exception ex)
@@ -42,6 +43,8 @@ namespace EcommerceApp.WebAPI.Controllers
             try
             {
                 var category = await _categoryService.GetCategoryById(id);
+                var categoryDto = _mapper.Map<CategoryDto>(category); // dont forget to map to dto first!
+
                 return Ok(category);
             }
             catch (Exception ex)
@@ -64,6 +67,21 @@ namespace EcommerceApp.WebAPI.Controllers
             {
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, $"An error occured while updating category");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategoryAsync(int id)
+        {
+            try
+            {
+                await _categoryService.RemoveByIdAsync(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, $"An error occured while deleting category");
             }
         }
 

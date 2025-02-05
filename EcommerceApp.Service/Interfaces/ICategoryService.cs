@@ -37,5 +37,12 @@ namespace EcommerceApp.Service.Contracts
         /// <param name="categoryId">Identifier for a category</param>
         /// <returns></returns>
         Task<CategoryModel?> GetCategoryById(int categoryId);
+
+        /// <summary>
+        /// A method to remove a category by Id
+        /// </summary>
+        /// <param name="categoryId">Identifier for a category</param>
+        /// <returns>Task</returns>
+        Task RemoveByIdAsync(int categoryId);
     }
 }
